@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTracker.Core", "Expe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTracker.Core.Tests.Unit", "ExpenseTracker.Core.Tests.Unit\ExpenseTracker.Core.Tests.Unit.csproj", "{6F2674D2-8F70-48E9-8D3F-740FF813C8DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTracker.Core.Tests.Acceptance", "ExpenseTracker.Core.Tests.Acceptance\ExpenseTracker.Core.Tests.Acceptance.csproj", "{67E535D0-26C5-4FB8-A672-768910E6C494}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{6F2674D2-8F70-48E9-8D3F-740FF813C8DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F2674D2-8F70-48E9-8D3F-740FF813C8DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F2674D2-8F70-48E9-8D3F-740FF813C8DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67E535D0-26C5-4FB8-A672-768910E6C494}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67E535D0-26C5-4FB8-A672-768910E6C494}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67E535D0-26C5-4FB8-A672-768910E6C494}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67E535D0-26C5-4FB8-A672-768910E6C494}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
