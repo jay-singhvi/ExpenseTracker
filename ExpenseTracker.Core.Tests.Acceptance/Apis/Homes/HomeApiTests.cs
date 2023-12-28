@@ -1,5 +1,6 @@
 ﻿using ExpenseTracker.Core.Tests.Acceptance.Brokers;
 using FluentAssertions;
+using Xunit;
 
 namespace ExpenseTracker.Core.Tests.Acceptance.Apis.Homes
 {
