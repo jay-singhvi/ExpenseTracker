@@ -5,7 +5,7 @@ using ExpenseTracker.Core.Models.Transactions;
 
 namespace ExpenseTracker.Core.Services.Foundations.Transactions
 {
-    public class TransactionService : ITransactionService
+    public partial class TransactionService : ITransactionService
     {
         private readonly IStorageBroker storageBroker;
         private readonly ILoggingBroker loggingBroker;
@@ -20,11 +20,10 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
             this.dateTimeBroker = dateTimeBroker;
         }
 
-        public ValueTask<Transaction> AddTransactionAsync(Transaction transaction)
-        {
-            throw new NotImplementedException();
-        }
-
-
+        public ValueTask<Transaction> AddTransactionAsync(Transaction transaction) =>
+            TryCatch(async () =>
+            {
+                return await this.storageBroker.InsertTransactionAsync(transaction);
+            });
     }
 }
