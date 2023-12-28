@@ -23,6 +23,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
         public ValueTask<Transaction> AddTransactionAsync(Transaction transaction) =>
             TryCatch(async () =>
             {
+                this.dateTimeBroker.GetCurrentDateTimeOffset();
                 return await this.storageBroker.InsertTransactionAsync(transaction);
             });
     }
