@@ -24,6 +24,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
             TryCatch(async () =>
             {
                 this.dateTimeBroker.GetCurrentDateTimeOffset();
+                ValidateTransactionOnAdd(transaction);
                 return await this.storageBroker.InsertTransactionAsync(transaction);
             });
     }

@@ -3,6 +3,7 @@
 using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.Identity.Client;
 using Xeptions;
 
 namespace ExpenseTracker.Core.Services.Foundations.Transactions
@@ -18,14 +19,27 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
             {
                 return await returningPostFunction();
             }
+            catch (NullTransactionException nullTransactionException)
+            {
+                throw CreateAndLogValidationException(nullTransactionException);
+            }
             catch (SqlException sqlException)
             {
-                var failedTransactionStorageException = 
+                var failedTransactionStorageException =
                     new FailedTransactionStorageException(sqlException);
 
                 throw CreateAndLogCriticalDependencyException(failedTransactionStorageException);
-
             }
+        }
+
+        private TransactionValidationException CreateAndLogValidationException(Xeption exception)
+        {
+            var transactionValidationException = 
+                new TransactionValidationException(exception);
+
+            this.loggingBroker.LogError(transactionValidationException);
+
+            return transactionValidationException;
         }
 
         private TransactionDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
