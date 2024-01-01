@@ -22,7 +22,9 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
 
             (Rule: IsNotSame(firstDate: transaction.UpdatedDate, secondDate: transaction.CreatedDate,
                 secondDateName: nameof(transaction.CreatedDate)),
-                Parameter: nameof(transaction.UpdatedDate))
+                Parameter: nameof(transaction.UpdatedDate)),
+
+            (Rule: IsNotRecent(transaction.CreatedDate), Parameter: nameof(transaction.CreatedDate))
                 );
         }
 
@@ -76,5 +78,22 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
                 Condition = firstDate != secondDate,
                 Message = $"Date is not same as {secondDateName}"
             };
+
+        private dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message = "Date is not recent."
+        };
+
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime =
+                this.dateTimeBroker.GetCurrentDateTimeOffset();
+
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+            TimeSpan oneMinute = TimeSpan.FromMinutes(1);
+
+            return timeDifference.Duration() > oneMinute;
+        }
     }
 }
