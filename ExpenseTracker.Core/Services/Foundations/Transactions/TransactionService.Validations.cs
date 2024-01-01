@@ -13,12 +13,16 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
             ValidateTransactionIsNotNull(transaction);
 
             Validate(
-                (Rule: IsInvalid(transaction.Id), Parameter: nameof(transaction.Id)),
+            (Rule: IsInvalid(transaction.Id), Parameter: nameof(transaction.Id)),
             (Rule: IsInvalid(transaction.Category), Parameter: nameof(transaction.Category)),
             (Rule: IsInvalid(transaction.Description), Parameter: nameof(transaction.Description)),
             (Rule: IsInvalid(transaction.PaymentMode), Parameter: nameof(transaction.PaymentMode)),
             (Rule: IsInvalid(transaction.CreatedDate), Parameter: nameof(transaction.CreatedDate)),
-            (Rule: IsInvalid(transaction.UpdatedDate), Parameter: nameof(transaction.UpdatedDate))
+            (Rule: IsInvalid(transaction.UpdatedDate), Parameter: nameof(transaction.UpdatedDate)),
+
+            (Rule: IsNotSame(firstDate: transaction.UpdatedDate, secondDate: transaction.CreatedDate,
+                secondDateName: nameof(transaction.CreatedDate)),
+                Parameter: nameof(transaction.UpdatedDate))
                 );
         }
 
@@ -64,5 +68,13 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
             Condition = date == default,
             Message = "Date is required."
         };
+
+        private static dynamic IsNotSame(DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate != secondDate,
+                Message = $"Date is not same as {secondDateName}"
+            };
     }
 }
