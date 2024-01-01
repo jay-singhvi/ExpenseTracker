@@ -4,6 +4,7 @@ using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.Identity.Client;
+using System;
 using Xeptions;
 
 namespace ExpenseTracker.Core.Services.Foundations.Transactions
@@ -22,6 +23,10 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
             catch (NullTransactionException nullTransactionException)
             {
                 throw CreateAndLogValidationException(nullTransactionException);
+            }
+            catch (InvalidTransactionException invalidTransactionException)
+            {
+                throw CreateAndLogValidationException(invalidTransactionException);
             }
             catch (SqlException sqlException)
             {

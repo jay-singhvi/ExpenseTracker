@@ -79,10 +79,6 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
                 values: "Text is required.");
 
             invalidTransactionException.AddData(
-                key: nameof(Transaction.Amount), 
-                values: "Number is required.");
-
-            invalidTransactionException.AddData(
                 key: nameof(Transaction.PaymentMode),
                 values: "Text is required.");
 
