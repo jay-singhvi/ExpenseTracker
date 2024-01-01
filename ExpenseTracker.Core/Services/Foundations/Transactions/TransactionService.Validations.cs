@@ -49,7 +49,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
 
         private static dynamic IsInvalid(Guid id) => new
         {
-            Condition = id == Guid.Empty,
+            Condition = id == default,
             Message = "Id is required."
         };
 
