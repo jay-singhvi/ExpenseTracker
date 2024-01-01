@@ -165,5 +165,59 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(MinutesBeforeOrAfter))]
+        public async Task ShouldThrowValidationExcptionOnAddIfCreatedDateIsNotRecent(
+            int minutesBeforeOrAfter)
+        {
+            // given
+            DateTimeOffset randomDateTime =
+                GetRandomDateTimeOffset();
+
+            DateTimeOffset invalidDateTime =
+                randomDateTime.AddMinutes(minutesBeforeOrAfter);
+
+            var randomTransaction = CreateRandomTransaction(invalidDateTime);
+            var invalidTransaction = randomTransaction;
+
+            var invalidTransactionException =
+                new InvalidTransactionException();
+
+            invalidTransactionException.AddData(
+                key: nameof(Transaction.CreatedDate),
+                values: "Date is not recent.");
+
+            var expectedTransactionValidationException =
+                new TransactionValidationException(invalidTransactionException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                .Returns(randomDateTime);
+
+            // when
+            ValueTask<Transaction> addPropertyTask = this.transactionService.AddTransactionAsync(invalidTransaction);
+
+            // then
+            await Assert.ThrowsAsync<TransactionValidationException>(() =>
+                addPropertyTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTransactionValidationException))),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertTransactionAsync(It.IsAny<Transaction>()),
+                Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

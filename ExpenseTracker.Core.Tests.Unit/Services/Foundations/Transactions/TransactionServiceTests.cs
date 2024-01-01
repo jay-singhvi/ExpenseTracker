@@ -10,6 +10,7 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 {
@@ -58,5 +59,19 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
         private static int GetRandomNumber() =>
             new IntRange(min: 2, max: 10).GetValue();
+
+        public static TheoryData MinutesBeforeOrAfter()
+        {
+            int randomNumber = GetRandomNumber();
+            int randomNegativeNumber = GetRandomNegativeNumber();
+
+            return new TheoryData<int> {
+                randomNumber,
+                randomNegativeNumber
+            };
+        }
+
+        private static int GetRandomNegativeNumber() =>
+            -1 * new IntRange(min: 2, max: 10).GetValue();
     }
 }
