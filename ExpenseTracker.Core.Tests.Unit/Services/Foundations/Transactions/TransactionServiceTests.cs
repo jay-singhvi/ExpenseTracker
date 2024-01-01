@@ -55,5 +55,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
         }
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
+
+        private static int GetRandomNumber() =>
+            new IntRange(min: 2, max: 10).GetValue();
     }
 }
