@@ -1,5 +1,6 @@
 ﻿
 
+using EFxceptions.Models.Exceptions;
 using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using Microsoft.Data.SqlClient;
@@ -35,6 +36,14 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
 
                 throw CreateAndLogCriticalDependencyException(failedTransactionStorageException);
             }
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var alreadyExistsTransaction = 
+                    new AlreadyExistsTransactionException(duplicateKeyException);
+
+                throw CreateAndLogDependencyValidationException(alreadyExistsTransaction);
+            }
+
         }
 
         private TransactionValidationException CreateAndLogValidationException(Xeption exception)
@@ -55,6 +64,16 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
             this.loggingBroker.LogCritical(transactionDependencyException);
 
             return transactionDependencyException;
+        }
+
+        private TransactionDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
+        {
+            var transactionDependencyValidationException = 
+                new TransactionDependencyValidationException(exception);
+
+            this.loggingBroker.LogError(transactionDependencyValidationException);
+
+            return transactionDependencyValidationException;
         }
 
     }
