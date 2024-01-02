@@ -2,6 +2,7 @@
 using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using System.Threading.Tasks;
 using Xunit;
@@ -58,7 +59,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             var duplicateKeyException = new DuplicateKeyException(someMessage);
 
-            var alreadyExistsTransactionException = 
+            var alreadyExistsTransactionException =
                 new AlreadyExistsTransactionException(duplicateKeyException);
 
             var expectedTransactionDependencyValidationException =
@@ -68,30 +69,75 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
                 broker.GetCurrentDateTimeOffset()).Throws(duplicateKeyException);
 
             // When
-            ValueTask<Transaction> addTransactionTask = 
+            ValueTask<Transaction> addTransactionTask =
                 this.transactionService.AddTransactionAsync(someTransaction);
 
             // Then
-            await Assert.ThrowsAsync<TransactionDependencyValidationException>(() => 
+            await Assert.ThrowsAsync<TransactionDependencyValidationException>(() =>
                 addTransactionTask.AsTask());
 
-            this.dateTimeBrokerMock.Verify(broker => 
-            broker.GetCurrentDateTimeOffset(), 
+            this.dateTimeBrokerMock.Verify(broker =>
+            broker.GetCurrentDateTimeOffset(),
             Times.Once);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
             broker.LogError(It.Is(SameExceptionAs(
-                expectedTransactionDependencyValidationException))), 
+                expectedTransactionDependencyValidationException))),
             Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
-            broker.InsertTransactionAsync(someTransaction), 
+            this.storageBrokerMock.Verify(broker =>
+            broker.InsertTransactionAsync(someTransaction),
             Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
 
+        }
+
+
+        [Fact]
+        public async Task ShouldThrowDependencyExceptionOnAddIfDatabaseUpdateErrorOccursAndLogItAsync()
+        {
+            // Given
+            Transaction someTransaction = CreateRandomTransaction();
+
+            var dbUpdateException = new DbUpdateException();
+
+            var failedTransactionStorageException = 
+                new FailedTransactionStorageException(dbUpdateException);
+
+            var expectedTransactionDependencyException = 
+                new TransactionDependencyException(failedTransactionStorageException);
+
+            this.dateTimeBrokerMock.Setup(broker => 
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(dbUpdateException);
+
+            // When
+            ValueTask<Transaction> addTransactionTask = 
+                this.transactionService.AddTransactionAsync(someTransaction);
+
+            // Then
+            await Assert.ThrowsAsync<TransactionDependencyException>(() => 
+                addTransactionTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker => 
+            broker.GetCurrentDateTimeOffset(),
+            Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+            broker.LogError(It.Is(SameExceptionAs(
+                expectedTransactionDependencyException))),
+                Times.Once);
+
+            this.storageBrokerMock.Verify(broker => 
+            broker.InsertTransactionAsync(It.IsAny<Transaction>()),
+            Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
