@@ -4,6 +4,7 @@ using EFxceptions.Models.Exceptions;
 using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using System;
 using Xeptions;
@@ -43,6 +44,13 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsTransaction);
             }
+            catch (DbUpdateException dbUpdateException)
+            {
+                var failedTransactionStorageException = 
+                    new FailedTransactionStorageException(dbUpdateException);
+
+                throw CreateAndLogDependencyException(failedTransactionStorageException);
+            }
 
         }
 
@@ -74,6 +82,16 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
             this.loggingBroker.LogError(transactionDependencyValidationException);
 
             return transactionDependencyValidationException;
+        }
+
+        private TransactionDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var transactionDependencyException = 
+                new TransactionDependencyException(exception);
+
+            this.loggingBroker.LogError(transactionDependencyException);
+
+            throw transactionDependencyException;
         }
 
     }
