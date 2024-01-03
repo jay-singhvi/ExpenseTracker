@@ -1,8 +1,5 @@
 ﻿using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Transactions.Exceptions;
-using Microsoft.Extensions.Hosting;
-using System;
-using System.Data;
 
 namespace ExpenseTracker.Core.Services.Foundations.Transactions
 {

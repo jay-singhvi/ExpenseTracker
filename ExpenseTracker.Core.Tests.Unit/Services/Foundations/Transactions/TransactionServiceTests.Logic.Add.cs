@@ -3,9 +3,6 @@ using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -32,23 +29,23 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
                     .ReturnsAsync(storageTransaction);
 
             // when
-            Transaction actualTransaction = 
+            Transaction actualTransaction =
                 await this.transactionService.AddTransactionAsync(inputTransaction);
 
             // then
             actualTransaction.Should().BeEquivalentTo(expectedTransaction);
 
-            this.dateTimeBrokerMock.Verify(broker => 
-                broker.GetCurrentDateTimeOffset(), 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
                 Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
-                broker.InsertTransactionAsync(inputTransaction), 
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertTransactionAsync(inputTransaction),
                 Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
-        } 
+        }
     }
 }

@@ -5,8 +5,6 @@ using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
-using System;
 using Xeptions;
 
 namespace ExpenseTracker.Core.Services.Foundations.Transactions
@@ -39,14 +37,14 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
             }
             catch (DuplicateKeyException duplicateKeyException)
             {
-                var alreadyExistsTransaction = 
+                var alreadyExistsTransaction =
                     new AlreadyExistsTransactionException(duplicateKeyException);
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsTransaction);
             }
             catch (DbUpdateException dbUpdateException)
             {
-                var failedTransactionStorageException = 
+                var failedTransactionStorageException =
                     new FailedTransactionStorageException(dbUpdateException);
 
                 throw CreateAndLogDependencyException(failedTransactionStorageException);
@@ -56,7 +54,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
 
         private TransactionValidationException CreateAndLogValidationException(Xeption exception)
         {
-            var transactionValidationException = 
+            var transactionValidationException =
                 new TransactionValidationException(exception);
 
             this.loggingBroker.LogError(transactionValidationException);
@@ -76,7 +74,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
 
         private TransactionDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
         {
-            var transactionDependencyValidationException = 
+            var transactionDependencyValidationException =
                 new TransactionDependencyValidationException(exception);
 
             this.loggingBroker.LogError(transactionDependencyValidationException);
@@ -86,7 +84,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
 
         private TransactionDependencyException CreateAndLogDependencyException(Xeption exception)
         {
-            var transactionDependencyException = 
+            var transactionDependencyException =
                 new TransactionDependencyException(exception);
 
             this.loggingBroker.LogError(transactionDependencyException);

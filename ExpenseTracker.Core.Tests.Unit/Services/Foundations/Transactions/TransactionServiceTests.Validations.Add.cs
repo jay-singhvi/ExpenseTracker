@@ -1,15 +1,10 @@
 ﻿using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Transactions.Exceptions;
-using Microsoft.Extensions.Hosting;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using Xunit;
-using Xunit.Sdk;
 
 namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 {
@@ -63,19 +58,19 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
                 Description = invalidText
             };
 
-            var invalidTransactionException = 
+            var invalidTransactionException =
                 new InvalidTransactionException();
 
             invalidTransactionException.AddData(
-                key: nameof(Transaction.Id), 
+                key: nameof(Transaction.Id),
                 values: "Id is required.");
 
             invalidTransactionException.AddData(
-                key: nameof(Transaction.Category), 
+                key: nameof(Transaction.Category),
                 values: "Text is required.");
 
             invalidTransactionException.AddData(
-                key: nameof(Transaction.Description), 
+                key: nameof(Transaction.Description),
                 values: "Text is required.");
 
             invalidTransactionException.AddData(
@@ -83,27 +78,27 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
                 values: "Text is required.");
 
             invalidTransactionException.AddData(
-                key: nameof(Transaction.CreatedDate), 
+                key: nameof(Transaction.CreatedDate),
                 values: "Date is required.");
 
             invalidTransactionException.AddData(
                 key: nameof(Transaction.UpdatedDate),
                 values: "Date is required.");
 
-            var expectedTransactionValidationException = 
+            var expectedTransactionValidationException =
                 new TransactionValidationException(invalidTransactionException);
 
             // When
-            ValueTask<Transaction> addTransactionTask = 
+            ValueTask<Transaction> addTransactionTask =
                 this.transactionService.AddTransactionAsync(invalidTransaction);
 
             // Then
-            await Assert.ThrowsAsync<TransactionValidationException>(() => 
+            await Assert.ThrowsAsync<TransactionValidationException>(() =>
                 addTransactionTask.AsTask());
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedTransactionValidationException))), 
+                    expectedTransactionValidationException))),
                     Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
@@ -127,25 +122,25 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
                 broker.GetCurrentDateTimeOffset())
                     .Returns(randomDateTime);
 
-            invalidTransaction.UpdatedDate = 
+            invalidTransaction.UpdatedDate =
                 invalidTransaction.CreatedDate.AddDays(randomNumber);
 
-            var invalidTransactionException = 
+            var invalidTransactionException =
                 new InvalidTransactionException();
 
             invalidTransactionException.AddData(
                 key: nameof(Transaction.UpdatedDate),
                 values: $"Date is not same as {nameof(Transaction.CreatedDate)}");
 
-            var expectedTransactionValidationException = 
+            var expectedTransactionValidationException =
                 new TransactionValidationException(invalidTransactionException);
 
             // When
-            ValueTask<Transaction> addTransactionTask = 
+            ValueTask<Transaction> addTransactionTask =
                 this.transactionService.AddTransactionAsync(invalidTransaction);
 
             // Then
-            await Assert.ThrowsAsync<TransactionValidationException>(() => 
+            await Assert.ThrowsAsync<TransactionValidationException>(() =>
                 addTransactionTask.AsTask());
 
             this.loggingBrokerMock.Verify(broker =>

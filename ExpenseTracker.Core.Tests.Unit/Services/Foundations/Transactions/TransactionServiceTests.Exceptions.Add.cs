@@ -104,25 +104,25 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             var dbUpdateException = new DbUpdateException();
 
-            var failedTransactionStorageException = 
+            var failedTransactionStorageException =
                 new FailedTransactionStorageException(dbUpdateException);
 
-            var expectedTransactionDependencyException = 
+            var expectedTransactionDependencyException =
                 new TransactionDependencyException(failedTransactionStorageException);
 
-            this.dateTimeBrokerMock.Setup(broker => 
+            this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
                     .Throws(dbUpdateException);
 
             // When
-            ValueTask<Transaction> addTransactionTask = 
+            ValueTask<Transaction> addTransactionTask =
                 this.transactionService.AddTransactionAsync(someTransaction);
 
             // Then
-            await Assert.ThrowsAsync<TransactionDependencyException>(() => 
+            await Assert.ThrowsAsync<TransactionDependencyException>(() =>
                 addTransactionTask.AsTask());
 
-            this.dateTimeBrokerMock.Verify(broker => 
+            this.dateTimeBrokerMock.Verify(broker =>
             broker.GetCurrentDateTimeOffset(),
             Times.Once);
 
@@ -131,7 +131,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
                 expectedTransactionDependencyException))),
                 Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
             broker.InsertTransactionAsync(It.IsAny<Transaction>()),
             Times.Never);
 
@@ -147,26 +147,26 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             Transaction someTransaction = CreateRandomTransaction();
             var serviceException = new Exception();
 
-            var failedTransactionServiceException = 
+            var failedTransactionServiceException =
                 new FailedTransactionServiceException(serviceException);
 
-            var expectedTransactionServiceException = 
+            var expectedTransactionServiceException =
                 new TransactionServiceException(failedTransactionServiceException);
 
-            this.dateTimeBrokerMock.Setup(broker => 
+            this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
                     .Throws(serviceException);
 
             // When
-            ValueTask<Transaction> addTransactionTask = 
+            ValueTask<Transaction> addTransactionTask =
                 this.transactionService.AddTransactionAsync(someTransaction);
 
             // Then
-            await Assert.ThrowsAsync<TransactionServiceException>(() => 
+            await Assert.ThrowsAsync<TransactionServiceException>(() =>
                 addTransactionTask.AsTask());
 
-            this.dateTimeBrokerMock.Verify(broker => 
-                broker.GetCurrentDateTimeOffset(), 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -174,8 +174,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
                     expectedTransactionServiceException))),
                     Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
-                broker.InsertTransactionAsync(It.IsAny<Transaction>()), 
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertTransactionAsync(It.IsAny<Transaction>()),
                     Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
