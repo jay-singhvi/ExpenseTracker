@@ -49,6 +49,13 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
 
                 throw CreateAndLogDependencyException(failedTransactionStorageException);
             }
+            catch (Exception exception)
+            {
+                var failedTransactionServiceException = 
+                    new FailedTransactionServiceException(exception);
+
+                throw CreateAndLogServiceException(failedTransactionServiceException);
+            }
 
         }
 
@@ -90,6 +97,16 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
             this.loggingBroker.LogError(transactionDependencyException);
 
             throw transactionDependencyException;
+        }
+
+        private TransactionServiceException CreateAndLogServiceException(Xeption exception)
+        {
+            var transactionServiceException = 
+                new TransactionServiceException(exception);
+
+            this.loggingBroker.LogError(transactionServiceException);
+
+            throw transactionServiceException;
         }
 
     }
