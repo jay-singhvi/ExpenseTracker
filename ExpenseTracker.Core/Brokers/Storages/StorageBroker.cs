@@ -1,5 +1,6 @@
 ﻿using EFxceptions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace ExpenseTracker.Core.Brokers.Storages
 {

@@ -1,4 +1,6 @@
-﻿namespace ExpenseTracker.Core.Brokers.Loggings
+﻿using System;
+
+namespace ExpenseTracker.Core.Brokers.Loggings
 {
     public interface ILoggingBroker
     {

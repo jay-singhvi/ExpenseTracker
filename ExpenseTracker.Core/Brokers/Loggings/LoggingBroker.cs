@@ -1,4 +1,7 @@
-﻿namespace ExpenseTracker.Core.Brokers.Loggings
+﻿using Microsoft.Extensions.Logging;
+using System;
+
+namespace ExpenseTracker.Core.Brokers.Loggings
 {
     public class LoggingBroker : ILoggingBroker
     {

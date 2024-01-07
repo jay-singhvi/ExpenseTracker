@@ -30,15 +30,13 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             this.transactionService = new TransactionService(storageBroker: this.storageBrokerMock.Object,
                 loggingBroker: this.loggingBrokerMock.Object,
                 dateTimeBroker: this.dateTimeBrokerMock.Object);
-
-
         }
 
         private static Transaction CreateRandomTransaction(DateTimeOffset dates) =>
-            CreatePostFiller(dates: dates).Create();
+            CreateTransactionFiller(dates: dates).Create();
 
         private static Transaction CreateRandomTransaction() =>
-            CreatePostFiller(dates: GetRandomDateTimeOffset()).Create();
+            CreateTransactionFiller(dates: GetRandomDateTimeOffset()).Create();
 
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
@@ -46,11 +44,12 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
         private static SqlException GetSqlException() =>
             (SqlException)RuntimeHelpers.GetUninitializedObject(typeof(SqlException));
 
-        private static Filler<Transaction> CreatePostFiller(DateTimeOffset dates)
+        private static Filler<Transaction> CreateTransactionFiller(DateTimeOffset dates)
         {
             var filler = new Filler<Transaction>();
             filler.Setup()
-                   .OnType<DateTimeOffset>().Use(dates);
+                   .OnType<DateTimeOffset>().Use(dates)
+                   .OnProperty(transaction => transaction.User).IgnoreIt();
 
             return filler;
         }

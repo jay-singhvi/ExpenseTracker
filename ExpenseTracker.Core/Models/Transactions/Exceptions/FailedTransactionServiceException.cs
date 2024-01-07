@@ -1,4 +1,5 @@
-﻿using Xeptions;
+﻿using System;
+using Xeptions;
 
 namespace ExpenseTracker.Core.Models.Transactions.Exceptions
 {
