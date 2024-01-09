@@ -1,6 +1,4 @@
-﻿
-
-using EFxceptions.Models.Exceptions;
+﻿using EFxceptions.Models.Exceptions;
 using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using Microsoft.Data.SqlClient;
@@ -54,7 +52,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
             }
             catch (Exception exception)
             {
-                var failedTransactionServiceException = 
+                var failedTransactionServiceException =
                     new FailedTransactionServiceException(exception);
 
                 throw CreateAndLogServiceException(failedTransactionServiceException);
@@ -104,7 +102,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
 
         private TransactionServiceException CreateAndLogServiceException(Xeption exception)
         {
-            var transactionServiceException = 
+            var transactionServiceException =
                 new TransactionServiceException(exception);
 
             this.loggingBroker.LogError(transactionServiceException);

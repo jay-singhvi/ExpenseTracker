@@ -1,5 +1,8 @@
 
+using ExpenseTracker.Core.Brokers.DateTimes;
+using ExpenseTracker.Core.Brokers.Loggings;
 using ExpenseTracker.Core.Brokers.Storages;
+using ExpenseTracker.Core.Brokers.UserManagers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,7 +18,11 @@ namespace ExpenseTracker.Core
             // Add services to the container.
             builder.Services.AddControllers();
             builder.Services.AddDbContext<StorageBroker>();
-            builder.Services.AddTransient<IStorageBroker, StorageBroker>();
+            builder.Services.AddScoped<IUserManagerBroker, UserManagerBroker>();
+            builder.Services.AddScoped<IStorageBroker, StorageBroker>();
+            builder.Services.AddTransient<ILoggingBroker, LoggingBroker>();
+            builder.Services.AddTransient<IDateTimeBroker, DateTimeBroker>();
+
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

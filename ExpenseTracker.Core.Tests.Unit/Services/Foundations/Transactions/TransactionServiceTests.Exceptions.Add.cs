@@ -1,4 +1,5 @@
-﻿using EFxceptions.Models.Exceptions;
+﻿using EFxceptions.Identity;
+using EFxceptions.Models.Exceptions;
 using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using Microsoft.Data.SqlClient;
