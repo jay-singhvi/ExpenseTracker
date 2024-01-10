@@ -54,6 +54,12 @@ namespace ExpenseTracker.Core.Brokers.Storages
             optionsBuilder.UseSqlServer(connectionString);
         }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            SetTransactionReferences(builder);
+        }
+
         public override void Dispose() { }
     }
 }
