@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExpenseTracker.Core.Services.Foundations.Users
 {
-    public class UserService : IUserService
+    public partial class UserService : IUserService
     {
         private readonly IDateTimeBroker dateTimeBroker;
         private readonly ILoggingBroker loggingBroker;
@@ -21,9 +21,10 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             this.loggingBroker = loggingBroker;            
         }
 
-        public async ValueTask<User> RegisterUserAsync(User user, string password)
-        {
-            return await this.userManagerBroker.InsertUserAsync(user, password);
-        }
+        public ValueTask<User> RegisterUserAsync(User user, string password) =>
+            TryCatch(async () => {
+                ValidateUserOnAdd(user);
+                return await this.userManagerBroker.InsertUserAsync(user, password);
+            });
     }
 }
