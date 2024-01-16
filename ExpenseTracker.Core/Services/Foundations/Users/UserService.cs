@@ -21,9 +21,9 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             this.loggingBroker = loggingBroker;            
         }
 
-        public ValueTask<User> RegisterUserAsync(User user, string password)
+        public async ValueTask<User> RegisterUserAsync(User user, string password)
         {
-            throw new System.NotImplementedException();
+            return await this.userManagerBroker.InsertUserAsync(user, password);
         }
     }
 }
