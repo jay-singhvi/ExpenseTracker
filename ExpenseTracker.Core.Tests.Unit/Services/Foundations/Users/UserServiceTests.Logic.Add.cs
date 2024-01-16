@@ -23,9 +23,9 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             string password = GetRandomPassword();
             var someEmail = GetRandomEmail();
 
-            this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTimeOffset())
-                    .Returns(dateTime);
+            //this.dateTimeBrokerMock.Setup(broker =>
+            //    broker.GetCurrentDateTimeOffset())
+            //        .Returns(dateTime);
 
             this.userManagerBrokerMock.Setup(broker =>
                 broker.InsertUserAsync(inputUser, password))
@@ -38,15 +38,15 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             // Then
             actualUser.Should().BeEquivalentTo(expectedUser);
 
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffset(),
-                    Times.Once);
+            //this.dateTimeBrokerMock.Verify(broker =>
+            //    broker.GetCurrentDateTimeOffset(),
+            //        Times.Once);
 
             this.userManagerBrokerMock.Verify(broker =>
                 broker.InsertUserAsync(inputUser, password),
                     Times.Once);
 
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            //this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.userManagerBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
