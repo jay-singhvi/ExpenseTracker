@@ -5,7 +5,9 @@ using ExpenseTracker.Core.Models.Users;
 using ExpenseTracker.Core.Services.Foundations.Users;
 using Moq;
 using System;
+using System.Linq.Expressions;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 {
@@ -60,6 +62,9 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
         private static string GetRandomNames(NameStyle nameStyle) =>
             new RealNames(nameStyle).GetValue();
+
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
 
     }
 }
