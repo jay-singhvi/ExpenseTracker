@@ -50,6 +50,22 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             return user;
         }
 
+        private static User CreateRandomUser()
+        {
+            var user = new User
+            {
+                Id = Guid.NewGuid(),
+                UserName = GetRandomEmail(),
+                PhoneNumber = GetRandomPhoneNumber(),
+                FirstName = GetRandomNames(NameStyle.FirstName),
+                LastName = GetRandomNames(NameStyle.LastName),
+                CreatedDate = DateTimeOffset.UtcNow,
+                UpdatedDate = DateTimeOffset.UtcNow
+            };
+
+            return user;
+        }
+
         private static string GetRandomPassword() =>
             new MnemonicString(1, 8, 20).GetValue();
 
