@@ -82,5 +82,43 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.userManagerBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public async Task ShouldThrowValidationExceptionOnAddIfUserNameIsInvalidAndLogItAsync(string invalidUserUserName)
+        {
+            // Given
+            User randomUser = CreateRandomUser();
+            User invalidUser = randomUser;
+            invalidUser.UserName = invalidUserUserName;
+            string password = GetRandomPassword();
+
+            var invalidUserException = 
+                new InvalidUserException(
+                    parameterName: nameof(invalidUser.UserName),
+                    parameterValue: password);
+
+            var expectedUserValidationException = 
+                new UserValidationException(invalidUserException);
+
+            // When
+            ValueTask<User> addUserTask = 
+                this.userService.RegisterUserAsync(invalidUser, password);
+
+            // Then
+            await Assert.ThrowsAsync<UserValidationException>(() => 
+                addUserTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker => 
+                broker.LogError(It.Is(
+                    SameExceptionAs(expectedUserValidationException))),
+                    Times.Once);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.userManagerBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
