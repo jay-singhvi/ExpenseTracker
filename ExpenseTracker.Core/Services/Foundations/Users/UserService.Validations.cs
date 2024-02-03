@@ -10,6 +10,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
         {
             ValidateUserIsNotNull(user);
             ValidateUserIdIsNull(user.Id);
+            ValidateUserFields(user);
         }
 
         private void ValidateUserIsNotNull(User user)
@@ -29,5 +30,17 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
                     parameterValue: userId);
             }
         }
+
+        private void ValidateUserFields(User user)
+        {
+            if (IsInvalid(user.UserName))
+            {
+                throw new InvalidUserException(
+                    parameterName: nameof(User.UserName), 
+                    parameterValue: user.UserName);
+            }
+        }
+
+        private bool IsInvalid(string input) => string.IsNullOrWhiteSpace(input);
     }
 }

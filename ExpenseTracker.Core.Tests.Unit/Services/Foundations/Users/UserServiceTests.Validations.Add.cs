@@ -97,8 +97,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             var invalidUserException = 
                 new InvalidUserException(
-                    parameterName: nameof(invalidUser.UserName),
-                    parameterValue: password);
+                    parameterName: nameof(User.UserName),
+                    parameterValue: invalidUser.UserName);
 
             var expectedUserValidationException = 
                 new UserValidationException(invalidUserException);
