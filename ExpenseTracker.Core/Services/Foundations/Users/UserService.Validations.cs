@@ -13,6 +13,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             ValidateUserFields(user);
             ValidateInvalidAuditFields(user);
             ValidateAuditFieldsDataOnCreate(user);
+            ValidateCreatedDateIsRecent(user);
         }
 
         private void ValidateUserIsNotNull(User user)
@@ -90,8 +91,29 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             }
         }
 
+        private void ValidateCreatedDateIsRecent(User user)
+        {
+            if (IsDateNotRecent(user.CreatedDate))
+            {
+                throw new InvalidUserException(
+                    parameterName: nameof(User.CreatedDate), 
+                    parameterValue: user.CreatedDate);
+            }
+        }
+
         private static bool IsInvalid(string input) => string.IsNullOrWhiteSpace(input);
 
         private static bool IsInvalid(DateTimeOffset input) => input == default;
+
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime =
+                this.dateTimeBroker.GetCurrentDateTimeOffset();
+
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+            TimeSpan oneMinute = TimeSpan.FromMinutes(1);
+
+            return timeDifference.Duration() > oneMinute;
+        }
     }
 }

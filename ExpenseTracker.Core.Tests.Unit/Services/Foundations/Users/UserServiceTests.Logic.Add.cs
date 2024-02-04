@@ -23,9 +23,9 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             string password = GetRandomPassword();
             var someEmail = GetRandomEmail();
 
-            //this.dateTimeBrokerMock.Setup(broker =>
-            //    broker.GetCurrentDateTimeOffset())
-            //        .Returns(dateTime);
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Returns(dateTime);
 
             this.userManagerBrokerMock.Setup(broker =>
                 broker.InsertUserAsync(inputUser, password))
