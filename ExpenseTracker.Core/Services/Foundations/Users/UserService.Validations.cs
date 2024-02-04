@@ -72,10 +72,10 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
                     throw new InvalidUserException(
                     parameterName: nameof(User.CreatedDate),
                     parameterValue: user.CreatedDate);
-                //case { } when IsInvalid(user.UpdatedDate):
-                //    throw new InvalidUserException(
-                //    parameterName: nameof(User.UpdatedDate),
-                //    parameterValue: user.UpdatedDate);
+                case { } when IsInvalid(user.UpdatedDate):
+                    throw new InvalidUserException(
+                    parameterName: nameof(User.UpdatedDate),
+                    parameterValue: user.UpdatedDate);
             }
         }
 
