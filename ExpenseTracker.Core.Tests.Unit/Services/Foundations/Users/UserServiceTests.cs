@@ -8,6 +8,7 @@ using System;
 using System.Linq.Expressions;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 {
@@ -82,5 +83,19 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
 
+        public static TheoryData InvalidMinuteCases()
+        {
+            int randomMoreThanMinuteFromNow = GetRandomNumber();
+            int randomMoreThanMinuteBeforeNow = GetNegativeRandomNumber();
+
+            return new TheoryData<int>
+            {
+                randomMoreThanMinuteFromNow,
+                randomMoreThanMinuteBeforeNow
+            };
+        }
+
+        private static int GetRandomNumber() => new IntRange(min: 2, max: 90).GetValue();
+        private static int GetNegativeRandomNumber() => -1 * GetRandomNumber();
     }
 }
