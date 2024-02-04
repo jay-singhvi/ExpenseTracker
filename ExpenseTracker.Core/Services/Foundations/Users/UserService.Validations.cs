@@ -47,6 +47,13 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
                     parameterValue: user.FirstName);
             }
 
+            if (IsInvalid(user.LastName))
+            {
+                throw new InvalidUserException(
+                    parameterName: nameof(User.LastName),
+                    parameterValue: user.LastName);
+            }
+
         }
 
         private bool IsInvalid(string input) => string.IsNullOrWhiteSpace(input);
