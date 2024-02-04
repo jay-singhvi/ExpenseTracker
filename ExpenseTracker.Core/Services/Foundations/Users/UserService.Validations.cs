@@ -40,12 +40,12 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
                     parameterValue: user.UserName);
             }
 
-            //if (IsInvalid(user.FirstName))
-            //{
-            //    throw new InvalidUserException(
-            //        parameterName: nameof(User.FirstName), 
-            //        parameterValue: user.FirstName);
-            //}
+            if (IsInvalid(user.FirstName))
+            {
+                throw new InvalidUserException(
+                    parameterName: nameof(User.FirstName),
+                    parameterValue: user.FirstName);
+            }
 
         }
 
