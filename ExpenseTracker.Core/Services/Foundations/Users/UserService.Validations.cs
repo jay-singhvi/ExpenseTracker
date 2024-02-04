@@ -12,6 +12,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             ValidateUserIdIsNull(user.Id);
             ValidateUserFields(user);
             ValidateInvalidAuditFields(user);
+            ValidateAuditFieldsDataOnCreate(user);
         }
 
         private void ValidateUserIsNotNull(User user)
@@ -74,6 +75,16 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
                     parameterValue: user.CreatedDate);
                 case { } when IsInvalid(user.UpdatedDate):
                     throw new InvalidUserException(
+                    parameterName: nameof(User.UpdatedDate),
+                    parameterValue: user.UpdatedDate);
+            }
+        }
+
+        private static void ValidateAuditFieldsDataOnCreate(User user)
+        {
+            if(user.UpdatedDate != user.CreatedDate)
+            {
+                throw new InvalidUserException(
                     parameterName: nameof(User.UpdatedDate),
                     parameterValue: user.UpdatedDate);
             }
