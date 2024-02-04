@@ -11,6 +11,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             ValidateUserIsNotNull(user);
             ValidateUserIdIsNull(user.Id);
             ValidateUserFields(user);
+            ValidateInvalidAuditFields(user);
         }
 
         private void ValidateUserIsNotNull(User user)
@@ -54,8 +55,32 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
                     parameterValue: user.LastName);
             }
 
+            if (IsInvalid(user.CreatedDate))
+            {
+                throw new InvalidUserException(
+                    parameterName: nameof(User.CreatedDate),
+                    parameterValue: user.CreatedDate);
+            }
+
         }
 
-        private bool IsInvalid(string input) => string.IsNullOrWhiteSpace(input);
+        private static void ValidateInvalidAuditFields(User user)
+        {
+            switch (user)
+            {
+                case { } when IsInvalid(user.CreatedDate):
+                    throw new InvalidUserException(
+                    parameterName: nameof(User.CreatedDate),
+                    parameterValue: user.CreatedDate);
+                //case { } when IsInvalid(user.UpdatedDate):
+                //    throw new InvalidUserException(
+                //    parameterName: nameof(User.UpdatedDate),
+                //    parameterValue: user.UpdatedDate);
+            }
+        }
+
+        private static bool IsInvalid(string input) => string.IsNullOrWhiteSpace(input);
+
+        private static bool IsInvalid(DateTimeOffset input) => input == default;
     }
 }
