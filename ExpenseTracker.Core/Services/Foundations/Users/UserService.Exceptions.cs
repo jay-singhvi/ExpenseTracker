@@ -1,4 +1,5 @@
-﻿using ExpenseTracker.Core.Models.Transactions.Exceptions;
+﻿using EFxceptions.Models.Exceptions;
+using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using ExpenseTracker.Core.Models.Users;
 using ExpenseTracker.Core.Models.Users.Exceptions;
 using System.Threading.Tasks;
@@ -24,6 +25,13 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             {
                 throw CreateAndLogValidationException(invalidUserException);
             }
+            //catch (DuplicateKeyException duplicateKeyException)
+            //{
+            //    var alreadyExistsUserException = 
+            //        new AlreadyExistsUserException(duplicateKeyException);
+
+            //    throw CreateAndLogDependencyValidationException(alreadyExistsUserException);
+            //}
         }
 
         private UserValidationException CreateAndLogValidationException(Xeption exception)
@@ -34,6 +42,16 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             this.loggingBroker.LogError(userValidationException);
 
             return userValidationException;
+        }
+
+        private UserDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
+        {
+            var userDependencyValidationException = 
+                new UserDependencyValidationException(exception);
+
+            this.loggingBroker.LogError(userDependencyValidationException);
+
+            return userDependencyValidationException;
         }
     }
 }

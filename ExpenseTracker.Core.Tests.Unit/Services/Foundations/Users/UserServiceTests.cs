@@ -53,6 +53,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
         private static User CreateRandomUser()
         {
+            DateTimeOffset dates = GetRandomDateTimeOffset();
             var user = new User
             {
                 Id = Guid.NewGuid(),
@@ -60,8 +61,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                 PhoneNumber = GetRandomPhoneNumber(),
                 FirstName = GetRandomNames(NameStyle.FirstName),
                 LastName = GetRandomNames(NameStyle.LastName),
-                CreatedDate = DateTimeOffset.UtcNow,
-                UpdatedDate = DateTimeOffset.UtcNow
+                CreatedDate = dates,
+                UpdatedDate = dates
             };
 
             return user;
@@ -97,5 +98,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
         private static int GetRandomNumber() => new IntRange(min: 2, max: 90).GetValue();
         private static int GetNegativeRandomNumber() => -1 * GetRandomNumber();
+
+        private static string GetRandomMessage() => 
+            new MnemonicString().GetValue();
     }
 }

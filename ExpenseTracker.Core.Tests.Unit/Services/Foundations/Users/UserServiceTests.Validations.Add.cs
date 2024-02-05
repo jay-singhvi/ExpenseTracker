@@ -1,4 +1,5 @@
-﻿using ExpenseTracker.Core.Models.Users;
+﻿using EFxceptions.Models.Exceptions;
+using ExpenseTracker.Core.Models.Users;
 using ExpenseTracker.Core.Models.Users.Exceptions;
 using Moq;
 using System;
@@ -370,5 +371,6 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             this.userManagerBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
     }
 }
