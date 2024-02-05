@@ -25,13 +25,13 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             {
                 throw CreateAndLogValidationException(invalidUserException);
             }
-            //catch (DuplicateKeyException duplicateKeyException)
-            //{
-            //    var alreadyExistsUserException = 
-            //        new AlreadyExistsUserException(duplicateKeyException);
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var alreadyExistsUserException =
+                    new AlreadyExistsUserException(duplicateKeyException);
 
-            //    throw CreateAndLogDependencyValidationException(alreadyExistsUserException);
-            //}
+                throw CreateAndLogDependencyValidationException(alreadyExistsUserException);
+            }
         }
 
         private UserValidationException CreateAndLogValidationException(Xeption exception)
