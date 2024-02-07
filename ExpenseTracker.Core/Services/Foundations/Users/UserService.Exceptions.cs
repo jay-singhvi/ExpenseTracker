@@ -2,6 +2,7 @@
 using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using ExpenseTracker.Core.Models.Users;
 using ExpenseTracker.Core.Models.Users.Exceptions;
+using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
 using Xeptions;
 
@@ -25,6 +26,14 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             {
                 throw CreateAndLogValidationException(invalidUserException);
             }
+            catch (SqlException sqlException)
+            {
+                var failedUserStorageException = 
+                    new FailedUserStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedUserStorageException);
+            }
+
             catch (DuplicateKeyException duplicateKeyException)
             {
                 var alreadyExistsUserException =
@@ -52,6 +61,16 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             this.loggingBroker.LogError(userDependencyValidationException);
 
             return userDependencyValidationException;
+        }
+
+        private UserDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
+        {
+            var userDependencyException = 
+                new UserDependencyException(exception);
+
+            this.loggingBroker.LogError(userDependencyException);
+
+            return userDependencyException;
         }
     }
 }
