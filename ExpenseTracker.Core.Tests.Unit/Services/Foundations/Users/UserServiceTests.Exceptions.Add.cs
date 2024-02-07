@@ -15,6 +15,49 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
     public partial class UserServiceTests
     {
         [Fact]
+        public async void ShouldThrowCriticalDependencyExceptionOnAddIfSqlErrorOccursAndLogItAsync()
+        {
+            // Given
+            User randomUser = CreateRandomUser();
+            User inputUser = randomUser;
+            string password = GetRandomPassword();
+
+            Exception sqlException = GetSqlException();
+
+            var failedUserStorageException = 
+                new FailedUserStorageException(sqlException);
+
+            var expectedUserDependencyException = 
+                new UserDependencyException(failedUserStorageException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(sqlException);
+
+            // When
+            ValueTask<User> addUserTask = 
+                this.userService.RegisterUserAsync(inputUser, password);
+
+            UserDependencyException actualUserDependencyException =
+                await Assert.ThrowsAsync<UserDependencyException>(() => addUserTask.AsTask());
+
+            // Then
+            actualUserDependencyException.Should().BeEquivalentTo(expectedUserDependencyException);
+
+            this.dateTimeBrokerMock.Verify(broker => 
+                broker.GetCurrentDateTimeOffset(), 
+                    Times.Once);
+
+            this.userManagerBrokerMock.Verify(broker => 
+                broker.InsertUserAsync(It.IsAny<User>(),password), 
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.userManagerBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void ShouldThrowDependencyValidationExceptionOnAddIfUserAlreadyExistsAndLogItAsync()
         {
             // Given

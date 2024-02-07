@@ -3,9 +3,11 @@ using ExpenseTracker.Core.Brokers.Loggings;
 using ExpenseTracker.Core.Brokers.UserManagers;
 using ExpenseTracker.Core.Models.Users;
 using ExpenseTracker.Core.Services.Foundations.Users;
+using Microsoft.Data.SqlClient;
 using Moq;
 using System;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using Tynamix.ObjectFiller;
 using Xeptions;
 using Xunit;
@@ -95,6 +97,9 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                 randomMoreThanMinuteBeforeNow
             };
         }
+
+        private static SqlException GetSqlException() => 
+            (SqlException)RuntimeHelpers.GetUninitializedObject(typeof(SqlException));
 
         private static int GetRandomNumber() => new IntRange(min: 2, max: 90).GetValue();
         private static int GetNegativeRandomNumber() => -1 * GetRandomNumber();
