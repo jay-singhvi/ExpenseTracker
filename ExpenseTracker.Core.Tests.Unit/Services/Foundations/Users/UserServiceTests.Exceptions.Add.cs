@@ -109,5 +109,52 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.userManagerBrokerMock.VerifyNoOtherCalls();            
         }
+
+        [Fact]
+        public async void ShouldThrowDependencyValidationExceptionOnAddIfReferenceErrorOccursAndLogItAsync()
+        {
+            // Given
+            User someUser = CreateRandomUser();
+            string password = GetRandomPassword();
+            string randomMessage = GetRandomMessage();
+            string exceptionMessage = randomMessage;
+
+            var foreignKeyConstraintConflictException = 
+                new ForeignKeyConstraintConflictException(exceptionMessage);
+
+            var invalidUserReferenceException = 
+                new InvalidUserReferenceException(foreignKeyConstraintConflictException);
+
+            var expectedUserDependencyValidationException = 
+                new UserDependencyValidationException(invalidUserReferenceException);
+
+            this.dateTimeBrokerMock.Setup(broker => 
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(foreignKeyConstraintConflictException);
+
+            // When
+            ValueTask<User> addUserTask = 
+                this.userService.RegisterUserAsync(someUser, password);
+
+            var actualUserDependencyValidation = 
+                await Assert.ThrowsAsync<UserDependencyValidationException>(() => 
+                    addUserTask.AsTask());
+            // Then
+            actualUserDependencyValidation.Should().BeEquivalentTo(It.Is(SameExceptionAs(
+                expectedUserDependencyValidationException)));
+
+            this.dateTimeBrokerMock.Verify(broker => 
+                broker.GetCurrentDateTimeOffset(), 
+                    Times.Once());
+
+            this.userManagerBrokerMock.Verify(broker => 
+                broker.InsertUserAsync(It.IsAny<User>(), password), 
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.userManagerBrokerMock.VerifyNoOtherCalls();
+
+        }
     }
 }
