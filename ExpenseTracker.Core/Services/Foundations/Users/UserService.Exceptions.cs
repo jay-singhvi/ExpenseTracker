@@ -4,6 +4,7 @@ using ExpenseTracker.Core.Models.Users;
 using ExpenseTracker.Core.Models.Users.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading.Tasks;
 using Xeptions;
 
@@ -56,6 +57,13 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
 
                 throw CreateAndLogDependencyValidationException(failedUserStorageException);
             }
+            catch (Exception exception)
+            {
+                var failedUserServiceException = 
+                    new FailedUserServiceException(exception);
+
+                throw CreateAndLogUserServiceException(failedUserServiceException);
+            }
         }
 
         private UserValidationException CreateAndLogValidationException(Xeption exception)
@@ -86,6 +94,16 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             this.loggingBroker.LogError(userDependencyException);
 
             return userDependencyException;
+        }
+
+        private UserServiceException CreateAndLogUserServiceException(Xeption exception)
+        {
+            var userServiceException = 
+                new UserServiceException(exception);
+
+            this.loggingBroker.LogError(userServiceException);
+
+            return userServiceException;
         }
     }
 }
