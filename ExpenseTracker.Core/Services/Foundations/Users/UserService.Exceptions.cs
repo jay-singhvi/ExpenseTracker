@@ -3,6 +3,7 @@ using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using ExpenseTracker.Core.Models.Users;
 using ExpenseTracker.Core.Models.Users.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Xeptions;
 
@@ -47,6 +48,13 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
                     new InvalidUserReferenceException(foreignKeyConstraintConflictException);
 
                 throw CreateAndLogDependencyValidationException(invalidUserReferenceException);
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                var failedUserStorageException = 
+                    new FailedUserStorageException(dbUpdateException);
+
+                throw CreateAndLogDependencyValidationException(failedUserStorageException);
             }
         }
 
