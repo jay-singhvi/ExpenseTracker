@@ -136,16 +136,22 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             ValueTask<User> addUserTask = 
                 this.userService.RegisterUserAsync(someUser, password);
 
-            var actualUserDependencyValidation = 
-                await Assert.ThrowsAsync<UserDependencyValidationException>(() => 
-                    addUserTask.AsTask());
+            var actualUserDependencyValidationException = 
+                await Assert.ThrowsAsync<UserDependencyValidationException>(
+                    addUserTask.AsTask);
+
             // Then
-            actualUserDependencyValidation.Should().BeEquivalentTo(It.Is(SameExceptionAs(
-                expectedUserDependencyValidationException)));
+            actualUserDependencyValidationException.Should().BeEquivalentTo(
+                expectedUserDependencyValidationException);
 
             this.dateTimeBrokerMock.Verify(broker => 
                 broker.GetCurrentDateTimeOffset(), 
                     Times.Once());
+
+            this.loggingBrokerMock.Verify(broker => 
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserDependencyValidationException))), 
+                        Times.Once);
 
             this.userManagerBrokerMock.Verify(broker => 
                 broker.InsertUserAsync(It.IsAny<User>(), password), 
@@ -154,6 +160,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.userManagerBrokerMock.VerifyNoOtherCalls();
+
 
         }
     }

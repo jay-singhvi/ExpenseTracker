@@ -41,6 +41,13 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsUserException);
             }
+            //catch (ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
+            //{
+            //    var invalidUserReferenceException = 
+            //        new InvalidUserReferenceException(foreignKeyConstraintConflictException);
+
+            //    throw CreateAndLogDependencyValidationException(invalidUserReferenceException);
+            //}
         }
 
         private UserValidationException CreateAndLogValidationException(Xeption exception)
