@@ -1,5 +1,6 @@
 ﻿using ExpenseTracker.Core.Models.Users;
 using Microsoft.AspNetCore.Identity;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ExpenseTracker.Core.Brokers.UserManagers
@@ -20,5 +21,9 @@ namespace ExpenseTracker.Core.Brokers.UserManagers
 
             return user;
         }
+
+        public IQueryable<User> SelectAllUsers() =>
+            this.userManager.Users;
+
     }
 }

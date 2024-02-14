@@ -6,11 +6,13 @@ using ExpenseTracker.Core.Services.Foundations.Users;
 using Microsoft.Data.SqlClient;
 using Moq;
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using Tynamix.ObjectFiller;
 using Xeptions;
 using Xunit;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 {
@@ -106,5 +108,23 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
         private static string GetRandomMessage() => 
             new MnemonicString().GetValue();
+
+        private static IQueryable<User> CreateRandomUsers()
+        {
+            return CreateUserFiller(dates: GetRandomDateTimeOffset())
+                    .Create(count: GetRandomNumber())
+                    .AsQueryable();
+        }
+
+        private static Filler<User> CreateUserFiller(DateTimeOffset dates)
+        {
+            var filler = new Filler<User>();
+
+            filler.Setup()
+                .OnType<DateTimeOffset>().Use(dates)
+                .OnProperty(user => user.LockoutEnd).Use(dates);                          
+
+            return filler;
+        }
     }
 }

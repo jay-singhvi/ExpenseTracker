@@ -2,6 +2,7 @@
 using ExpenseTracker.Core.Brokers.Loggings;
 using ExpenseTracker.Core.Brokers.UserManagers;
 using ExpenseTracker.Core.Models.Users;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ExpenseTracker.Core.Services.Foundations.Users
@@ -26,5 +27,10 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
                 ValidateUserOnAdd(user);
                 return await this.userManagerBroker.InsertUserAsync(user, password);
             });
+
+        public IQueryable<User> RetrieveAllUsersAsync()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
