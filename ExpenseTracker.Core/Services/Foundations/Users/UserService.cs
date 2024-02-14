@@ -30,7 +30,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
 
         public IQueryable<User> RetrieveAllUsersAsync()
         {
-            throw new System.NotImplementedException();
+            return this.userManagerBroker.SelectAllUsers();
         }
     }
 }
