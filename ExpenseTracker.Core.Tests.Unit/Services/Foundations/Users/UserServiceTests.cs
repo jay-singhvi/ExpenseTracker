@@ -39,37 +39,14 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
 
-        private static User CreateRandomUser(DateTimeOffset dates)
-        {
-            var user = new User
-            {
-                Id = Guid.NewGuid(),
-                UserName = GetRandomEmail(),
-                PhoneNumber = GetRandomPhoneNumber(),
-                FirstName = GetRandomNames(NameStyle.FirstName),
-                LastName = GetRandomNames(NameStyle.LastName),
-                CreatedDate = dates,
-                UpdatedDate = dates
-            };
-
-            return user;
-        }
+        private static User CreateRandomUser(DateTimeOffset dates) => 
+            CreateUserFiller(dates).Create();
 
         private static User CreateRandomUser()
         {
             DateTimeOffset dates = GetRandomDateTimeOffset();
-            var user = new User
-            {
-                Id = Guid.NewGuid(),
-                UserName = GetRandomEmail(),
-                PhoneNumber = GetRandomPhoneNumber(),
-                FirstName = GetRandomNames(NameStyle.FirstName),
-                LastName = GetRandomNames(NameStyle.LastName),
-                CreatedDate = dates,
-                UpdatedDate = dates
-            };
-
-            return user;
+            
+            return CreateUserFiller(dates).Create();
         }
 
         private static string GetRandomPassword() =>
