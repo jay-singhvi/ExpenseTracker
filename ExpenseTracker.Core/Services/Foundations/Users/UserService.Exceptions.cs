@@ -5,20 +5,23 @@ using ExpenseTracker.Core.Models.Users.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xeptions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ExpenseTracker.Core.Services.Foundations.Users
 {
     public partial class UserService
     {
-        private delegate ValueTask<User> ReturningPostFunction();
+        private delegate ValueTask<User> ReturningUserFunction();
+        private delegate IQueryable<User> ReturningUsersFunction();
 
-        private async ValueTask<User> TryCatch(ReturningPostFunction returningPostFunction)
+        private async ValueTask<User> TryCatch(ReturningUserFunction returningUserFunction)
         {
             try
             {
-                return await returningPostFunction();
+                return await returningUserFunction();
             }
             catch (NullUserException nullUserException)
             {
@@ -66,6 +69,21 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             }
         }
 
+        private IQueryable<User> TryCatch(ReturningUsersFunction returningUsersFunction)
+        {
+            try
+            {
+                return returningUsersFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedUserStorageException = 
+                    new FailedUserStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedUserStorageException);
+            }
+        }
+
         private UserValidationException CreateAndLogValidationException(Xeption exception)
         {
             var userValidationException = 
@@ -91,7 +109,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             var userDependencyException = 
                 new UserDependencyException(exception);
 
-            this.loggingBroker.LogError(userDependencyException);
+            this.loggingBroker.LogCritical(userDependencyException);
 
             return userDependencyException;
         }

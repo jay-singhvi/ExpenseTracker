@@ -28,9 +28,10 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
                 return await this.userManagerBroker.InsertUserAsync(user, password);
             });
 
-        public IQueryable<User> RetrieveAllUsersAsync()
-        {
-            return this.userManagerBroker.SelectAllUsers();
-        }
+        public IQueryable<User> RetrieveAllUsersAsync() =>
+            TryCatch(() =>
+            {
+                return this.userManagerBroker.SelectAllUsers();
+            });
     }
 }
