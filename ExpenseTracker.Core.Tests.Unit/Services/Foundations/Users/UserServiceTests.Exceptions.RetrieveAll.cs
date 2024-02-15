@@ -63,8 +63,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             var failedUserStorageException = 
                 new FailedUserStorageException(serviceException);
 
-            var expectedUserDependencyException = 
-                new UserDependencyException(failedUserStorageException);
+            var expectedUserServiceException = 
+                new UserServiceException(failedUserStorageException);
 
             this.userManagerBrokerMock.Setup(broker => 
                 broker.SelectAllUsers())
@@ -74,11 +74,11 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             Action retrieveAllUsers = () => 
                 this.userService.RetrieveAllUsers();
 
-            var actualUserDependencyException = 
-                Assert.Throws<UserDependencyException>(retrieveAllUsers);
+            var actualUserServiceException = 
+                Assert.Throws<UserServiceException>(retrieveAllUsers);
 
             // Then
-            actualUserDependencyException.Should().BeEquivalentTo(expectedUserDependencyException);
+            actualUserServiceException.Should().BeEquivalentTo(expectedUserServiceException);
 
             this.userManagerBrokerMock.Verify(broker => 
                 broker.SelectAllUsers(),
@@ -86,7 +86,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             this.loggingBrokerMock.Verify(broker => 
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedUserDependencyException))), 
+                    expectedUserServiceException))), 
                         Times.Once);
 
             this.userManagerBrokerMock.VerifyNoOtherCalls();

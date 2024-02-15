@@ -82,6 +82,13 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
 
                 throw CreateAndLogCriticalDependencyException(failedUserStorageException);
             }
+            //catch (Exception exception)
+            //{
+            //    var failedUserStorageException = 
+            //        new FailedUserStorageException(exception);
+
+            //    throw CreateAndLogUserServiceException(failedUserStorageException);
+            //}
         }
 
         private UserValidationException CreateAndLogValidationException(Xeption exception)
