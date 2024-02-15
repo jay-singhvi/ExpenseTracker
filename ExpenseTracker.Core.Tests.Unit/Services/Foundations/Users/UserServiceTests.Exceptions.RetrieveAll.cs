@@ -15,13 +15,9 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
     public partial class UserServiceTests
     {
         [Fact]
-        public void ShouldThrowCriticalDependencyExceptionOnRetrieveAllIfSqlExceptionOccursAndLogItAsync()
+        public void ShouldThrowCriticalDependencyExceptionOnRetrieveAllIfSqlExceptionOccursAndLogIt()
         {
             // Given
-            User someUser = CreateRandomUser();
-            User storageUser = someUser;
-            User expectedUser = storageUser;
-
             SqlException sqlException = GetSqlException();
 
             var failedUserStorageException = 
@@ -36,7 +32,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             // Then
             Action retrieveAllUsers = () => 
-                this.userService.RetrieveAllUsersAsync();
+                this.userService.RetrieveAllUsers();
 
             UserDependencyException actualUserDependencyException = 
                 Assert.Throws<UserDependencyException>(retrieveAllUsers);
@@ -50,6 +46,46 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             this.loggingBrokerMock.Verify(broker => 
                 broker.LogCritical(It.Is(SameExceptionAs(
+                    expectedUserDependencyException))), 
+                        Times.Once);
+
+            this.userManagerBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public void ShouldThrowServiceExceptionOnRetrieveAllIfServiceErrorOccursAndLogIt()
+        {
+            // Given
+            var serviceException = new Exception();
+
+            var failedUserStorageException = 
+                new FailedUserStorageException(serviceException);
+
+            var expectedUserDependencyException = 
+                new UserDependencyException(failedUserStorageException);
+
+            this.userManagerBrokerMock.Setup(broker => 
+                broker.SelectAllUsers())
+                    .Throws(serviceException);
+
+            // When
+            Action retrieveAllUsers = () => 
+                this.userService.RetrieveAllUsers();
+
+            var actualUserDependencyException = 
+                Assert.Throws<UserDependencyException>(retrieveAllUsers);
+
+            // Then
+            actualUserDependencyException.Should().BeEquivalentTo(expectedUserDependencyException);
+
+            this.userManagerBrokerMock.Verify(broker => 
+                broker.SelectAllUsers(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker => 
+                broker.LogError(It.Is(SameExceptionAs(
                     expectedUserDependencyException))), 
                         Times.Once);
 

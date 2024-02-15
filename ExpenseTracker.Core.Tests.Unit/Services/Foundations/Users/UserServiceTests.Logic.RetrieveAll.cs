@@ -26,7 +26,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             // When
             IQueryable<User> actualUsers = 
-                this.userService.RetrieveAllUsersAsync();
+                this.userService.RetrieveAllUsers();
 
             // Then
             actualUsers.Should().BeEquivalentTo(expectedUsers);

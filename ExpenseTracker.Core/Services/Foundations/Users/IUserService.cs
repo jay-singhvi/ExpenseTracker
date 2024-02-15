@@ -7,6 +7,6 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
     public interface IUserService
     {
         ValueTask<User> RegisterUserAsync(User user, string password);
-        IQueryable<User> RetrieveAllUsersAsync();
+        IQueryable<User> RetrieveAllUsers();
     }
 }
