@@ -1,0 +1,12 @@
+﻿using System;
+using Xeptions;
+
+namespace ExpenseTracker.Core.Models.Users.Exceptions
+{
+    public class NotFoundUserException : Xeption
+    {
+        public NotFoundUserException(Guid userId) : 
+            base(message: $"Coundn't find user with id: {userId}")
+        { }
+    }
+}
