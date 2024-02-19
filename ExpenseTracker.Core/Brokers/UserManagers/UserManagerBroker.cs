@@ -26,9 +26,11 @@ namespace ExpenseTracker.Core.Brokers.UserManagers
         public IQueryable<User> SelectAllUsers() =>
             this.userManager.Users;
 
-        public ValueTask<User> SelectUserById(Guid userId)
+        public async ValueTask<User> SelectUserById(Guid userId)
         {
-            throw new NotImplementedException();
+            var broker = new UserManagerBroker(this.userManager);
+
+            return await broker.userManager.FindByIdAsync(userId.ToString());
         }
     }
 }
