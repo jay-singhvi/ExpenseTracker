@@ -1,5 +1,6 @@
 ﻿using ExpenseTracker.Core.Models.Users;
 using Microsoft.AspNetCore.Identity;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,5 +26,9 @@ namespace ExpenseTracker.Core.Brokers.UserManagers
         public IQueryable<User> SelectAllUsers() =>
             this.userManager.Users;
 
+        public ValueTask<User> SelectUserById(Guid userId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
