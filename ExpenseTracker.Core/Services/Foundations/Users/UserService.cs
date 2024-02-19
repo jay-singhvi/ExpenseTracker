@@ -39,7 +39,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             TryCatch(async () => {
                 ValidateUserIdIsNull(userId);
                 User storageUser = await this.userManagerBroker.SelectUserById(userId);
-                //ValidateStorageUser(storageUser, userId);
+                ValidateStorageUser(storageUser, userId);
 
                 return storageUser;
             });
