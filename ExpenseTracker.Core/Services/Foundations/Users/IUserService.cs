@@ -9,6 +9,6 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
     {
         ValueTask<User> RegisterUserAsync(User user, string password);
         IQueryable<User> RetrieveAllUsers();
-        ValueTask<User> RetrieveUserById(Guid userId);
+        ValueTask<User> RetrieveUserByIdAsync(Guid userId);
     }
 }

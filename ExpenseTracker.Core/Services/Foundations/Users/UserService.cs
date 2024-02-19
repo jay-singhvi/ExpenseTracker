@@ -35,7 +35,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
                 return this.userManagerBroker.SelectAllUsers();
             });
 
-        public ValueTask<User> RetrieveUserById(Guid userId)
+        public ValueTask<User> RetrieveUserByIdAsync(Guid userId)
         {
             return this.userManagerBroker.SelectUserById(userId);
         }

@@ -27,7 +27,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             // When
             User actualUser = 
-                await this.userService.RetrieveUserById(userId);
+                await this.userService.RetrieveUserByIdAsync(userId);
 
             // Then
             actualUser.Should().BeEquivalentTo(expectedUser);
