@@ -2,6 +2,7 @@
 using ExpenseTracker.Core.Brokers.Loggings;
 using ExpenseTracker.Core.Brokers.UserManagers;
 using ExpenseTracker.Core.Models.Users;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,5 +34,10 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             {
                 return this.userManagerBroker.SelectAllUsers();
             });
+
+        public ValueTask<User> RetrieveUserById(Guid userId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
