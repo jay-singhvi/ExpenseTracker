@@ -116,5 +116,12 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             return timeDifference.Duration() > oneMinute;
         }
 
+        private static void ValidateStorageUser(User storageUser, Guid userId)
+        {
+            if (storageUser is null)
+            {
+                throw new NotFoundUserException(userId);
+            }
+        }
     }
 }

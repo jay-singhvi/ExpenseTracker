@@ -91,7 +91,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             this.userManagerBrokerMock.Verify(broker => 
                 broker.SelectUserById(It.IsAny<Guid>()), 
-                    Times.Never);
+                    Times.Once);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.userManagerBrokerMock.VerifyNoOtherCalls();
