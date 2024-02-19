@@ -115,5 +115,6 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
 
             return timeDifference.Duration() > oneMinute;
         }
+
     }
 }
