@@ -37,7 +37,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
 
         public ValueTask<User> RetrieveUserById(Guid userId)
         {
-            throw new NotImplementedException();
+            return this.userManagerBroker.SelectUserById(userId);
         }
     }
 }
