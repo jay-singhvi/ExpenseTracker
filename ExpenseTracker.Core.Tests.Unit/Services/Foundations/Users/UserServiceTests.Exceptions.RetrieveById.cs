@@ -56,5 +56,49 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async void ShouldThrowServiceExceptionOnRetrieveByIdIfServiceErrorOccursAndLogItAsync()
+        {
+            // Given
+            User someUser = CreateRandomUser();
+            Guid userId = someUser.Id;
+
+            var serviceException = new Exception();
+
+            var failedUserServiceException = 
+                new FailedUserServiceException(serviceException);
+
+            var expectedUserServiceException = 
+                new UserServiceException(failedUserServiceException);
+
+            this.userManagerBrokerMock.Setup(broker =>
+                broker.SelectUserById(userId))
+                    .ThrowsAsync(serviceException);
+
+            // When
+            ValueTask<User> RetrieveUserByIdTask = 
+                this.userService.RetrieveUserByIdAsync(userId);
+
+            var actualUserServiceException =
+                await Assert.ThrowsAsync<UserServiceException>(() =>
+                    RetrieveUserByIdTask.AsTask());
+
+            // Then
+            actualUserServiceException.Should().BeEquivalentTo(expectedUserServiceException);
+
+            this.userManagerBrokerMock.Verify(broker => 
+                broker.SelectUserById(It.IsAny<Guid>()), 
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker => 
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserServiceException))), 
+                        Times.Once);
+
+            this.userManagerBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
