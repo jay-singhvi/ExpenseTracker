@@ -37,7 +37,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             //        .Returns(randomDate);
 
             this.userManagerBrokerMock.Setup(broker => 
-                broker.SelectUserById(inputUserId))
+                broker.SelectUserByIdAsync(inputUserId))
                     .ReturnsAsync(storageUser);
 
             this.userManagerBrokerMock.Setup(broker => 
@@ -55,7 +55,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             //        Times.Once);
 
             this.userManagerBrokerMock.Verify(broker => 
-                broker.SelectUserById(inputUserId), 
+                broker.SelectUserByIdAsync(inputUserId), 
                     Times.Once);
 
             this.userManagerBrokerMock.Verify(broker => 

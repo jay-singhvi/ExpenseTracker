@@ -29,7 +29,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                 new UserDependencyException(failUserStorageException);
 
             this.userManagerBrokerMock.Setup(broker => 
-                broker.SelectUserById(userId))
+                broker.SelectUserByIdAsync(userId))
                     .ThrowsAsync(sqlException);
 
             // When
@@ -44,7 +44,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             actualUserDependencyException.Should().BeEquivalentTo(expectedUserDependencyException);
 
             this.userManagerBrokerMock.Verify(broker => 
-                broker.SelectUserById(It.IsAny<Guid>()), 
+                broker.SelectUserByIdAsync(It.IsAny<Guid>()), 
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker => 
@@ -73,7 +73,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                 new UserServiceException(failedUserServiceException);
 
             this.userManagerBrokerMock.Setup(broker =>
-                broker.SelectUserById(userId))
+                broker.SelectUserByIdAsync(userId))
                     .ThrowsAsync(serviceException);
 
             // When
@@ -88,7 +88,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             actualUserServiceException.Should().BeEquivalentTo(expectedUserServiceException);
 
             this.userManagerBrokerMock.Verify(broker => 
-                broker.SelectUserById(It.IsAny<Guid>()), 
+                broker.SelectUserByIdAsync(It.IsAny<Guid>()), 
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker => 

@@ -9,7 +9,7 @@ namespace ExpenseTracker.Core.Brokers.UserManagers
     {
         ValueTask<User> InsertUserAsync(User user, string password);
         IQueryable<User> SelectAllUsers();
-        ValueTask<User> SelectUserById(Guid userId);
+        ValueTask<User> SelectUserByIdAsync(Guid userId);
         ValueTask<User> UpdateUserAsync(User user);
 
     }

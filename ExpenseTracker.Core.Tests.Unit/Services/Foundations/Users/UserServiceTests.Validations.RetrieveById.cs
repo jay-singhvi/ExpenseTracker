@@ -47,7 +47,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                         Times.Once);
 
             this.userManagerBrokerMock.Verify(broker => 
-                broker.SelectUserById(It.IsAny<Guid>()), 
+                broker.SelectUserByIdAsync(It.IsAny<Guid>()), 
                     Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -69,7 +69,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                 new UserValidationException(notFoundException);
 
             this.userManagerBrokerMock.Setup(broker => 
-                broker.SelectUserById(invalidUserId))
+                broker.SelectUserByIdAsync(invalidUserId))
                     .ReturnsAsync(noUser);
 
             // When
@@ -90,7 +90,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                         Times.Once);
 
             this.userManagerBrokerMock.Verify(broker => 
-                broker.SelectUserById(It.IsAny<Guid>()), 
+                broker.SelectUserByIdAsync(It.IsAny<Guid>()), 
                     Times.Once);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();

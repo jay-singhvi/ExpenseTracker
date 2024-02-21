@@ -22,7 +22,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             Guid userId = someUser.Id;
 
             this.userManagerBrokerMock.Setup(broker => 
-                broker.SelectUserById(userId))
+                broker.SelectUserByIdAsync(userId))
                     .ReturnsAsync(storageUser);
 
             // When
@@ -33,7 +33,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             actualUser.Should().BeEquivalentTo(expectedUser);
 
             this.userManagerBrokerMock.Verify(broker => 
-                broker.SelectUserById(It.IsAny<Guid>()), 
+                broker.SelectUserByIdAsync(It.IsAny<Guid>()), 
                     Times.Once);
 
             this.userManagerBrokerMock.VerifyNoOtherCalls();
