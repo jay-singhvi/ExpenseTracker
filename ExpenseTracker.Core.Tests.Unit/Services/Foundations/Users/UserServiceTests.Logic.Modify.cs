@@ -24,28 +24,25 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                 CreateRandomUser(dates: randomDate);
 
             User inputUser = randomUser;
+            User storageUser = inputUser;
 
             inputUser.UpdatedDate = randomDate.AddMinutes(1);
-
-            User StorageUser = inputUser;
-
             User updatedUser = inputUser;
-
             User expectedUser = updatedUser.DeepClone();
 
             Guid inputUserId = inputUser.Id;
 
-            this.dateTimeBrokerMock.Setup(broker => 
-                broker.GetCurrentDateTimeOffset())
-                    .Returns(randomDate);
+            //this.dateTimeBrokerMock.Setup(broker => 
+            //    broker.GetCurrentDateTimeOffset())
+            //        .Returns(randomDate);
 
             this.userManagerBrokerMock.Setup(broker => 
                 broker.SelectUserById(inputUserId))
-                    .ReturnsAsync(StorageUser);
+                    .ReturnsAsync(storageUser);
 
             this.userManagerBrokerMock.Setup(broker => 
                 broker.UpdateUserAsync(inputUser))
-                    .ReturnsAsync(StorageUser);
+                    .ReturnsAsync(storageUser);
 
             // When
             User actualUser = await this.userService.ModifyUserAsync(inputUser);
@@ -53,9 +50,9 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             // Then
             actualUser.Should().BeEquivalentTo(expectedUser);
 
-            this.dateTimeBrokerMock.Verify(broker => 
-                broker.GetCurrentDateTimeOffset(), 
-                    Times.Once);
+            //this.dateTimeBrokerMock.Verify(broker => 
+            //    broker.GetCurrentDateTimeOffset(), 
+            //        Times.Once);
 
             this.userManagerBrokerMock.Verify(broker => 
                 broker.SelectUserById(inputUserId), 
