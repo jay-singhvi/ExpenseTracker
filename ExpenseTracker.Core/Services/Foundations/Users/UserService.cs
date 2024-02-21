@@ -43,5 +43,10 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
 
                 return storageUser;
             });
+
+        public ValueTask<User> ModifyUserAsync(User user)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
