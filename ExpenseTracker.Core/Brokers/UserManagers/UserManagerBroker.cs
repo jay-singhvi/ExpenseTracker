@@ -32,5 +32,13 @@ namespace ExpenseTracker.Core.Brokers.UserManagers
 
             return await broker.userManager.FindByIdAsync(userId.ToString());
         }
+
+        public async ValueTask<User> UpdateUserAsync(User user)
+        {
+            var broker = new UserManagerBroker(this.userManager);
+            await broker.userManager.UpdateAsync(user);
+
+            return user;
+        }
     }
 }
