@@ -44,9 +44,13 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
                 return storageUser;
             });
 
-        public ValueTask<User> ModifyUserAsync(User user)
+        public async ValueTask<User> ModifyUserAsync(User user)
         {
-            throw new NotImplementedException();
+            User maybeUser = 
+                await this.userManagerBroker.SelectUserByIdAsync(user.Id);
+
+            return await this.userManagerBroker.UpdateUserAsync(user);
+
         }
     }
 }
