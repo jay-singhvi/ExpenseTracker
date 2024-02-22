@@ -46,7 +46,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
 
         public ValueTask<User> ModifyUserAsync(User user) =>
             TryCatch(async () => {
-                ValidateUserIsNotNull(user);
+                ValidateUserOnModify(user);
 
                 User maybeUser =
                     await this.userManagerBroker.SelectUserByIdAsync(user.Id);

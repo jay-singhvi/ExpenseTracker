@@ -16,6 +16,12 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             ValidateCreatedDateIsRecent(user);
         }
 
+        private void ValidateUserOnModify(User user)
+        {
+            ValidateUserIsNotNull(user);
+            ValidateUserFields(user);
+        }
+
         private void ValidateUserIsNotNull(User user)
         {
             if (user == null)
