@@ -49,5 +49,49 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             this.userManagerBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("   ")]
+        public async Task ShouldThrowValidationExceptionOnModifyIfUserIsInvalidAndLogItAsync(string invalidText)
+        {
+            // Given
+            User randomUser = CreateRandomUser();
+            User invalidUser = randomUser;
+            invalidUser.UserName = invalidText;
+
+            var invalidUserException = 
+                new InvalidUserException(
+                    parameterName: nameof(User.UserName), 
+                    parameterValue: invalidUser.UserName);
+
+            var expectedUserValidationException = 
+                new UserValidationException(invalidUserException);
+
+            // When
+            ValueTask<User> modifyUserTask = 
+                this.userService.ModifyUserAsync(invalidUser);
+
+            var actualUserValidationException = 
+                await Assert.ThrowsAsync<UserValidationException>(() => 
+                    modifyUserTask.AsTask());
+
+            // Then
+            actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(expectedUserValidationException))), 
+                    Times.Once);
+
+            this.userManagerBrokerMock.Verify(broker => 
+                broker.UpdateUserAsync(It.IsAny<User>()), 
+                    Times.Never);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.userManagerBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
