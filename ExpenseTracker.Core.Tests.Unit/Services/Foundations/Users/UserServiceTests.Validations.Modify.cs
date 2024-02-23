@@ -111,8 +111,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             var expectedUserValidationException =
                 new UserValidationException(invalidUserException);
 
-            this.dateTimeBrokerMock.Setup(broker => 
-                broker.GetCurrentDateTimeOffset())
+            this.userManagerBrokerMock.Setup(broker => 
+                broker.SelectUserByIdAsync(inputUser.Id))
                     .Throws(invalidUserException);
 
             //When
@@ -126,8 +126,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             //Then
             actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
 
-            this.dateTimeBrokerMock.Verify(broker => 
-                broker.GetCurrentDateTimeOffset(), 
+            this.userManagerBrokerMock.Verify(broker => 
+                broker.SelectUserByIdAsync(inputUser.Id), 
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker => 
@@ -135,9 +135,9 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                     expectedUserValidationException))), 
                         Times.Once);
 
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.userManagerBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
