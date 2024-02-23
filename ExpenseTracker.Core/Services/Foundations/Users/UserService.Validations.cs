@@ -19,7 +19,9 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
         private void ValidateUserOnModify(User user)
         {
             ValidateUserIsNotNull(user);
+            ValidateUserIdIsNull(user.Id);
             ValidateUserFields(user);
+            ValidateAuditFieldsOnModify(user);
         }
 
         private void ValidateUserIsNotNull(User user)
@@ -127,6 +129,22 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             if (storageUser is null)
             {
                 throw new NotFoundUserException(userId);
+            }
+        }
+
+        private void ValidateAuditFieldsOnModify(User user)
+        {
+            switch (user)
+            {
+                case { } when user.UpdatedDate == user.CreatedDate:
+                    throw new InvalidUserException(
+                        parameterName: nameof(User.UpdatedDate),
+                        parameterValue: user.UpdatedDate);
+
+                case { } when IsDateNotRecent(user.UpdatedDate):
+                    throw new InvalidUserException(
+                        parameterName: nameof(User.UpdatedDate),
+                        parameterValue: user.UpdatedDate);
             }
         }
     }

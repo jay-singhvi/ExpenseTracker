@@ -93,5 +93,35 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             this.userManagerBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        //[Fact]
+        //public async void ShouldThrowValidationExceptionOnModifyIfCreatedDateAndUpdatedDateIsSameAndLogItAsync()
+        //{
+        //    // Given
+        //    //DateTimeOffset randomDate = GetRandomDateTimeOffset();
+        //    //User randomUser = CreateRandomUser(randomDate);
+
+        //    //User inputUser = randomUser;
+
+        //    //var invalidUserException = 
+        //    //    new InvalidUserException(
+        //    //        parameterName: nameof(User.UpdatedDate), 
+        //    //        parameterValue: inputUser.UpdatedDate);
+
+        //    //var userValidationException = 
+        //    //    new UserValidationException(invalidUserException);
+
+        //    //this.userManagerBrokerMock.Setup(broker => 
+        //    //    broker.SelectUserByIdAsync(inputUser.Id))
+        //    //        .ThrowsAsync(invalidUserException);
+
+        //    // When
+        //    //ValueTask<User> modifyUserTask = 
+        //    //    this.userService.RetrieveUserByIdAsync(inputUser.Id);
+
+        //    // Then
+
+        //}
+
     }
 }
