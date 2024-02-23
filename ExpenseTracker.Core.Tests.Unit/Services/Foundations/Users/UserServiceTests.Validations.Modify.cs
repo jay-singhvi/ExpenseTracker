@@ -94,34 +94,50 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
-        //[Fact]
-        //public async void ShouldThrowValidationExceptionOnModifyIfCreatedDateAndUpdatedDateIsSameAndLogItAsync()
-        //{
-        //    // Given
-        //    //DateTimeOffset randomDate = GetRandomDateTimeOffset();
-        //    //User randomUser = CreateRandomUser(randomDate);
+        [Fact]
+        public async void ShouldThrowValidationExceptionOnModifyIfCreatedDateAndUpdatedDateIsSameAndLogItAsync()
+        {
+            // Given
+            DateTimeOffset randomDate = GetRandomDateTimeOffset();
+            User randomUser = CreateRandomUser(randomDate);
 
-        //    //User inputUser = randomUser;
+            User inputUser = randomUser;
 
-        //    //var invalidUserException = 
-        //    //    new InvalidUserException(
-        //    //        parameterName: nameof(User.UpdatedDate), 
-        //    //        parameterValue: inputUser.UpdatedDate);
+            var invalidUserException =
+                new InvalidUserException(
+                    parameterName: nameof(User.UpdatedDate),
+                    parameterValue: inputUser.UpdatedDate);
 
-        //    //var userValidationException = 
-        //    //    new UserValidationException(invalidUserException);
+            var expectedUserValidationException =
+                new UserValidationException(invalidUserException);
 
-        //    //this.userManagerBrokerMock.Setup(broker => 
-        //    //    broker.SelectUserByIdAsync(inputUser.Id))
-        //    //        .ThrowsAsync(invalidUserException);
+            this.dateTimeBrokerMock.Setup(broker => 
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(invalidUserException);
 
-        //    // When
-        //    //ValueTask<User> modifyUserTask = 
-        //    //    this.userService.RetrieveUserByIdAsync(inputUser.Id);
+            //When
+            ValueTask<User> modifyUserTask =
+                this.userService.RetrieveUserByIdAsync(inputUser.Id);
 
-        //    // Then
+            var actualUserValidationException = 
+                await Assert.ThrowsAsync<UserValidationException>(() => 
+                    modifyUserTask.AsTask());
 
-        //}
+            //Then
+            actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
 
+            this.dateTimeBrokerMock.Verify(broker => 
+                broker.GetCurrentDateTimeOffset(), 
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker => 
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserValidationException))), 
+                        Times.Once);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.userManagerBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
