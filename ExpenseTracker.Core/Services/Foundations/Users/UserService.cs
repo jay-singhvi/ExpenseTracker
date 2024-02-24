@@ -54,7 +54,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
                 return await this.userManagerBroker.UpdateUserAsync(user);
             });
 
-        public ValueTask<User> RemoveUserByIdAsync(User user)
+        public ValueTask<User> RemoveUserByIdAsync(Guid userId)
         {
             throw new NotImplementedException();
         }
