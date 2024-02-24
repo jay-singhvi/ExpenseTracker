@@ -57,7 +57,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
         public ValueTask<User> RemoveUserByIdAsync(Guid userId) =>
             TryCatch(async () => { 
 
-                //ValidateUserIdIsNull(userId);
+                ValidateUserIdIsNull(userId);
 
                 User mayBeUser =
                     await this.userManagerBroker.SelectUserByIdAsync(userId);
