@@ -90,6 +90,10 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                         Times.Once);
 
             this.userManagerBrokerMock.Verify(broker => 
+                broker.SelectUserByIdAsync(invalidUserId)
+                    , Times.Once);
+
+            this.userManagerBrokerMock.Verify(broker => 
                 broker.DeleteUserAsync(
                     It.IsAny<User>()), 
                     Times.Never);

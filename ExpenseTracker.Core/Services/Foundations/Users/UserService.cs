@@ -62,6 +62,8 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
                 User mayBeUser =
                     await this.userManagerBroker.SelectUserByIdAsync(userId);
 
+                ValidateStorageUser(mayBeUser,userId);
+
                 return await this.userManagerBroker.DeleteUserAsync(mayBeUser);
             });
     }
