@@ -114,5 +114,51 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async void ShouldThrowServiceExceptionOnRemoveByIdIfServiceErrorOccursAndLogItAsync()
+        {
+            // Given
+            Guid userId = Guid.NewGuid();
+            var serviceException = new Exception();
+
+            var failedUserServiceException = 
+                new FailedUserServiceException(serviceException);
+
+            var expectedUserServiceException = 
+                new UserServiceException(failedUserServiceException);
+
+            this.userManagerBrokerMock.Setup(broker => 
+                broker.SelectUserByIdAsync(userId))
+                    .ThrowsAsync(serviceException);               
+
+            // When
+            ValueTask<User> removeUserByIdTask = 
+                this.userService.RemoveUserByIdAsync(userId);
+
+            var actualUserServiceException = 
+                await Assert.ThrowsAsync<UserServiceException>(() => 
+                    removeUserByIdTask.AsTask());
+            // Then
+            actualUserServiceException.Should()
+                .BeEquivalentTo(expectedUserServiceException);
+
+            this.userManagerBrokerMock.Verify(broker => 
+                broker.SelectUserByIdAsync(userId), 
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker => 
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserServiceException))), 
+                        Times.Once);
+
+            this.userManagerBrokerMock.Verify(broker => 
+                broker.DeleteUserAsync(It.IsAny<User>()), 
+                    Times.Never);
+
+            this.userManagerBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
