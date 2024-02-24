@@ -40,5 +40,13 @@ namespace ExpenseTracker.Core.Brokers.UserManagers
 
             return user;
         }
+
+        public async ValueTask<User> DeleteUserAsync(User user)
+        {
+            var broker = new UserManagerBroker(this.userManager);
+            await broker.userManager.DeleteAsync(user);
+
+            return user;
+        }
     }
 }
