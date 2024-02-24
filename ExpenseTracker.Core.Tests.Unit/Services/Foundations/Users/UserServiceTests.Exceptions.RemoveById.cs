@@ -1,6 +1,7 @@
 ﻿using ExpenseTracker.Core.Models.Users;
 using ExpenseTracker.Core.Models.Users.Exceptions;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -72,7 +73,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             Guid userId = inputUser.Id;
 
             var dbUpdateConcurrencyException = 
-                new DBConcurrencyException();
+                new DbUpdateConcurrencyException();
 
             var lockedUserException = 
                 new LockedUserException(dbUpdateConcurrencyException);

@@ -42,13 +42,19 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
 
                 throw CreateAndLogCriticalDependencyException(failedUserStorageException);
             }
-
             catch (DuplicateKeyException duplicateKeyException)
             {
                 var alreadyExistsUserException =
                     new AlreadyExistsUserException(duplicateKeyException);
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsUserException);
+            }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedUserException = 
+                    new LockedUserException(dbUpdateConcurrencyException);
+
+                throw CreateAndLogDependencyValidationException(lockedUserException);
             }
             catch (ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
             {
