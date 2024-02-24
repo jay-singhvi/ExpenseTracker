@@ -4,6 +4,7 @@ using FluentAssertions;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,6 +59,58 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.userManagerBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void ShouldThrowDependencyValidationExceptionOnRemoveByIdIfDBUpdateConcurrencyErrorOccursAndLogItAsync()
+        {
+            // Given
+            User randomUser = CreateRandomUser();
+            User inputUser = randomUser;
+
+            Guid userId = inputUser.Id;
+
+            var dbUpdateConcurrencyException = 
+                new DBConcurrencyException();
+
+            var lockedUserException = 
+                new LockedUserException(dbUpdateConcurrencyException);
+
+            var expectedUserDependencyValidationException = 
+                new UserDependencyValidationException(lockedUserException);
+
+            this.userManagerBrokerMock.Setup(broker => 
+                broker.SelectUserByIdAsync(userId))
+                    .ThrowsAsync(dbUpdateConcurrencyException);
+
+            // When
+            ValueTask<User> removeUserByIdTask = 
+                this.userService.RemoveUserByIdAsync(userId);
+
+            var actualUserDependencyValidation =
+                await Assert.ThrowsAsync<UserDependencyValidationException>(() =>
+                    removeUserByIdTask.AsTask());
+
+            // Then
+            actualUserDependencyValidation.Should()
+                .BeEquivalentTo(expectedUserDependencyValidationException);
+
+            this.userManagerBrokerMock.Verify(broker =>
+                broker.SelectUserByIdAsync(userId),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker => 
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserDependencyValidationException))), 
+                        Times.Once);
+
+            this.userManagerBrokerMock.Verify(broker => 
+                broker.DeleteUserAsync(It.IsAny<User>()), 
+                    Times.Never);
+
+            this.userManagerBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
