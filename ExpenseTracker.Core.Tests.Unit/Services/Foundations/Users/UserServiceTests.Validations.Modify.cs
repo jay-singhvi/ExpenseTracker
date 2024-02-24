@@ -139,5 +139,58 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             this.userManagerBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(InvalidMinuteCases))]
+        public async void ShouldThrowValidationExceptionOnModifyIfUpadtedDateIsNotRecentAndLogItAsync(int minutes)
+        {
+            // Given
+            DateTimeOffset randomDate = GetRandomDateTimeOffset();
+            User randomUser = CreateRandomUser(randomDate);
+            User inputUser = randomUser;
+            inputUser.UpdatedDate = randomDate.AddMinutes(minutes);
+
+            var invalidUserException = new InvalidUserException(
+                    parameterName: nameof(User.UpdatedDate), 
+                    parameterValue: inputUser.UpdatedDate);
+
+            var expectedUserValidationException = 
+                new UserValidationException(invalidUserException);
+
+            this.dateTimeBrokerMock.Setup(broker => 
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(invalidUserException);
+
+            // When
+            ValueTask<User> modifyUserTask = this.userService.ModifyUserAsync(inputUser);
+
+            var actualUserValidationException = 
+                await Assert.ThrowsAsync<UserValidationException>(() => 
+                    modifyUserTask.AsTask());
+
+            // Then
+            actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker => 
+                broker.GetCurrentDateTimeOffset(), 
+                    Times.Once());
+
+            this.loggingBrokerMock.Verify(broker => 
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserValidationException))), 
+                        Times.Once);
+
+            this.userManagerBrokerMock.Verify(broker =>
+                broker.SelectUserByIdAsync(It.IsAny<Guid>()),
+                    Times.Never);
+
+            this.userManagerBrokerMock.Verify(broker => 
+                broker.UpdateUserAsync(It.IsAny<User>()), 
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.userManagerBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
