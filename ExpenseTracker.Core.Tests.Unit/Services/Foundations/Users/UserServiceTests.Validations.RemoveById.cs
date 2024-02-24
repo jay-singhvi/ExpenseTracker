@@ -20,10 +20,11 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             Guid randomId = Guid.Empty;
             Guid invalidUserId = randomId;
 
-            var nullUserException = new NullUserException();
+            var invalidUserException = 
+                new InvalidUserException(parameterName: nameof(User.Id),parameterValue: invalidUserId);
 
             var expectedUserValidationException = 
-                new UserValidationException(nullUserException);
+                new UserValidationException(invalidUserException);
 
             // When
             ValueTask<User> removeUserByIdTask = 

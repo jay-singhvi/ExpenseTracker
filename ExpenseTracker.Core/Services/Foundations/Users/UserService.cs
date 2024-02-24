@@ -54,12 +54,15 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
                 return await this.userManagerBroker.UpdateUserAsync(user);
             });
 
-        public async ValueTask<User> RemoveUserByIdAsync(Guid userId)
-        {
-            User mayBeUser = 
-                await this.userManagerBroker.SelectUserByIdAsync(userId);
+        public ValueTask<User> RemoveUserByIdAsync(Guid userId) =>
+            TryCatch(async () => { 
 
-            return await this.userManagerBroker.DeleteUserAsync(mayBeUser);
-        }
+                //ValidateUserIdIsNull(userId);
+
+                User mayBeUser =
+                    await this.userManagerBroker.SelectUserByIdAsync(userId);
+
+                return await this.userManagerBroker.DeleteUserAsync(mayBeUser);
+            });
     }
 }
