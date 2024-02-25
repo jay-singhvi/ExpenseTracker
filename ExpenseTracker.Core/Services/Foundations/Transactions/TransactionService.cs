@@ -29,9 +29,9 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
                 return await this.storageBroker.InsertTransactionAsync(transaction);
             });
 
-        public IQueryable<Transaction> RetrieveAllTransactions()
-        {
-            return this.storageBroker.SelectAllTransactions();
-        }
+        public IQueryable<Transaction> RetrieveAllTransactions() =>
+            TryCatch(() => {
+                return this.storageBroker.SelectAllTransactions();
+            });
     }
 }

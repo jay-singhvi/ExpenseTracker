@@ -12,14 +12,14 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
 {
     public partial class TransactionService
     {
-        private delegate ValueTask<Transaction> ReturningPostFunction();
-        private delegate IQueryable<Transaction> ReturningPostsFunction();
+        private delegate ValueTask<Transaction> ReturningTransactionFunction();
+        private delegate IQueryable<Transaction> ReturningTransactionsFunction();
 
-        private async ValueTask<Transaction> TryCatch(ReturningPostFunction returningPostFunction)
+        private async ValueTask<Transaction> TryCatch(ReturningTransactionFunction returningTransactionFunction)
         {
             try
             {
-                return await returningPostFunction();
+                return await returningTransactionFunction();
             }
             catch (NullTransactionException nullTransactionException)
             {
@@ -60,6 +60,21 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
 
         }
 
+        
+        private IQueryable<Transaction> TryCatch(ReturningTransactionsFunction returningTransactionFunctions)
+        {
+            try
+            {
+                return returningTransactionFunctions();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedTransactionStorageException = 
+                    new FailedTransactionStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedTransactionStorageException);
+            }
+        }
         private TransactionValidationException CreateAndLogValidationException(Xeption exception)
         {
             var transactionValidationException =
