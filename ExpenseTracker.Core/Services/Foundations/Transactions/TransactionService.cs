@@ -31,7 +31,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
 
         public IQueryable<Transaction> RetrieveAllTransactions()
         {
-            throw new System.NotImplementedException();
+            return this.storageBroker.SelectAllTransactions();
         }
     }
 }
