@@ -2,6 +2,7 @@
 using ExpenseTracker.Core.Brokers.Loggings;
 using ExpenseTracker.Core.Brokers.Storages;
 using ExpenseTracker.Core.Models.Transactions;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ExpenseTracker.Core.Services.Foundations.Transactions
@@ -27,5 +28,10 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
                 ValidateTransactionOnAdd(transaction);
                 return await this.storageBroker.InsertTransactionAsync(transaction);
             });
+
+        public IQueryable<Transaction> RetrieveAllTransactions()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
