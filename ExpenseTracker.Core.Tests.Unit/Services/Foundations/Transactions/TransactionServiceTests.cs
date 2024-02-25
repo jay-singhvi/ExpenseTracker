@@ -6,6 +6,7 @@ using ExpenseTracker.Core.Services.Foundations.Transactions;
 using Microsoft.Data.SqlClient;
 using Moq;
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using Tynamix.ObjectFiller;
@@ -53,6 +54,12 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             return filler;
         }
+
+        private static IQueryable<Transaction> CreateRandomTransactions() =>
+            CreateTransactionFiller(dates: GetRandomDateTimeOffset())
+                .Create(GetRandomNumber())
+                    .AsQueryable();
+
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
 
