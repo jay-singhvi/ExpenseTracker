@@ -2,6 +2,7 @@
 using ExpenseTracker.Core.Brokers.Loggings;
 using ExpenseTracker.Core.Brokers.Storages;
 using ExpenseTracker.Core.Models.Transactions;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -34,5 +35,10 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
             {
                 return this.storageBroker.SelectAllTransactions();
             });
+
+        public ValueTask<Transaction> RetrieveTransactionByIdAsync(Guid transactionId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ExpenseTracker.Core.Models.Transactions;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,5 +9,6 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
     {
         ValueTask<Transaction> AddTransactionAsync(Transaction transaction);
         IQueryable<Transaction> RetrieveAllTransactions();
+        ValueTask<Transaction> RetrieveTransactionByIdAsync(Guid transactionId);
     }
 }
