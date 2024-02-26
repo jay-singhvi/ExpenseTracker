@@ -1,6 +1,7 @@
 ﻿using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using System;
+using System.Reflection.Metadata;
 
 namespace ExpenseTracker.Core.Services.Foundations.Transactions
 {
@@ -33,6 +34,9 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
                 throw new NullTransactionException();
             }
         }
+
+        private static void ValidateTransactionId(Guid transactionId) =>
+            Validate((Rule: IsInvalid(transactionId), Parameter: nameof(Transaction.Id)));
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
@@ -93,5 +97,6 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
 
             return timeDifference.Duration() > oneMinute;
         }
+
     }
 }
