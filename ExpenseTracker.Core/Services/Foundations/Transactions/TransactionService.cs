@@ -30,7 +30,8 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
             });
 
         public IQueryable<Transaction> RetrieveAllTransactions() =>
-            TryCatch(() => {
+            TryCatch(() =>
+            {
                 return this.storageBroker.SelectAllTransactions();
             });
     }

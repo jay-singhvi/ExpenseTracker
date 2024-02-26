@@ -60,7 +60,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
 
         }
 
-        
+
         private IQueryable<Transaction> TryCatch(ReturningTransactionsFunction returningTransactionFunctions)
         {
             try
@@ -69,14 +69,14 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
             }
             catch (SqlException sqlException)
             {
-                var failedTransactionStorageException = 
+                var failedTransactionStorageException =
                     new FailedTransactionStorageException(sqlException);
 
                 throw CreateAndLogCriticalDependencyException(failedTransactionStorageException);
             }
             catch (Exception serviceException)
             {
-                var failedTransactionServiceException = 
+                var failedTransactionServiceException =
                     new FailedTransactionServiceException(serviceException);
 
                 throw CreateAndLogServiceException(failedTransactionServiceException);

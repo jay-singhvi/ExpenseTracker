@@ -5,9 +5,6 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -25,10 +22,10 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             Exception sqlException = GetSqlException();
 
-            var failedUserStorageException = 
+            var failedUserStorageException =
                 new FailedUserStorageException(sqlException);
 
-            var expectedUserDependencyException = 
+            var expectedUserDependencyException =
                 new UserDependencyException(failedUserStorageException);
 
             this.dateTimeBrokerMock.Setup(broker =>
@@ -36,7 +33,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                     .Throws(sqlException);
 
             // When
-            ValueTask<User> addUserTask = 
+            ValueTask<User> addUserTask =
                 this.userService.RegisterUserAsync(inputUser, password);
 
             UserDependencyException actualUserDependencyException =
@@ -45,12 +42,12 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             // Then
             actualUserDependencyException.Should().BeEquivalentTo(expectedUserDependencyException);
 
-            this.dateTimeBrokerMock.Verify(broker => 
-                broker.GetCurrentDateTimeOffset(), 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
                     Times.Once);
 
-            this.userManagerBrokerMock.Verify(broker => 
-                broker.InsertUserAsync(It.IsAny<User>(),password), 
+            this.userManagerBrokerMock.Verify(broker =>
+                broker.InsertUserAsync(It.IsAny<User>(), password),
                     Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
@@ -86,29 +83,29 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                 this.userService.RegisterUserAsync(inputUser, password);
 
             UserDependencyValidationException actualUserDependencyValidationException =
-                await Assert.ThrowsAsync<UserDependencyValidationException>(() => 
+                await Assert.ThrowsAsync<UserDependencyValidationException>(() =>
                     addUserTask.AsTask());
 
             // Then
             actualUserDependencyValidationException.Should()
                 .BeEquivalentTo(expectedUserDependencyValidationException);
 
-            this.dateTimeBrokerMock.Verify(broker => 
+            this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTimeOffset(),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    actualUserDependencyValidationException))), 
+                    actualUserDependencyValidationException))),
                         Times.Once);
 
-            this.userManagerBrokerMock.Verify(broker => 
-                broker.InsertUserAsync(It.IsAny<User>(), password), 
+            this.userManagerBrokerMock.Verify(broker =>
+                broker.InsertUserAsync(It.IsAny<User>(), password),
                     Times.Never());
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
-            this.userManagerBrokerMock.VerifyNoOtherCalls();            
+            this.userManagerBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -120,24 +117,24 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             string randomMessage = GetRandomMessage();
             string exceptionMessage = randomMessage;
 
-            var foreignKeyConstraintConflictException = 
+            var foreignKeyConstraintConflictException =
                 new ForeignKeyConstraintConflictException(exceptionMessage);
 
-            var invalidUserReferenceException = 
+            var invalidUserReferenceException =
                 new InvalidUserReferenceException(foreignKeyConstraintConflictException);
 
-            var expectedUserDependencyValidationException = 
+            var expectedUserDependencyValidationException =
                 new UserDependencyValidationException(invalidUserReferenceException);
 
-            this.dateTimeBrokerMock.Setup(broker => 
+            this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
                     .Throws(foreignKeyConstraintConflictException);
 
             // When
-            ValueTask<User> addUserTask = 
+            ValueTask<User> addUserTask =
                 this.userService.RegisterUserAsync(someUser, password);
 
-            var actualUserDependencyValidationException = 
+            var actualUserDependencyValidationException =
                 await Assert.ThrowsAsync<UserDependencyValidationException>(
                     addUserTask.AsTask);
 
@@ -145,17 +142,17 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             actualUserDependencyValidationException.Should().BeEquivalentTo(
                 expectedUserDependencyValidationException);
 
-            this.dateTimeBrokerMock.Verify(broker => 
-                broker.GetCurrentDateTimeOffset(), 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
                     Times.Once());
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedUserDependencyValidationException))), 
+                    expectedUserDependencyValidationException))),
                         Times.Once);
 
-            this.userManagerBrokerMock.Verify(broker => 
-                broker.InsertUserAsync(It.IsAny<User>(), password), 
+            this.userManagerBrokerMock.Verify(broker =>
+                broker.InsertUserAsync(It.IsAny<User>(), password),
                     Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
@@ -174,18 +171,18 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             DbUpdateException dbUpdateException = new DbUpdateException();
 
-            var failedUserStorageException = 
+            var failedUserStorageException =
                 new FailedUserStorageException(dbUpdateException);
 
-            var expectedUserDependencyValidationException = 
+            var expectedUserDependencyValidationException =
                 new UserDependencyValidationException(failedUserStorageException);
 
-            this.dateTimeBrokerMock.Setup(broker => 
+            this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
                     .Throws(dbUpdateException);
 
             // When
-            ValueTask<User> addUserTask = 
+            ValueTask<User> addUserTask =
                 this.userService.RegisterUserAsync(someUser, password);
 
             UserDependencyValidationException actualUserDependencyValidationexception =
@@ -195,17 +192,17 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             actualUserDependencyValidationexception.Should().BeEquivalentTo(
                 expectedUserDependencyValidationException);
 
-            this.dateTimeBrokerMock.Verify(broker => 
-                broker.GetCurrentDateTimeOffset(), 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedUserDependencyValidationException))), 
+                    expectedUserDependencyValidationException))),
                         Times.Once);
 
-            this.userManagerBrokerMock.Verify(broker => 
-                broker.InsertUserAsync(It.IsAny<User>(), password), 
+            this.userManagerBrokerMock.Verify(broker =>
+                broker.InsertUserAsync(It.IsAny<User>(), password),
                     Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
@@ -222,18 +219,18 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             var serviceException = new Exception();
 
-            var failedUserServiceException = 
+            var failedUserServiceException =
                 new FailedUserServiceException(serviceException);
 
-            var expectedUserServiceException = 
+            var expectedUserServiceException =
                 new UserServiceException(failedUserServiceException);
 
-            this.dateTimeBrokerMock.Setup(broker => 
+            this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
                     .Throws(serviceException);
 
             // When
-            ValueTask<User> addUserTask = 
+            ValueTask<User> addUserTask =
                 this.userService.RegisterUserAsync(someUser, password);
 
             UserServiceException actualUserServiceException =
@@ -242,17 +239,17 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             // Then
             actualUserServiceException.Should().BeEquivalentTo(expectedUserServiceException);
 
-            this.dateTimeBrokerMock.Verify(broker => 
-                broker.GetCurrentDateTimeOffset(), 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedUserServiceException))),
                         Times.Once);
 
-            this.userManagerBrokerMock.Verify(broker => 
-                broker.InsertUserAsync(It.IsAny<User>(),password), 
+            this.userManagerBrokerMock.Verify(broker =>
+                broker.InsertUserAsync(It.IsAny<User>(), password),
                     Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

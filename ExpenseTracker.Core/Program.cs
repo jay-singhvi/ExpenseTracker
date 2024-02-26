@@ -6,7 +6,6 @@ using ExpenseTracker.Core.Brokers.UserManagers;
 using ExpenseTracker.Core.Models.Users;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -24,7 +23,7 @@ namespace ExpenseTracker.Core
             builder.Services.AddTransient<ILoggingBroker, LoggingBroker>();
             builder.Services.AddTransient<IDateTimeBroker, DateTimeBroker>();
             builder.Services.AddScoped<IStorageBroker, StorageBroker>();
-            builder.Services.AddScoped<IUserManagerBroker, UserManagerBroker>();            
+            builder.Services.AddScoped<IUserManagerBroker, UserManagerBroker>();
 
             builder.Services.AddIdentityApiEndpoints<User>()
                 .AddRoles<Role>()

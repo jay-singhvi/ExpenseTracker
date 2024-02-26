@@ -3,9 +3,6 @@ using ExpenseTracker.Core.Models.Users.Exceptions;
 using FluentAssertions;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -20,35 +17,35 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             Guid randomId = Guid.Empty;
             Guid invalidUserId = randomId;
 
-            var invalidUserException = 
-                new InvalidUserException(parameterName: nameof(User.Id),parameterValue: invalidUserId);
+            var invalidUserException =
+                new InvalidUserException(parameterName: nameof(User.Id), parameterValue: invalidUserId);
 
-            var expectedUserValidationException = 
+            var expectedUserValidationException =
                 new UserValidationException(invalidUserException);
 
             // When
-            ValueTask<User> removeUserByIdTask = 
+            ValueTask<User> removeUserByIdTask =
                 this.userService.RemoveUserByIdAsync(invalidUserId);
 
-            var actualUserValidationException = 
-                await Assert.ThrowsAsync<UserValidationException>(() => 
+            var actualUserValidationException =
+                await Assert.ThrowsAsync<UserValidationException>(() =>
                     removeUserByIdTask.AsTask());
 
             // Then
             actualUserValidationException.Should()
                 .BeEquivalentTo(expectedUserValidationException);
 
-            this.userManagerBrokerMock.Verify(broker => 
-                broker.SelectUserByIdAsync(It.IsAny<Guid>()), 
+            this.userManagerBrokerMock.Verify(broker =>
+                broker.SelectUserByIdAsync(It.IsAny<Guid>()),
                     Times.Never);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedUserValidationException))), 
+                    expectedUserValidationException))),
                         Times.Once);
 
-            this.userManagerBrokerMock.Verify(broker => 
-                broker.DeleteUserAsync(It.IsAny<User>()), 
+            this.userManagerBrokerMock.Verify(broker =>
+                broker.DeleteUserAsync(It.IsAny<User>()),
                     Times.Never);
 
             this.userManagerBrokerMock.VerifyNoOtherCalls();
@@ -65,7 +62,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             User noUser = null;
             var notFoundUserException = new NotFoundUserException(invalidUserId);
 
-            var expectedUserValidationException = 
+            var expectedUserValidationException =
                 new UserValidationException(notFoundUserException);
 
             this.userManagerBrokerMock.Setup(broker =>
@@ -73,29 +70,29 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                     .ReturnsAsync(noUser);
 
             // When
-            ValueTask<User> removeUserByIdTask = 
+            ValueTask<User> removeUserByIdTask =
                 this.userService.RemoveUserByIdAsync(invalidUserId);
 
-            var actualUserValidationException = 
-                    await Assert.ThrowsAsync<UserValidationException>(() => 
+            var actualUserValidationException =
+                    await Assert.ThrowsAsync<UserValidationException>(() =>
                         removeUserByIdTask.AsTask());
 
             // Then
             actualUserValidationException.Should()
                 .BeEquivalentTo(expectedUserValidationException);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedUserValidationException))), 
+                    expectedUserValidationException))),
                         Times.Once);
 
-            this.userManagerBrokerMock.Verify(broker => 
+            this.userManagerBrokerMock.Verify(broker =>
                 broker.SelectUserByIdAsync(invalidUserId)
                     , Times.Once);
 
-            this.userManagerBrokerMock.Verify(broker => 
+            this.userManagerBrokerMock.Verify(broker =>
                 broker.DeleteUserAsync(
-                    It.IsAny<User>()), 
+                    It.IsAny<User>()),
                     Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();

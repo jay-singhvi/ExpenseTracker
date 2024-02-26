@@ -1,6 +1,5 @@
 ﻿using ExpenseTracker.Core.Models.Transactions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,9 +13,9 @@ namespace ExpenseTracker.Core.Brokers.Storages
         public async ValueTask<Transaction> InsertTransactionAsync(Transaction transaction) =>
             await InsertAsync(transaction);
 
-        public IQueryable<Transaction> SelectAllTransactions() => 
+        public IQueryable<Transaction> SelectAllTransactions() =>
             SelectAll<Transaction>();
-        
+
         public async ValueTask<Transaction> SelectTransactionByIdAsync(Guid transactionId) =>
             await SelectAsync<Transaction>(transactionId);
 

@@ -2,10 +2,6 @@
 using FluentAssertions;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
@@ -18,34 +14,34 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             // Given
             var sqlException = GetSqlException();
 
-            var failedTransactionStorageException = 
+            var failedTransactionStorageException =
                 new FailedTransactionStorageException(sqlException);
 
-            var expectedTransactionDependencyException = 
+            var expectedTransactionDependencyException =
                 new TransactionDependencyException(failedTransactionStorageException);
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllTransactions())
                     .Throws(sqlException);
 
             // When
-            Action retrieveAllTransactions = () => 
+            Action retrieveAllTransactions = () =>
                 this.transactionService.RetrieveAllTransactions();
 
-            var actualTransactionDependencyException = 
+            var actualTransactionDependencyException =
                 Assert.Throws<TransactionDependencyException>(retrieveAllTransactions);
 
             // Then
             actualTransactionDependencyException.Should()
                 .BeEquivalentTo(expectedTransactionDependencyException);
 
-            this.storageBrokerMock.Verify(broker => 
-                broker.SelectAllTransactions(), 
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectAllTransactions(),
                     Times.Once());
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
-                    expectedTransactionDependencyException))), 
+                    expectedTransactionDependencyException))),
                         Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
@@ -59,34 +55,34 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             // Given
             var serviceException = new Exception();
 
-            var failedTransactionServiceException = 
+            var failedTransactionServiceException =
                 new FailedTransactionServiceException(serviceException);
 
-            var expectedTransactionServiceException = 
+            var expectedTransactionServiceException =
                 new TransactionServiceException(failedTransactionServiceException);
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllTransactions())
                     .Throws(serviceException);
 
             // When
-            Action retrieveAllTransactionsAction = () => 
+            Action retrieveAllTransactionsAction = () =>
             this.transactionService.RetrieveAllTransactions();
 
-            var actualTransactionServiceException = 
+            var actualTransactionServiceException =
                 Assert.Throws<TransactionServiceException>(retrieveAllTransactionsAction);
 
             // Then
             actualTransactionServiceException.Should()
                 .BeEquivalentTo(expectedTransactionServiceException);
 
-            this.storageBrokerMock.Verify(broker => 
-                broker.SelectAllTransactions(), 
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectAllTransactions(),
                     Times.Once());
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedTransactionServiceException))), 
+                    expectedTransactionServiceException))),
                         Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();

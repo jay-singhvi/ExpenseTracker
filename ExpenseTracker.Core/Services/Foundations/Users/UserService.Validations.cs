@@ -47,7 +47,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             if (IsInvalid(user.UserName))
             {
                 throw new InvalidUserException(
-                    parameterName: nameof(User.UserName), 
+                    parameterName: nameof(User.UserName),
                     parameterValue: user.UserName);
             }
 
@@ -91,7 +91,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
 
         private static void ValidateAuditFieldsDataOnCreate(User user)
         {
-            if(user.UpdatedDate != user.CreatedDate)
+            if (user.UpdatedDate != user.CreatedDate)
             {
                 throw new InvalidUserException(
                     parameterName: nameof(User.UpdatedDate),
@@ -104,7 +104,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             if (IsDateNotRecent(user.CreatedDate))
             {
                 throw new InvalidUserException(
-                    parameterName: nameof(User.CreatedDate), 
+                    parameterName: nameof(User.CreatedDate),
                     parameterValue: user.CreatedDate);
             }
         }

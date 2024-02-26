@@ -1,11 +1,7 @@
 ﻿using ExpenseTracker.Core.Models.Transactions;
 using FluentAssertions;
 using Moq;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
@@ -20,19 +16,19 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             IQueryable<Transaction> storageTransactions = randomTransactions;
             IQueryable<Transaction> expectedTransactions = randomTransactions;
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllTransactions())
                     .Returns(storageTransactions);
 
             // When
-            IQueryable<Transaction> actualTransactions = 
+            IQueryable<Transaction> actualTransactions =
                 this.transactionService.RetrieveAllTransactions();
 
             // Then
             actualTransactions.Should()
                 .BeEquivalentTo(expectedTransactions);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectAllTransactions(),
                     Times.Once());
 

@@ -1,11 +1,7 @@
-﻿using EFxceptions.Models.Exceptions;
-using ExpenseTracker.Core.Models.Users;
+﻿using ExpenseTracker.Core.Models.Users;
 using ExpenseTracker.Core.Models.Users.Exceptions;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -22,24 +18,24 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             var nullUserException = new NullUserException();
 
-            var expectedUserValidationException = 
+            var expectedUserValidationException =
                 new UserValidationException(nullUserException);
 
             // When
-            ValueTask<User> addUserTask = 
+            ValueTask<User> addUserTask =
                 this.userService.RegisterUserAsync(invalidUser, password);
 
             // Then
-            await Assert.ThrowsAsync<UserValidationException>(() => 
+            await Assert.ThrowsAsync<UserValidationException>(() =>
                 addUserTask.AsTask());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedUserValidationException))), 
+                    expectedUserValidationException))),
                     Times.Once);
 
-            this.userManagerBrokerMock.Verify(broker => 
-                broker.InsertUserAsync(It.IsAny<User>(),password), 
+            this.userManagerBrokerMock.Verify(broker =>
+                broker.InsertUserAsync(It.IsAny<User>(), password),
                 Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -59,11 +55,11 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                 parameterName: nameof(inputUser.Id),
                 parameterValue: inputUser.Id);
 
-            var expectedUserValidationException = 
+            var expectedUserValidationException =
                 new UserValidationException(invalidUserException);
 
             // When
-            ValueTask<User> addUserTask = 
+            ValueTask<User> addUserTask =
                 this.userService.RegisterUserAsync(inputUser, password);
 
             // Then
@@ -96,23 +92,23 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             invalidUser.UserName = invalidUserUserName;
             string password = GetRandomPassword();
 
-            var invalidUserException = 
+            var invalidUserException =
                 new InvalidUserException(
                     parameterName: nameof(User.UserName),
                     parameterValue: invalidUser.UserName);
 
-            var expectedUserValidationException = 
+            var expectedUserValidationException =
                 new UserValidationException(invalidUserException);
 
             // When
-            ValueTask<User> addUserTask = 
+            ValueTask<User> addUserTask =
                 this.userService.RegisterUserAsync(invalidUser, password);
 
             // Then
-            await Assert.ThrowsAsync<UserValidationException>(() => 
+            await Assert.ThrowsAsync<UserValidationException>(() =>
                 addUserTask.AsTask());
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(
                     SameExceptionAs(expectedUserValidationException))),
                     Times.Once);
@@ -139,25 +135,25 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                     parameterName: nameof(User.FirstName),
                     parameterValue: invalidUser.FirstName);
 
-            var expectedUserValidationException = 
+            var expectedUserValidationException =
                 new UserValidationException(invalidUserException);
 
             // When
-            ValueTask<User> addUserTask = 
+            ValueTask<User> addUserTask =
                 this.userService.RegisterUserAsync(invalidUser, password);
 
             // Then
             await Assert.ThrowsAsync<UserValidationException>(
                 () => addUserTask.AsTask());
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedUserValidationException))), 
+                    expectedUserValidationException))),
                     Times.Once);
 
-            this.userManagerBrokerMock.Verify(broker => 
+            this.userManagerBrokerMock.Verify(broker =>
                 broker.InsertUserAsync(
-                    It.IsAny<User>(),password), 
+                    It.IsAny<User>(), password),
                     Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -221,11 +217,11 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                 parameterName: nameof(User.CreatedDate),
                 parameterValue: inputUser.CreatedDate);
 
-            var expectedUserValidationException = 
+            var expectedUserValidationException =
                 new UserValidationException(invalidUserException);
 
             // When
-            ValueTask<User> addUserTask = 
+            ValueTask<User> addUserTask =
                 this.userService.RegisterUserAsync(inputUser, password);
 
             // Then
@@ -233,11 +229,11 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                 () => addUserTask.AsTask());
 
             this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(
-                SameExceptionAs(expectedUserValidationException))), 
+                SameExceptionAs(expectedUserValidationException))),
                 Times.Once);
 
-            this.userManagerBrokerMock.Verify(broker => 
-                broker.InsertUserAsync(It.IsAny<User>(),password), 
+            this.userManagerBrokerMock.Verify(broker =>
+                broker.InsertUserAsync(It.IsAny<User>(), password),
                 Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -291,29 +287,29 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             inputUser.UpdatedDate = GetRandomDateTimeOffset();
             string password = GetRandomPassword();
 
-            var invalidUserException = 
+            var invalidUserException =
                 new InvalidUserException(
-                    parameterName: nameof(User.UpdatedDate), 
+                    parameterName: nameof(User.UpdatedDate),
                     parameterValue: inputUser.UpdatedDate);
 
-            var expectedUserValidationException = 
+            var expectedUserValidationException =
                 new UserValidationException(invalidUserException);
 
             // When
-            ValueTask<User> addUserTask = 
+            ValueTask<User> addUserTask =
                 this.userService.RegisterUserAsync(inputUser, password);
 
             // Then
             await Assert.ThrowsAsync<UserValidationException>(
                 () => addUserTask.AsTask());
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedUserValidationException))), 
+                    expectedUserValidationException))),
                         Times.Once);
 
-            this.userManagerBrokerMock.Verify(broker => 
-                broker.InsertUserAsync(It.IsAny<User>(), password), 
+            this.userManagerBrokerMock.Verify(broker =>
+                broker.InsertUserAsync(It.IsAny<User>(), password),
                     Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -333,12 +329,12 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             inputUser.UpdatedDate = inputUser.CreatedDate;
             string password = GetRandomPassword();
 
-            var invalidUserException = 
+            var invalidUserException =
                 new InvalidUserException(
-                    parameterName: nameof(User.CreatedDate), 
+                    parameterName: nameof(User.CreatedDate),
                     parameterValue: inputUser.CreatedDate);
 
-            var expectedUserValidationException = 
+            var expectedUserValidationException =
                 new UserValidationException(invalidUserException);
 
             this.dateTimeBrokerMock.Setup(broker =>
@@ -346,25 +342,25 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                     .Returns(dateTime);
 
             // When
-            ValueTask<User> addUserTask = 
+            ValueTask<User> addUserTask =
                 this.userService.RegisterUserAsync(inputUser, password);
 
             // Then
-            await Assert.ThrowsAsync<UserValidationException>(() => 
+            await Assert.ThrowsAsync<UserValidationException>(() =>
                 addUserTask.AsTask());
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTimeOffset(),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedUserValidationException))), 
+                    expectedUserValidationException))),
                         Times.Once());
 
-            this.userManagerBrokerMock.Verify(broker => 
+            this.userManagerBrokerMock.Verify(broker =>
                 broker.InsertUserAsync(
-                    It.IsAny<User>(),password), 
+                    It.IsAny<User>(), password),
                         Times.Never());
 
             this.loggingBrokerMock.VerifyNoOtherCalls();

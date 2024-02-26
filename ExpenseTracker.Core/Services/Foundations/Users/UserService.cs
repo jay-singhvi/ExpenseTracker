@@ -20,11 +20,12 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
         {
             this.userManagerBroker = userManagerBroker;
             this.dateTimeBroker = dateTimeBroker;
-            this.loggingBroker = loggingBroker;            
+            this.loggingBroker = loggingBroker;
         }
 
         public ValueTask<User> RegisterUserAsync(User user, string password) =>
-            TryCatch(async () => {
+            TryCatch(async () =>
+            {
                 ValidateUserOnAdd(user);
                 return await this.userManagerBroker.InsertUserAsync(user, password);
             });
@@ -36,7 +37,8 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             });
 
         public ValueTask<User> RetrieveUserByIdAsync(Guid userId) =>
-            TryCatch(async () => {
+            TryCatch(async () =>
+            {
                 ValidateUserIdIsNull(userId);
                 User storageUser = await this.userManagerBroker.SelectUserByIdAsync(userId);
                 ValidateStorageUser(storageUser, userId);
@@ -45,7 +47,8 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             });
 
         public ValueTask<User> ModifyUserAsync(User user) =>
-            TryCatch(async () => {
+            TryCatch(async () =>
+            {
                 ValidateUserOnModify(user);
 
                 User maybeUser =
@@ -55,14 +58,15 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             });
 
         public ValueTask<User> RemoveUserByIdAsync(Guid userId) =>
-            TryCatch(async () => { 
+            TryCatch(async () =>
+            {
 
                 ValidateUserIdIsNull(userId);
 
                 User mayBeUser =
                     await this.userManagerBroker.SelectUserByIdAsync(userId);
 
-                ValidateStorageUser(mayBeUser,userId);
+                ValidateStorageUser(mayBeUser, userId);
 
                 return await this.userManagerBroker.DeleteUserAsync(mayBeUser);
             });

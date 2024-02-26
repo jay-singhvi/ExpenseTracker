@@ -3,9 +3,6 @@ using ExpenseTracker.Core.Models.Users.Exceptions;
 using FluentAssertions;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -21,16 +18,16 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             // Given
             Guid invalidUserId = Guid.Empty;
 
-            var invalidUserException = 
+            var invalidUserException =
                 new InvalidUserException(
-                    parameterName: nameof(User.Id), 
+                    parameterName: nameof(User.Id),
                     parameterValue: invalidUserId);
 
-            var expectedUserValidationException = 
+            var expectedUserValidationException =
                 new UserValidationException(invalidUserException);
 
             // When
-            ValueTask<User> retrieveUserById = 
+            ValueTask<User> retrieveUserById =
                 this.userService.RetrieveUserByIdAsync(invalidUserId);
 
             UserValidationException actualUserValidationException =
@@ -41,13 +38,13 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedUserValidationException))), 
+                    expectedUserValidationException))),
                         Times.Once);
 
-            this.userManagerBrokerMock.Verify(broker => 
-                broker.SelectUserByIdAsync(It.IsAny<Guid>()), 
+            this.userManagerBrokerMock.Verify(broker =>
+                broker.SelectUserByIdAsync(It.IsAny<Guid>()),
                     Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -62,35 +59,35 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             Guid invalidUserId = Guid.NewGuid();
             User noUser = null;
 
-            var notFoundException = 
+            var notFoundException =
                 new NotFoundUserException(invalidUserId);
 
-            var expectedUserValidationException = 
+            var expectedUserValidationException =
                 new UserValidationException(notFoundException);
 
-            this.userManagerBrokerMock.Setup(broker => 
+            this.userManagerBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(invalidUserId))
                     .ReturnsAsync(noUser);
 
             // When
-            ValueTask<User> retrieveUserById = 
+            ValueTask<User> retrieveUserById =
                 this.userService.RetrieveUserByIdAsync(invalidUserId);
 
-            var actualUserValidationException = 
-                await Assert.ThrowsAsync<UserValidationException>(() => 
+            var actualUserValidationException =
+                await Assert.ThrowsAsync<UserValidationException>(() =>
                     retrieveUserById.AsTask());
 
             // Then
 
             actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedUserValidationException))), 
+                    expectedUserValidationException))),
                         Times.Once);
 
-            this.userManagerBrokerMock.Verify(broker => 
-                broker.SelectUserByIdAsync(It.IsAny<Guid>()), 
+            this.userManagerBrokerMock.Verify(broker =>
+                broker.SelectUserByIdAsync(It.IsAny<Guid>()),
                     Times.Once);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();

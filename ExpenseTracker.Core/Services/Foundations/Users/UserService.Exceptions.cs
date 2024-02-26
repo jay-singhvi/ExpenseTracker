@@ -1,5 +1,4 @@
 ﻿using EFxceptions.Models.Exceptions;
-using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using ExpenseTracker.Core.Models.Users;
 using ExpenseTracker.Core.Models.Users.Exceptions;
 using Microsoft.Data.SqlClient;
@@ -8,7 +7,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xeptions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ExpenseTracker.Core.Services.Foundations.Users
 {
@@ -37,7 +35,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             }
             catch (SqlException sqlException)
             {
-                var failedUserStorageException = 
+                var failedUserStorageException =
                     new FailedUserStorageException(sqlException);
 
                 throw CreateAndLogCriticalDependencyException(failedUserStorageException);
@@ -51,7 +49,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             }
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
-                var lockedUserException = 
+                var lockedUserException =
                     new LockedUserException(dbUpdateConcurrencyException);
 
                 throw CreateAndLogDependencyValidationException(lockedUserException);
@@ -65,14 +63,14 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             }
             catch (DbUpdateException dbUpdateException)
             {
-                var failedUserStorageException = 
+                var failedUserStorageException =
                     new FailedUserStorageException(dbUpdateException);
 
                 throw CreateAndLogDependencyValidationException(failedUserStorageException);
             }
             catch (Exception exception)
             {
-                var failedUserServiceException = 
+                var failedUserServiceException =
                     new FailedUserServiceException(exception);
 
                 throw CreateAndLogUserServiceException(failedUserServiceException);
@@ -87,7 +85,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
             }
             catch (SqlException sqlException)
             {
-                var failedUserStorageException = 
+                var failedUserStorageException =
                     new FailedUserStorageException(sqlException);
 
                 throw CreateAndLogCriticalDependencyException(failedUserStorageException);
@@ -103,7 +101,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
 
         private UserValidationException CreateAndLogValidationException(Xeption exception)
         {
-            var userValidationException = 
+            var userValidationException =
                 new UserValidationException(exception);
 
             this.loggingBroker.LogError(userValidationException);
@@ -113,7 +111,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
 
         private UserDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
         {
-            var userDependencyValidationException = 
+            var userDependencyValidationException =
                 new UserDependencyValidationException(exception);
 
             this.loggingBroker.LogError(userDependencyValidationException);
@@ -123,7 +121,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
 
         private UserDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
         {
-            var userDependencyException = 
+            var userDependencyException =
                 new UserDependencyException(exception);
 
             this.loggingBroker.LogCritical(userDependencyException);
@@ -133,7 +131,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Users
 
         private UserServiceException CreateAndLogUserServiceException(Xeption exception)
         {
-            var userServiceException = 
+            var userServiceException =
                 new UserServiceException(exception);
 
             this.loggingBroker.LogError(userServiceException);

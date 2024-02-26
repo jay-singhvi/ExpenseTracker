@@ -12,7 +12,6 @@ using System.Runtime.CompilerServices;
 using Tynamix.ObjectFiller;
 using Xeptions;
 using Xunit;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 {
@@ -39,13 +38,13 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
 
-        private static User CreateRandomUser(DateTimeOffset dates) => 
+        private static User CreateRandomUser(DateTimeOffset dates) =>
             CreateUserFiller(dates).Create();
 
         private static User CreateRandomUser()
         {
             DateTimeOffset dates = GetRandomDateTimeOffset();
-            
+
             return CreateUserFiller(dates).Create();
         }
 
@@ -77,13 +76,13 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             };
         }
 
-        private static SqlException GetSqlException() => 
+        private static SqlException GetSqlException() =>
             (SqlException)RuntimeHelpers.GetUninitializedObject(typeof(SqlException));
 
         private static int GetRandomNumber() => new IntRange(min: 2, max: 90).GetValue();
         private static int GetNegativeRandomNumber() => -1 * GetRandomNumber();
 
-        private static string GetRandomMessage() => 
+        private static string GetRandomMessage() =>
             new MnemonicString().GetValue();
 
         private static IQueryable<User> CreateRandomUsers()
@@ -99,7 +98,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             filler.Setup()
                 .OnType<DateTimeOffset>().Use(dates)
-                .OnProperty(user => user.LockoutEnd).Use(dates);                          
+                .OnProperty(user => user.LockoutEnd).Use(dates);
 
             return filler;
         }

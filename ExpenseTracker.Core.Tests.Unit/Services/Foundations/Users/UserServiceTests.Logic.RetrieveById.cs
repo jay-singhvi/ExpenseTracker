@@ -2,10 +2,6 @@
 using FluentAssertions;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
@@ -21,19 +17,19 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             User expectedUser = storageUser;
             Guid userId = someUser.Id;
 
-            this.userManagerBrokerMock.Setup(broker => 
+            this.userManagerBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(userId))
                     .ReturnsAsync(storageUser);
 
             // When
-            User actualUser = 
+            User actualUser =
                 await this.userService.RetrieveUserByIdAsync(userId);
 
             // Then
             actualUser.Should().BeEquivalentTo(expectedUser);
 
-            this.userManagerBrokerMock.Verify(broker => 
-                broker.SelectUserByIdAsync(It.IsAny<Guid>()), 
+            this.userManagerBrokerMock.Verify(broker =>
+                broker.SelectUserByIdAsync(It.IsAny<Guid>()),
                     Times.Once);
 
             this.userManagerBrokerMock.VerifyNoOtherCalls();

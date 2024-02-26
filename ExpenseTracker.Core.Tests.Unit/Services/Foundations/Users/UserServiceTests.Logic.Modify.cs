@@ -3,10 +3,6 @@ using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
@@ -17,10 +13,10 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
         public async void ShouldModifyUserAsync()
         {
             // Given
-            DateTimeOffset randomDate = 
+            DateTimeOffset randomDate =
                 GetRandomDateTimeOffset();
 
-            User randomUser = 
+            User randomUser =
                 CreateRandomUser(dates: randomDate);
 
             User inputUser = randomUser;
@@ -33,36 +29,36 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             User expectedUser = updatedUser.DeepClone();
 
             Guid inputUserId = inputUser.Id;
-            
-            this.dateTimeBrokerMock.Setup(broker => 
+
+            this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
                     .Returns(randomDate);
 
-            this.userManagerBrokerMock.Setup(broker => 
+            this.userManagerBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(inputUserId))
                     .ReturnsAsync(storageUser);
 
-            this.userManagerBrokerMock.Setup(broker => 
+            this.userManagerBrokerMock.Setup(broker =>
                 broker.UpdateUserAsync(inputUser))
                     .ReturnsAsync(updatedUser);
 
             // When
-            User actualUser = 
+            User actualUser =
                 await this.userService.ModifyUserAsync(inputUser);
 
             // Then
             actualUser.Should().BeEquivalentTo(expectedUser);
 
-            this.dateTimeBrokerMock.Verify(broker => 
-                broker.GetCurrentDateTimeOffset(), 
-                    Times.Once);
-            
-            this.userManagerBrokerMock.Verify(broker => 
-                broker.SelectUserByIdAsync(inputUserId), 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
                     Times.Once);
 
-            this.userManagerBrokerMock.Verify(broker => 
-                broker.UpdateUserAsync(storageUser), 
+            this.userManagerBrokerMock.Verify(broker =>
+                broker.SelectUserByIdAsync(inputUserId),
+                    Times.Once);
+
+            this.userManagerBrokerMock.Verify(broker =>
+                broker.UpdateUserAsync(storageUser),
                     Times.Once);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
