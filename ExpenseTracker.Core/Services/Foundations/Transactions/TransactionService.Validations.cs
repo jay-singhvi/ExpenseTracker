@@ -38,6 +38,14 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
         private static void ValidateTransactionId(Guid transactionId) =>
             Validate((Rule: IsInvalid(transactionId), Parameter: nameof(Transaction.Id)));
 
+        private static void ValidateStorageTransaction(Transaction maybeTransaction, Guid transactionId)
+        {
+            if (maybeTransaction is null)
+            {
+                throw new NotFoundTransactionException(transactionId);
+            }
+        }
+
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
             var invalidTransactionException = new InvalidTransactionException();

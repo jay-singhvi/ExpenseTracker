@@ -54,5 +54,48 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async void ShouldThrowValidationExceptionOnRetrieveByIdIfTransactionIsNotFoundAndLogItAsync()
+        {
+            // Given
+            var someTransactionId = Guid.NewGuid();
+            Transaction noTransaction = null;
+
+            var notFoundTransactionException = 
+                new NotFoundTransactionException(someTransactionId);
+
+            var expectedTransactionValidationException = 
+                new TransactionValidationException(notFoundTransactionException);
+
+            this.storageBrokerMock.Setup(broker => 
+                broker.SelectTransactionByIdAsync(someTransactionId))
+                    .ReturnsAsync(noTransaction);
+
+            // When
+            ValueTask<Transaction> retrieveTransactionByIdTask = 
+                this.transactionService.RetrieveTransactionByIdAsync(someTransactionId);
+
+            var actualTransactionValidationException = 
+                await Assert.ThrowsAsync<TransactionValidationException>(() => 
+                    retrieveTransactionByIdTask.AsTask());
+
+            // Then
+            actualTransactionValidationException.Should()
+                .BeEquivalentTo(expectedTransactionValidationException);
+
+            this.storageBrokerMock.Verify(broker => 
+                broker.SelectTransactionByIdAsync(It.IsAny<Guid>()), 
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker => 
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTransactionValidationException))), 
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

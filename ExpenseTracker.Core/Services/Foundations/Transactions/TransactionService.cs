@@ -39,7 +39,13 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
         public ValueTask<Transaction> RetrieveTransactionByIdAsync(Guid transactionId) => 
             TryCatch(async () => {
                 ValidateTransactionId(transactionId);
-                return await this.storageBroker.SelectTransactionByIdAsync(transactionId);
+
+                var maybeTransaction = 
+                    await this.storageBroker.SelectTransactionByIdAsync(transactionId);
+
+                ValidateStorageTransaction(maybeTransaction, transactionId);
+
+                return maybeTransaction;
             });
     }
 }

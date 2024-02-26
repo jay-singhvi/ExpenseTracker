@@ -29,6 +29,10 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
             {
                 throw CreateAndLogValidationException(invalidTransactionException);
             }
+            catch (NotFoundTransactionException notFoundTransactionException)
+            {
+                throw CreateAndLogValidationException(notFoundTransactionException);
+            }
             catch (SqlException sqlException)
             {
                 var failedTransactionStorageException =
