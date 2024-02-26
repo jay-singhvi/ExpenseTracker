@@ -38,7 +38,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
 
         public ValueTask<Transaction> RetrieveTransactionByIdAsync(Guid transactionId)
         {
-            throw new NotImplementedException();
+            return this.storageBroker.SelectTransactionByIdAsync(transactionId);
         }
     }
 }
