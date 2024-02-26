@@ -74,6 +74,13 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
 
                 throw CreateAndLogCriticalDependencyException(failedTransactionStorageException);
             }
+            catch (Exception serviceException)
+            {
+                var failedTransactionServiceException = 
+                    new FailedTransactionServiceException(serviceException);
+
+                throw CreateAndLogServiceException(failedTransactionServiceException);
+            }
         }
         private TransactionValidationException CreateAndLogValidationException(Xeption exception)
         {
