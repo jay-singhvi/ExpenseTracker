@@ -48,9 +48,12 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
                 return maybeTransaction;
             });
 
-        public ValueTask<Transaction> ModifyTransactionAsync(Transaction transaction)
+        public async ValueTask<Transaction> ModifyTransactionAsync(Transaction transaction)
         {
-            throw new NotImplementedException();
+            Transaction maybeTransaction = 
+                await this.storageBroker.SelectTransactionByIdAsync(transaction.Id);
+
+            return await this.storageBroker.UpdateTransactionAsync(maybeTransaction);
         }
     }
 }
