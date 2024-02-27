@@ -10,5 +10,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
         ValueTask<Transaction> AddTransactionAsync(Transaction transaction);
         IQueryable<Transaction> RetrieveAllTransactions();
         ValueTask<Transaction> RetrieveTransactionByIdAsync(Guid transactionId);
+        ValueTask<Transaction> ModifyTransactionAsync(Transaction transaction);
+
     }
 }
