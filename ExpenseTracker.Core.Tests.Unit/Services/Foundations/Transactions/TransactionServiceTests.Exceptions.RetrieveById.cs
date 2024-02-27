@@ -16,7 +16,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
         [Fact]
         public async void ShouldThrowCriticalDependencyExceptionOnretrieveByIdIfSqlErrorOccursAndLogItAsync()
         {
-            // Given
+            // Given 
             Guid someTransactionId = Guid.NewGuid();
             var sqlException = GetSqlException();
             
