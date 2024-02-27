@@ -27,6 +27,11 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
                 );
         }
 
+        private static void ValidateTransactionOnModify(Transaction transaction)
+        {
+            ValidateTransactionIsNotNull(transaction);
+        }
+
         private static void ValidateTransactionIsNotNull(Transaction transaction)
         {
             if (transaction == null)
