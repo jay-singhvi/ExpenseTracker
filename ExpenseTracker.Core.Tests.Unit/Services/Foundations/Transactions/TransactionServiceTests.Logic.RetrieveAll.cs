@@ -9,7 +9,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
     public partial class TransactionServiceTests
     {
         [Fact]
-        public async void ShouldRetrieveAllTransactions()
+        public void ShouldRetrieveAllTransactions()
         {
             // Given
             IQueryable<Transaction> randomTransactions = CreateRandomTransactions();

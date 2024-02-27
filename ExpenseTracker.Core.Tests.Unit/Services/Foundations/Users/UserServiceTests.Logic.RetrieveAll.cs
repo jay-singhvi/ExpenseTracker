@@ -9,7 +9,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
     public partial class UserServiceTests
     {
         [Fact]
-        public async void ShouldRetrieveAllUsersAsync()
+        public void ShouldRetrieveAllUsersAsync()
         {
             // Given
             IQueryable<User> randomUsers = CreateRandomUsers();
