@@ -1,6 +1,7 @@
 ﻿using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using System;
+using System.Data;
 using System.Reflection.Metadata;
 
 namespace ExpenseTracker.Core.Services.Foundations.Transactions
@@ -30,6 +31,23 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
         private static void ValidateTransactionOnModify(Transaction transaction)
         {
             ValidateTransactionIsNotNull(transaction);
+
+            Validate(
+                (Rule: IsInvalid(transaction.Id), Parameter: nameof(Transaction.Id)),
+                (Rule: IsInvalid(transaction.UserId), Parameter: nameof(Transaction.UserId)),
+                (Rule: IsInvalid(transaction.Category), Parameter: nameof(Transaction.Category)),
+                (Rule: IsInvalid(transaction.Description), Parameter: nameof(Transaction.Description)),
+                (Rule: IsInvalid(transaction.Amount), Parameter: nameof(transaction.Amount)),
+                (Rule: IsInvalid(transaction.TransactionDate), Parameter: nameof(transaction.TransactionDate)),
+                (Rule: IsInvalid(transaction.CreatedDate), Parameter: nameof(transaction.CreatedDate)),
+                (Rule: IsInvalid(transaction.UpdatedDate), Parameter: nameof(transaction.UpdatedDate)),
+                (Rule: IsSame(
+                    firstDate: transaction.UpdatedDate, 
+                    secondDate: transaction.CreatedDate, 
+                    secondDateName: nameof(Transaction.CreatedDate)), 
+                    Parameter: nameof(Transaction.UpdatedDate)
+                )
+                );
         }
 
         private static void ValidateTransactionIsNotNull(Transaction transaction)
@@ -74,6 +92,12 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
             Message = "Id is required."
         };
 
+        private static dynamic IsInvalid(Decimal value) => new
+        {
+            Condition = value == default,
+            Message = "Value is required."
+        };
+
         private static dynamic IsInvalid(string text) => new
         {
             Condition = String.IsNullOrWhiteSpace(text),
@@ -93,6 +117,14 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
                 Condition = firstDate != secondDate,
                 Message = $"Date is not same as {secondDateName}"
             };
+
+        private static dynamic IsSame(DateTimeOffset firstDate, 
+            DateTimeOffset secondDate, 
+            string secondDateName) => new
+        {
+            Condition = firstDate == secondDate,
+            Message = $"Date is same as {secondDateName}"
+        };
 
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {

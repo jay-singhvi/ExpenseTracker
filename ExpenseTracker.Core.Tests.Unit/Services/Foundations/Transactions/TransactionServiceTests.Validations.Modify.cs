@@ -95,7 +95,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             invalidTransactionException.AddData(
                 key: nameof(Transaction.Amount),
-                values: "Id is required.");
+                values: "Value is required.");
 
             invalidTransactionException.AddData(
                 key: nameof(Transaction.TransactionDate),
