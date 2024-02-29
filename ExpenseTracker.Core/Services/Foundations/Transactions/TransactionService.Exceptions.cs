@@ -64,7 +64,6 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
 
         }
 
-
         private IQueryable<Transaction> TryCatch(ReturningTransactionsFunction returningTransactionFunctions)
         {
             try
@@ -135,6 +134,5 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
 
             throw transactionServiceException;
         }
-
     }
 }

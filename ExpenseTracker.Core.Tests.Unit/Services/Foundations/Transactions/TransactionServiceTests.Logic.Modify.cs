@@ -24,11 +24,14 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             Transaction inputTransaction = someTransaction;
             inputTransaction.UpdatedDate = randomDate.AddMinutes(1);
 
-
             Transaction storageTransaction = inputTransaction;
             Transaction updatedTransaction = inputTransaction;
             Transaction expectedTransaction = updatedTransaction;
             Guid transactionId = inputTransaction.Id;
+
+            this.dateTimeBrokerMock.Setup(broker => 
+                broker.GetCurrentDateTimeOffset())
+                    .Returns(randomDate);
 
             this.storageBrokerMock.Setup(broker => 
                 broker.SelectTransactionByIdAsync(transactionId))
@@ -45,7 +48,12 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             var actualTransaction = await modifyTransactionTask.AsTask();
 
             // Then
-            actualTransaction.Should().BeEquivalentTo(expectedTransaction);
+            actualTransaction.Should()
+                .BeEquivalentTo(expectedTransaction);
+
+            this.dateTimeBrokerMock.Verify(broker => 
+                broker.GetCurrentDateTimeOffset(), 
+                    Times.Once);
 
             this.storageBrokerMock.Verify(broker => 
                 broker.SelectTransactionByIdAsync(

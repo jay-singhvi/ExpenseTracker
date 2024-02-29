@@ -28,7 +28,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
                 );
         }
 
-        private static void ValidateTransactionOnModify(Transaction transaction)
+        private void ValidateTransactionOnModify(Transaction transaction)
         {
             ValidateTransactionIsNotNull(transaction);
 
@@ -46,7 +46,8 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
                     secondDate: transaction.CreatedDate, 
                     secondDateName: nameof(Transaction.CreatedDate)), 
                     Parameter: nameof(Transaction.UpdatedDate)
-                )
+                ),
+                (Rule: IsNotRecent(transaction.UpdatedDate), Parameter: nameof(transaction.UpdatedDate))
                 );
         }
 

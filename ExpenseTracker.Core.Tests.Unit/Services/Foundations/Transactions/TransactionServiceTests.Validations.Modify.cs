@@ -123,6 +123,10 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             actualTransactionValidationException.Should()
                 .BeEquivalentTo(expectedTransactionValidationException);
 
+            this.dateTimeBrokerMock.Verify(broker => 
+                broker.GetCurrentDateTimeOffset(), 
+                    Times.Once);
+
             this.loggingBrokerMock.Verify(broker => 
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedTransactionValidationException))), 
@@ -228,6 +232,10 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             // Then
             actualTransactionValidationException.Should()
                 .BeEquivalentTo(expectedTransactionValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker => 
+                broker.GetCurrentDateTimeOffset(), 
+                    Times.Once());
 
             this.loggingBrokerMock.Verify(broker => 
                 broker.LogError(It.Is(SameExceptionAs(
