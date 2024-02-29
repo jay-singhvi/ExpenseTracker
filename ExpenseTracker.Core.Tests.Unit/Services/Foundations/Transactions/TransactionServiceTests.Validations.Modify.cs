@@ -143,29 +143,84 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
-        [Fact]
-        public async void ShouldThrowValidationExceptionOnModifyIfTransactionUpdatedDateIsSameAsCreatedDateAndLogItAsync()
+        //[Fact] below test Not needed as it is accomodated in above test.
+        //public async void ShouldThrowValidationExceptionOnModifyIfTransactionUpdatedDateIsSameAsCreatedDateAndLogItAsync()
+        //{
+        //    // Given
+        //    DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+
+        //    Transaction randomTransaction = 
+        //        CreateRandomTransaction(dates: randomDateTime);
+
+        //    Transaction invalidTransaction = randomTransaction;
+
+        //    var invalidTransactionException = new InvalidTransactionException();
+
+        //    invalidTransactionException.AddData(
+        //        key: nameof(Transaction.UpdatedDate), 
+        //        values: $"Date is same as {nameof(Transaction.CreatedDate)}");
+
+        //    var expectedTransactionValidationException = 
+        //        new TransactionValidationException(invalidTransactionException);
+
+        //    // When
+        //    ValueTask<Transaction> modifyTransactionTask = 
+        //        this.transactionService.ModifyTransactionAsync(invalidTransaction);
+
+        //    var actualTransactionValidationException = 
+        //        await Assert.ThrowsAsync<TransactionValidationException>(modifyTransactionTask.AsTask);
+
+        //    // Then
+        //    actualTransactionValidationException.Should()
+        //        .BeEquivalentTo(expectedTransactionValidationException);
+
+        //    this.loggingBrokerMock.Verify(broker => 
+        //        broker.LogError(It.Is(SameExceptionAs(
+        //            expectedTransactionValidationException))), 
+        //                Times.Once);
+
+        //    this.storageBrokerMock.Verify(broker => 
+        //        broker.SelectTransactionByIdAsync(
+        //            It.IsAny<Guid>()), 
+        //                Times.Never);
+
+        //    this.storageBrokerMock.Verify(broker => 
+        //        broker.UpdateTransactionAsync(
+        //            It.IsAny<Transaction>()), 
+        //                Times.Never);
+
+        //    this.loggingBrokerMock.VerifyNoOtherCalls();
+        //    this.storageBrokerMock.VerifyNoOtherCalls();
+        //    this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        //}
+
+        [Theory]
+        [MemberData(nameof(MinutesBeforeOrAfter))]
+        public async void ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(int minutes)
         {
             // Given
-            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            DateTimeOffset dateTime = 
+                GetRandomDateTimeOffset();
 
-            Transaction randomTransaction = 
-                CreateRandomTransaction(dates: randomDateTime);
+            Transaction someTransaction = CreateRandomTransaction();
+            Transaction inputTransaction = someTransaction;
 
-            Transaction invalidTransaction = randomTransaction;
+            inputTransaction.UpdatedDate = 
+                inputTransaction.UpdatedDate.AddMinutes(minutes);
 
-            var invalidTransactionException = new InvalidTransactionException();
+            var invalidTransactionException = 
+                new InvalidTransactionException();
 
             invalidTransactionException.AddData(
                 key: nameof(Transaction.UpdatedDate), 
-                values: $"Date is same as {nameof(Transaction.CreatedDate)}");
+                values: "Date is not recent.");
 
             var expectedTransactionValidationException = 
                 new TransactionValidationException(invalidTransactionException);
 
             // When
             ValueTask<Transaction> modifyTransactionTask = 
-                this.transactionService.ModifyTransactionAsync(invalidTransaction);
+                this.transactionService.ModifyTransactionAsync(inputTransaction);
 
             var actualTransactionValidationException = 
                 await Assert.ThrowsAsync<TransactionValidationException>(modifyTransactionTask.AsTask);
