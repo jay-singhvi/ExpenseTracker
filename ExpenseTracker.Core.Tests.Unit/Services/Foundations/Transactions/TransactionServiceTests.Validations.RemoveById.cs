@@ -33,7 +33,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
                 this.transactionService.RemoveTransactionByIdAsync(invalidTransaction);
 
             var actualTransactionValidationException = 
-                await Assert.ThrowsAsync<InvalidTransactionException>(removeByIdTask.AsTask);
+                await Assert.ThrowsAsync<TransactionValidationException>(removeByIdTask.AsTask);
 
             // Then
             actualTransactionValidationException.Should()
