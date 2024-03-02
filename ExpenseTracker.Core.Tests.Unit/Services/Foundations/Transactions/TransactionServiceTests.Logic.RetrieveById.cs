@@ -2,9 +2,6 @@
 using FluentAssertions;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -23,12 +20,12 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             Guid transactionId = inputTransaction.Id;
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectTransactionByIdAsync(transactionId))
                     .ReturnsAsync(storageTransaction);
 
             // When
-            ValueTask<Transaction> retrieveTransactionByIdTask = 
+            ValueTask<Transaction> retrieveTransactionByIdTask =
                 this.transactionService.RetrieveTransactionByIdAsync(transactionId);
 
             var actualTransaction = await retrieveTransactionByIdTask.AsTask();
@@ -36,8 +33,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             actualTransaction.Should()
                 .BeEquivalentTo(expectedTransaction);
 
-            this.storageBrokerMock.Verify(broker => 
-                broker.SelectTransactionByIdAsync(transactionId), 
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTransactionByIdAsync(transactionId),
                     Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
