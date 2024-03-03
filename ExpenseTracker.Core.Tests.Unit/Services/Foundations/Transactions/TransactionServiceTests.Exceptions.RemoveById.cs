@@ -56,6 +56,50 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
         }
 
         [Fact]
+        public async Task ShouldThrowDependencyExceptionOnRemoveByIdIfDatabaseUpdateErrorOccursAndLogItAsync()
+        {
+            // Given
+            Transaction someTransaction = CreateRandomTransaction();
+
+            var dbUpdateException = new DbUpdateException();
+
+            var failedTransactionStorageException =
+                new FailedTransactionStorageException(dbUpdateException);
+
+            var expectedTransactionDependencyException =
+                new TransactionDependencyException(failedTransactionStorageException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(dbUpdateException);
+
+            // When
+            ValueTask<Transaction> removeTransactionTask =
+                this.transactionService.AddTransactionAsync(someTransaction);
+
+            // Then
+            await Assert.ThrowsAsync<TransactionDependencyException>(() =>
+                removeTransactionTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+            broker.GetCurrentDateTimeOffset(),
+            Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+            broker.LogError(It.Is(SameExceptionAs(
+                expectedTransactionDependencyException))),
+                Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+            broker.InsertTransactionAsync(It.IsAny<Transaction>()),
+            Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void ShouldThrowDependencyValidationExceptionOnRemoveByIdIfDBUpdateConcurrencyErrorOccursAndLogItAsync()
         {
             // Given
