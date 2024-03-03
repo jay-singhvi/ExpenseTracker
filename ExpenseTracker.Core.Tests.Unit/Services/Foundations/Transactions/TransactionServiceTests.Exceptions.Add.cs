@@ -53,6 +53,65 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
         }
 
         [Fact]
+        public async void ShouldThrowDependencyValidationExceptionOnAddIfReferenceErrorOccursAndLogItAsync()
+        {
+            // Given
+            Transaction someTransaction = CreateRandomTransaction();
+
+            Transaction foreignKeyConflictedTransaction = someTransaction;
+
+            string expectionMessage = GetRandomMessage();
+
+            var foreignKeyConstraintConflictException =
+                new ForeignKeyConstraintConflictException(expectionMessage);
+
+            var invalidTransactionReference =
+                new InvalidTransactionReferenceException(foreignKeyConstraintConflictException);
+
+            var expectedTransactionDependencyValidationException =
+                new TransactionDependencyValidationException(invalidTransactionReference);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(foreignKeyConstraintConflictException);
+
+            // When
+            ValueTask<Transaction> addTransactionTask =
+                this.transactionService.AddTransactionAsync(someTransaction);
+
+            var actualTransactionDependencyValidationException =
+                await Assert.ThrowsAsync<TransactionDependencyValidationException>(
+                    addTransactionTask.AsTask);
+
+            // Then
+            actualTransactionDependencyValidationException.Should()
+                .BeEquivalentTo(expectedTransactionDependencyValidationException);
+
+            this.dateTimeBrokerMock.Verify(
+                broker => broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTransactionDependencyValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTransactionByIdAsync(
+                    It.IsAny<Guid>()),
+                        Times.Never);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.DeleteTransactionAsync(
+                    It.IsAny<Transaction>()),
+                        Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void ShouldThrowDependencyValidationExceptionOnAddIfdbUpdateConcurrencyErrorOccursAndLogItAsync()
         {
             // Given
