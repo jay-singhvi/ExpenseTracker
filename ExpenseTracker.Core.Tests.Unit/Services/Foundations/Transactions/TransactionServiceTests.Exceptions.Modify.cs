@@ -68,6 +68,59 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
         }
 
         [Fact]
+        public async void ShouldThrowDependencyExceptionOnModifyIfDbUpdateExceptionOccursAndLogItAsync()
+        {
+            // Given
+            Transaction randomTransaction = CreateRandomTransaction();
+            var dbUpdateException = new DbUpdateException();
+
+            var failedTransactionStorage = 
+                new FailedTransactionStorageException(dbUpdateException);
+
+            var expectedTransactionDependencyException = 
+                new TransactionDependencyException(failedTransactionStorage);
+
+            this.dateTimeBrokerMock.Setup(broker => 
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(dbUpdateException);
+            
+            // When
+            ValueTask<Transaction> modifyTransactionTask = 
+                this.transactionService.ModifyTransactionAsync(randomTransaction);
+
+            var actualTransactionDependencyException = 
+                await Assert.ThrowsAsync<TransactionDependencyValidationException>(
+                    modifyTransactionTask.AsTask);
+
+            // Then
+            actualTransactionDependencyException.Should()
+                .BeEquivalentTo(expectedTransactionDependencyException);
+
+            this.dateTimeBrokerMock.Verify(broker => 
+                broker.GetCurrentDateTimeOffset(), 
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker => 
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTransactionDependencyException))), 
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker => 
+                broker.SelectTransactionByIdAsync(
+                    It.IsAny<Guid>()), 
+                        Times.Never);
+
+            this.storageBrokerMock.Verify(broker => 
+                broker.UpdateTransactionAsync(
+                    It.IsAny<Transaction>()), 
+                        Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void ShouldThrowDependencyValidationExceptionOnModifyIfdbUpdateConcurrencyErrorOccursAndLogItAsync()
         {
             // Given
