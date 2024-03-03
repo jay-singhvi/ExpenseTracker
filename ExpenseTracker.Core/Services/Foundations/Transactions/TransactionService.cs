@@ -36,12 +36,11 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
                 return this.storageBroker.SelectAllTransactions();
             });
 
-        public ValueTask<Transaction> RetrieveTransactionByIdAsync(Guid transactionId) =>
-            TryCatch(async () =>
-            {
+        public ValueTask<Transaction> RetrieveTransactionByIdAsync(Guid transactionId) => 
+            TryCatch(async () => {
                 ValidateTransactionId(transactionId);
 
-                var maybeTransaction =
+                var maybeTransaction = 
                     await this.storageBroker.SelectTransactionByIdAsync(transactionId);
 
                 ValidateStorageTransaction(maybeTransaction, transactionId);
@@ -50,8 +49,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
             });
 
         public ValueTask<Transaction> ModifyTransactionAsync(Transaction transaction) =>
-            TryCatch(async () =>
-            {
+            TryCatch(async () => {
                 ValidateTransactionOnModify(transaction);
 
                 Transaction maybeTransaction =
@@ -61,8 +59,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
             });
 
         public ValueTask<Transaction> RemoveTransactionByIdAsync(Guid transactionId) =>
-            TryCatch(async () =>
-            {
+            TryCatch(async () => { 
                 ValidateTransactionId(transactionId);
 
                 var maybeTransaction =

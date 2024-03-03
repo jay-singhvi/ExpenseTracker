@@ -3,6 +3,9 @@ using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using FluentAssertions;
 using Moq;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -17,21 +20,21 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             Guid randomTransactionId = Guid.NewGuid();
             var sqlException = GetSqlException();
 
-            var failTransactionStorageException = 
+            var failTransactionStorageException =
                 new FailedTransactionStorageException(sqlException);
 
-            var expectedTransactionDependencyException = 
+            var expectedTransactionDependencyException =
                 new TransactionDependencyException(failTransactionStorageException);
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectTransactionByIdAsync(randomTransactionId))
                     .ThrowsAsync(sqlException);
 
             // When
-            ValueTask<Transaction> removeTransactionByIdTask = 
+            ValueTask<Transaction> removeTransactionByIdTask =
                 this.transactionService.RemoveTransactionByIdAsync(randomTransactionId);
 
-            var actualTransactionDependencyException = 
+            var actualTransactionDependencyException =
                 await Assert.ThrowsAsync<TransactionDependencyException>(
                     removeTransactionByIdTask.AsTask);
 
@@ -44,9 +47,9 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
                     It.IsAny<Guid>()),
                         Times.Once);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
-                    expectedTransactionDependencyException))), 
+                    expectedTransactionDependencyException))),
                         Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();

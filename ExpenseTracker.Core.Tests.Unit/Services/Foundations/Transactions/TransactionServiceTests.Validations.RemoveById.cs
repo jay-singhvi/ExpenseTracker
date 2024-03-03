@@ -3,6 +3,9 @@ using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using FluentAssertions;
 using Moq;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -19,36 +22,36 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             var invalidTransactionException = new InvalidTransactionException();
 
             invalidTransactionException.AddData(
-                key: nameof(Transaction.Id),
+                key: nameof(Transaction.Id), 
                 values: "Id is required.");
 
-            var expectedTransactionValidationException =
+            var expectedTransactionValidationException = 
                 new TransactionValidationException(invalidTransactionException);
 
             // When
-            ValueTask<Transaction> removeByIdTask =
+            ValueTask<Transaction> removeByIdTask = 
                 this.transactionService.RemoveTransactionByIdAsync(invalidTransaction);
 
-            var actualTransactionValidationException =
+            var actualTransactionValidationException = 
                 await Assert.ThrowsAsync<TransactionValidationException>(removeByIdTask.AsTask);
 
             // Then
             actualTransactionValidationException.Should()
                 .BeEquivalentTo(expectedTransactionValidationException);
 
-            this.loggingBrokerMock.Verify(broker =>
+            this.loggingBrokerMock.Verify(broker => 
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedTransactionValidationException))),
+                    expectedTransactionValidationException))), 
                         Times.Once);
 
-            this.storageBrokerMock.Verify(broker =>
+            this.storageBrokerMock.Verify(broker => 
                 broker.SelectTransactionByIdAsync(
-                        It.IsAny<Guid>()),
+                        It.IsAny<Guid>()), 
                             Times.Never);
 
-            this.storageBrokerMock.Verify(broker =>
+            this.storageBrokerMock.Verify(broker => 
                 broker.DeleteTransactionAsync(
-                        It.IsAny<Transaction>()),
+                        It.IsAny<Transaction>()), 
                             Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();

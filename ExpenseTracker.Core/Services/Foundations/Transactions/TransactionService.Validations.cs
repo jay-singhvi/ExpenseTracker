@@ -1,6 +1,8 @@
 ﻿using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using System;
+using System.Data;
+using System.Reflection.Metadata;
 
 namespace ExpenseTracker.Core.Services.Foundations.Transactions
 {
@@ -40,9 +42,9 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
                 (Rule: IsInvalid(transaction.CreatedDate), Parameter: nameof(transaction.CreatedDate)),
                 (Rule: IsInvalid(transaction.UpdatedDate), Parameter: nameof(transaction.UpdatedDate)),
                 (Rule: IsSame(
-                    firstDate: transaction.UpdatedDate,
-                    secondDate: transaction.CreatedDate,
-                    secondDateName: nameof(Transaction.CreatedDate)),
+                    firstDate: transaction.UpdatedDate, 
+                    secondDate: transaction.CreatedDate, 
+                    secondDateName: nameof(Transaction.CreatedDate)), 
                     Parameter: nameof(Transaction.UpdatedDate)
                 ),
                 (Rule: IsNotRecent(transaction.UpdatedDate), Parameter: nameof(transaction.UpdatedDate))
@@ -117,13 +119,13 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
                 Message = $"Date is not same as {secondDateName}"
             };
 
-        private static dynamic IsSame(DateTimeOffset firstDate,
-            DateTimeOffset secondDate,
+        private static dynamic IsSame(DateTimeOffset firstDate, 
+            DateTimeOffset secondDate, 
             string secondDateName) => new
-            {
-                Condition = firstDate == secondDate,
-                Message = $"Date is same as {secondDateName}"
-            };
+        {
+            Condition = firstDate == secondDate,
+            Message = $"Date is same as {secondDateName}"
+        };
 
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {
