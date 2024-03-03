@@ -47,6 +47,13 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsTransaction);
             }
+            catch(ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
+            {
+                var invalidTransactionReferenceException = 
+                    new InvalidTransactionReferenceException(foreignKeyConstraintConflictException);
+
+                throw CreateAndLogDependencyValidationException(invalidTransactionReferenceException);
+            }
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
                 var lockedTransactionException = 
