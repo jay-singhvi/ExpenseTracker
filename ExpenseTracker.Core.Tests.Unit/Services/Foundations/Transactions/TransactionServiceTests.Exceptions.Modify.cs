@@ -1,6 +1,7 @@
 ﻿using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -48,6 +49,60 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             this.loggingBrokerMock.Verify(broker => 
                 broker.LogCritical(It.Is(SameExceptionAs(
                     expectedTransactionDependencyException))), 
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker => 
+                broker.SelectTransactionByIdAsync(
+                    It.IsAny<Guid>()), 
+                        Times.Never);
+
+            this.storageBrokerMock.Verify(broker => 
+                broker.UpdateTransactionAsync(
+                    It.IsAny<Transaction>()), 
+                        Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void ShouldThrowDependencyValidationExceptionOnModifyIfdbUpdateConcurrencyErrorOccursAndLogItAsync()
+        {
+            // Given
+            Transaction someTransaction = CreateRandomTransaction();
+
+            var dbUpdateConcurrencyException = 
+                new DbUpdateConcurrencyException();
+
+            var lockedTransactionException = 
+                new LockedTransactionException(dbUpdateConcurrencyException);
+
+            var expectedTransactionDependencyValidationException = 
+                new TransactionDependencyValidationException(lockedTransactionException);
+
+            this.dateTimeBrokerMock.Setup(broker => 
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(dbUpdateConcurrencyException);
+
+            // When
+            ValueTask<Transaction> modifyTransactionTask = 
+                this.transactionService.ModifyTransactionAsync(someTransaction);
+
+            var actualTransactionDependencyValidationException = 
+                await Assert.ThrowsAsync<TransactionDependencyValidationException>(modifyTransactionTask.AsTask);
+
+            // Then
+            actualTransactionDependencyValidationException.Should()
+                .BeEquivalentTo(expectedTransactionDependencyValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker => 
+                broker.GetCurrentDateTimeOffset(), 
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker => 
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTransactionDependencyValidationException))), 
                         Times.Once);
 
             this.storageBrokerMock.Verify(broker => 
