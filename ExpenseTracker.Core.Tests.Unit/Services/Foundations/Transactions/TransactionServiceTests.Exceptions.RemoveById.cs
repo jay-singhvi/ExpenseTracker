@@ -106,5 +106,55 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             
         }
+
+        [Fact]
+        public async void ShouldThrowServiceExceptionOnRemoveByIdIfServiceErrorOccursAndLogItAsync()
+        {
+            // Given
+            Guid someTransactionId = Guid.NewGuid();
+
+            var serviceError = new Exception();
+
+            var failedTransactionServiceException = 
+                new FailedTransactionServiceException(serviceError);
+
+            var expectedTransactionServiceException = 
+                new TransactionServiceException(failedTransactionServiceException);
+
+            this.storageBrokerMock.Setup(broker => 
+                broker.SelectTransactionByIdAsync(someTransactionId))
+                    .ThrowsAsync(serviceError);
+
+            // When
+            ValueTask<Transaction> removeByIdTask = 
+                this.transactionService.RemoveTransactionByIdAsync(someTransactionId);
+
+            var actualTransactionServiceException = 
+                await Assert.ThrowsAsync<TransactionServiceException>(
+                    removeByIdTask.AsTask);
+
+            // Then
+            actualTransactionServiceException.Should()
+                .BeEquivalentTo(expectedTransactionServiceException);
+
+            this.storageBrokerMock.Verify(broker => 
+                broker.SelectTransactionByIdAsync(
+                    It.IsAny<Guid>()), 
+                        Times.Once);
+
+            this.loggingBrokerMock.Verify(broker => 
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTransactionServiceException))), 
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker => 
+                broker.DeleteTransactionAsync(
+                    It.IsAny<Transaction>()), 
+                        Times.Never);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
