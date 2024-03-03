@@ -89,7 +89,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
                 this.transactionService.ModifyTransactionAsync(randomTransaction);
 
             var actualTransactionDependencyException = 
-                await Assert.ThrowsAsync<TransactionDependencyValidationException>(
+                await Assert.ThrowsAsync<TransactionDependencyException>(
                     modifyTransactionTask.AsTask);
 
             // Then
