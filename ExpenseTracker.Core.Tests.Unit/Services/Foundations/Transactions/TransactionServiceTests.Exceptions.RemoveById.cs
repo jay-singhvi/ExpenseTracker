@@ -4,9 +4,6 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -65,38 +62,38 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             Guid someTransactionID = Guid.NewGuid();
             var dbUpdateConcurrencyException = new DbUpdateConcurrencyException();
 
-            var lockedTransactionException = 
+            var lockedTransactionException =
                 new LockedTransactionException(dbUpdateConcurrencyException);
 
-            var expectedTransactionDependencyValidationException = 
+            var expectedTransactionDependencyValidationException =
                 new TransactionDependencyValidationException(lockedTransactionException);
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectTransactionByIdAsync(someTransactionID))
                     .ThrowsAsync(dbUpdateConcurrencyException);
 
             // When
-            ValueTask<Transaction> removeByIdTask = 
+            ValueTask<Transaction> removeByIdTask =
                 this.transactionService.RemoveTransactionByIdAsync(someTransactionID);
 
-            var actualTransactionDependencyValidationException = 
+            var actualTransactionDependencyValidationException =
                 await Assert.ThrowsAsync<TransactionDependencyValidationException>(removeByIdTask.AsTask);
 
             // Then
             actualTransactionDependencyValidationException.Should()
                 .BeEquivalentTo(expectedTransactionDependencyValidationException);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectTransactionByIdAsync(
-                    It.IsAny<Guid>()), 
+                    It.IsAny<Guid>()),
                         Times.Once);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedTransactionDependencyValidationException))), 
+                    expectedTransactionDependencyValidationException))),
                         Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.DeleteTransactionAsync(
                     It.IsAny<Transaction>()),
                         Times.Never);
@@ -104,7 +101,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
-            
+
         }
 
         [Fact]
@@ -115,21 +112,21 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             var serviceError = new Exception();
 
-            var failedTransactionServiceException = 
+            var failedTransactionServiceException =
                 new FailedTransactionServiceException(serviceError);
 
-            var expectedTransactionServiceException = 
+            var expectedTransactionServiceException =
                 new TransactionServiceException(failedTransactionServiceException);
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectTransactionByIdAsync(someTransactionId))
                     .ThrowsAsync(serviceError);
 
             // When
-            ValueTask<Transaction> removeByIdTask = 
+            ValueTask<Transaction> removeByIdTask =
                 this.transactionService.RemoveTransactionByIdAsync(someTransactionId);
 
-            var actualTransactionServiceException = 
+            var actualTransactionServiceException =
                 await Assert.ThrowsAsync<TransactionServiceException>(
                     removeByIdTask.AsTask);
 
@@ -137,19 +134,19 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             actualTransactionServiceException.Should()
                 .BeEquivalentTo(expectedTransactionServiceException);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectTransactionByIdAsync(
-                    It.IsAny<Guid>()), 
+                    It.IsAny<Guid>()),
                         Times.Once);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedTransactionServiceException))), 
+                    expectedTransactionServiceException))),
                         Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.DeleteTransactionAsync(
-                    It.IsAny<Transaction>()), 
+                    It.IsAny<Transaction>()),
                         Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();

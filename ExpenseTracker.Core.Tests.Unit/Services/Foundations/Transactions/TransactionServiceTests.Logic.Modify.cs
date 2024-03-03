@@ -2,9 +2,6 @@
 using FluentAssertions;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -17,8 +14,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
         {
             // Given
             DateTimeOffset randomDate = GetRandomDateTimeOffset();
-            
-            Transaction someTransaction = 
+
+            Transaction someTransaction =
                 CreateRandomTransaction(dates: randomDate);
 
             Transaction inputTransaction = someTransaction;
@@ -29,20 +26,20 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             Transaction expectedTransaction = updatedTransaction;
             Guid transactionId = inputTransaction.Id;
 
-            this.dateTimeBrokerMock.Setup(broker => 
+            this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
                     .Returns(randomDate);
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectTransactionByIdAsync(transactionId))
                     .ReturnsAsync(storageTransaction);
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.UpdateTransactionAsync(inputTransaction))
                     .ReturnsAsync(updatedTransaction);
 
             // When
-            ValueTask<Transaction> modifyTransactionTask = 
+            ValueTask<Transaction> modifyTransactionTask =
                 this.transactionService.ModifyTransactionAsync(inputTransaction);
 
             var actualTransaction = await modifyTransactionTask.AsTask();
@@ -51,18 +48,18 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             actualTransaction.Should()
                 .BeEquivalentTo(expectedTransaction);
 
-            this.dateTimeBrokerMock.Verify(broker => 
-                broker.GetCurrentDateTimeOffset(), 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
                     Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectTransactionByIdAsync(
-                    It.IsAny<Guid>()), 
+                    It.IsAny<Guid>()),
                         Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.UpdateTransactionAsync(
-                    It.IsAny<Transaction>()), 
+                    It.IsAny<Transaction>()),
                         Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();

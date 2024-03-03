@@ -3,9 +3,6 @@ using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using FluentAssertions;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -19,17 +16,17 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             // Given
             Transaction nullTransaction = null;
 
-            var nullTransactionException = 
+            var nullTransactionException =
                 new NullTransactionException();
 
-            var expectedTransactionValidationException = 
+            var expectedTransactionValidationException =
                 new TransactionValidationException(nullTransactionException);
 
             // When
-            ValueTask<Transaction> modifyTransactionTask = 
+            ValueTask<Transaction> modifyTransactionTask =
                 this.transactionService.ModifyTransactionAsync(nullTransaction);
 
-            var actualTransactionValidationException = 
+            var actualTransactionValidationException =
                 await Assert.ThrowsAsync<TransactionValidationException>(
                     modifyTransactionTask.AsTask);
 
@@ -37,19 +34,19 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             actualTransactionValidationException.Should()
                 .BeEquivalentTo(expectedTransactionValidationException);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedTransactionValidationException))), 
-                        Times.Once);   
+                    expectedTransactionValidationException))),
+                        Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectTransactionByIdAsync(
-                    It.IsAny<Guid>()), 
+                    It.IsAny<Guid>()),
                         Times.Never);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.UpdateTransactionAsync(
-                    It.IsAny<Transaction>()), 
+                    It.IsAny<Transaction>()),
                         Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -70,7 +67,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
                 Category = invalidText
             };
 
-            var invalidTransactionException = 
+            var invalidTransactionException =
                 new InvalidTransactionException();
 
             invalidTransactionException.AddData(
@@ -82,7 +79,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
                 values: "Id is required.");
 
             invalidTransactionException.AddData(
-                key: nameof(Transaction.Category), 
+                key: nameof(Transaction.Category),
                 values: "Text is required.");
 
             //invalidTransactionException.AddData(
@@ -109,37 +106,37 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
                 key: nameof(Transaction.UpdatedDate),
                 values: ["Date is required.", $"Date is same as {nameof(Transaction.CreatedDate)}"]);
 
-            var expectedTransactionValidationException = 
+            var expectedTransactionValidationException =
                 new TransactionValidationException(invalidTransactionException);
 
             // When
-            ValueTask<Transaction> modifyTransactionTask = 
+            ValueTask<Transaction> modifyTransactionTask =
                 this.transactionService.ModifyTransactionAsync(invalidTransaction);
 
-            var actualTransactionValidationException = 
+            var actualTransactionValidationException =
                 await Assert.ThrowsAsync<TransactionValidationException>(modifyTransactionTask.AsTask);
 
             // Then
             actualTransactionValidationException.Should()
                 .BeEquivalentTo(expectedTransactionValidationException);
 
-            this.dateTimeBrokerMock.Verify(broker => 
-                broker.GetCurrentDateTimeOffset(), 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedTransactionValidationException))), 
+                    expectedTransactionValidationException))),
                         Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectTransactionByIdAsync(
-                    It.IsAny<Guid>()), 
+                    It.IsAny<Guid>()),
                         Times.Never);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.UpdateTransactionAsync(
-                    It.IsAny<Transaction>()), 
+                    It.IsAny<Transaction>()),
                         Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -203,53 +200,53 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
         public async void ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(int minutes)
         {
             // Given
-            DateTimeOffset dateTime = 
+            DateTimeOffset dateTime =
                 GetRandomDateTimeOffset();
 
             Transaction someTransaction = CreateRandomTransaction();
             Transaction inputTransaction = someTransaction;
 
-            inputTransaction.UpdatedDate = 
+            inputTransaction.UpdatedDate =
                 inputTransaction.UpdatedDate.AddMinutes(minutes);
 
-            var invalidTransactionException = 
+            var invalidTransactionException =
                 new InvalidTransactionException();
 
             invalidTransactionException.AddData(
-                key: nameof(Transaction.UpdatedDate), 
+                key: nameof(Transaction.UpdatedDate),
                 values: "Date is not recent.");
 
-            var expectedTransactionValidationException = 
+            var expectedTransactionValidationException =
                 new TransactionValidationException(invalidTransactionException);
 
             // When
-            ValueTask<Transaction> modifyTransactionTask = 
+            ValueTask<Transaction> modifyTransactionTask =
                 this.transactionService.ModifyTransactionAsync(inputTransaction);
 
-            var actualTransactionValidationException = 
+            var actualTransactionValidationException =
                 await Assert.ThrowsAsync<TransactionValidationException>(modifyTransactionTask.AsTask);
 
             // Then
             actualTransactionValidationException.Should()
                 .BeEquivalentTo(expectedTransactionValidationException);
 
-            this.dateTimeBrokerMock.Verify(broker => 
-                broker.GetCurrentDateTimeOffset(), 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
                     Times.Once());
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedTransactionValidationException))), 
+                    expectedTransactionValidationException))),
                         Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectTransactionByIdAsync(
-                    It.IsAny<Guid>()), 
+                    It.IsAny<Guid>()),
                         Times.Never);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.UpdateTransactionAsync(
-                    It.IsAny<Transaction>()), 
+                    It.IsAny<Transaction>()),
                         Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();

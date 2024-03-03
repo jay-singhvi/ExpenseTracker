@@ -3,10 +3,6 @@ using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
@@ -23,30 +19,30 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             Transaction deletedTransaction = expectedInputTransaction;
             Transaction expectedTransaction = deletedTransaction.DeepClone();
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectTransactionByIdAsync(randomTransaction.Id))
                     .ReturnsAsync(storageTransaction);
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.DeleteTransactionAsync(expectedInputTransaction))
                     .ReturnsAsync(deletedTransaction);
 
             // When
-            var actualDeletedTransaction = 
+            var actualDeletedTransaction =
                 await this.transactionService.RemoveTransactionByIdAsync(randomTransaction.Id);
 
             // Then
             actualDeletedTransaction.Should()
                 .BeEquivalentTo(expectedInputTransaction);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectTransactionByIdAsync(
-                    It.IsAny<Guid>()), 
+                    It.IsAny<Guid>()),
                         Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.DeleteTransactionAsync(
-                    It.IsAny<Transaction>()), 
+                    It.IsAny<Transaction>()),
                         Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
