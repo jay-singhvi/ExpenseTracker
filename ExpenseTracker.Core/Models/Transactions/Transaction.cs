@@ -1,5 +1,6 @@
 ﻿using ExpenseTracker.Core.Models.Users;
 using System;
+using System.Text.Json.Serialization;
 
 namespace ExpenseTracker.Core.Models.Transactions
 {
@@ -16,6 +17,8 @@ namespace ExpenseTracker.Core.Models.Transactions
         public DateTimeOffset UpdatedDate { get; set; }
         public Guid CreatedBy { get; set; }
         public Guid UpdatedBy { get; set; }
+
+        [JsonIgnore]
         public User User { get; set; }
     }
 }
