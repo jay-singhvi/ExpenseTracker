@@ -11,12 +11,13 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
             ValidateTransactionIsNotNull(transaction);
 
             Validate(
-            (Rule: IsInvalid(transaction.Id), Parameter: nameof(transaction.Id)),
-            (Rule: IsInvalid(transaction.Category), Parameter: nameof(transaction.Category)),
-            (Rule: IsInvalid(transaction.Description), Parameter: nameof(transaction.Description)),
-            (Rule: IsInvalid(transaction.PaymentMode), Parameter: nameof(transaction.PaymentMode)),
-            (Rule: IsInvalid(transaction.CreatedDate), Parameter: nameof(transaction.CreatedDate)),
-            (Rule: IsInvalid(transaction.UpdatedDate), Parameter: nameof(transaction.UpdatedDate)),
+            (Rule: IsInvalid(transaction.Id), Parameter: nameof(Transaction.Id)),
+            (Rule: IsInvalid(transaction.UserId), Parameter: nameof(Transaction.UserId)),
+            (Rule: IsInvalid(transaction.Category), Parameter: nameof(Transaction.Category)),
+            (Rule: IsInvalid(transaction.Description), Parameter: nameof(Transaction.Description)),
+            (Rule: IsInvalid(transaction.PaymentMode), Parameter: nameof(Transaction.PaymentMode)),
+            (Rule: IsInvalid(transaction.CreatedDate), Parameter: nameof(Transaction.CreatedDate)),
+            (Rule: IsInvalid(transaction.UpdatedDate), Parameter: nameof(Transaction.UpdatedDate)),
 
             (Rule: IsNotSame(firstDate: transaction.UpdatedDate, secondDate: transaction.CreatedDate,
                 secondDateName: nameof(transaction.CreatedDate)),
