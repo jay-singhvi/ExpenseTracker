@@ -4,6 +4,7 @@ using ExpenseTracker.Core.Services.Foundations.Transactions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ExpenseTracker.Core.Controllers
@@ -45,6 +46,26 @@ namespace ExpenseTracker.Core.Controllers
                 when(transactionDependencyValidationException.InnerException is LockedTransactionException)
             {
                 return Locked(transactionDependencyValidationException.InnerException);
+            }
+            catch (TransactionDependencyException transactionDependencyException)
+            {
+                return InternalServerError(transactionDependencyException);
+            }
+            catch(TransactionServiceException transactionServiceException)
+            {
+                return InternalServerError(transactionServiceException);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult<IQueryable<Transaction>> GetAllTransactions()
+        {
+            try
+            {
+                IQueryable<Transaction> retrieveTransactions = 
+                    transactionService.RetrieveAllTransactions();
+
+                return Ok(retrieveTransactions);
             }
             catch (TransactionDependencyException transactionDependencyException)
             {
