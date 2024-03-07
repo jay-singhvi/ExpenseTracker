@@ -107,20 +107,25 @@ namespace ExpenseTracker.Core.Controllers
             }
         }
 
-        //[HttpPut]
-        //public async ValueTask<ActionResult<Transaction>> PutTransactionAsync(Transaction transaction)
-        //{
-        //    try
-        //    {
-        //        Transaction modifiedTransaction = 
-        //            await this.transactionService.ModifyTransactionAsync(transaction);
+        [HttpPut]
+        public async ValueTask<ActionResult<Transaction>> PutTransactionAsync(Transaction transaction)
+        {
+            try
+            {
+                Transaction modifiedTransaction =
+                    await this.transactionService.ModifyTransactionAsync(transaction);
 
-        //        return Ok(modifiedTransaction);
-        //    }
-        //    catch (TransactionValidationException transactionValidationException)
-        //    {
-        //        return BadRequest(transactionValidationException);
-        //    }
-        //}
+                return Ok(modifiedTransaction);
+            }
+            catch(TransactionValidationException transactionValidationException)
+                when(transactionValidationException.InnerException is NotFoundTransactionException)
+            {
+                return NotFound(transactionValidationException.InnerException);
+            }
+            catch (TransactionValidationException transactionValidationException)
+            {
+                return BadRequest(transactionValidationException.InnerException);
+            }
+        }
     }
 }

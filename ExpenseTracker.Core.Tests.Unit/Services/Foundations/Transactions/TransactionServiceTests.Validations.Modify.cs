@@ -145,56 +145,64 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
-        //[Fact] below test Not needed as it is accomodated in above test.
-        //public async void ShouldThrowValidationExceptionOnModifyIfTransactionUpdatedDateIsSameAsCreatedDateAndLogItAsync()
-        //{
-        //    // Given
-        //    DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+        [Fact] 
+        public async void ShouldThrowValidationExceptionOnModifyIfTransactionUpdatedDateIsSameAsCreatedDateAndLogItAsync()
+        {
+            // Given
+            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
 
-        //    Transaction randomTransaction = 
-        //        CreateRandomTransaction(dates: randomDateTime);
+            Transaction randomTransaction =
+                CreateRandomTransaction(dates: randomDateTime);
 
-        //    Transaction invalidTransaction = randomTransaction;
+            Transaction invalidTransaction = randomTransaction;
 
-        //    var invalidTransactionException = new InvalidTransactionException();
+            var invalidTransactionException = new InvalidTransactionException();
 
-        //    invalidTransactionException.AddData(
-        //        key: nameof(Transaction.UpdatedDate), 
-        //        values: $"Date is same as {nameof(Transaction.CreatedDate)}");
+            invalidTransactionException.AddData(
+                key: nameof(Transaction.UpdatedDate),
+                values: $"Date is same as {nameof(Transaction.CreatedDate)}");
 
-        //    var expectedTransactionValidationException = 
-        //        new TransactionValidationException(invalidTransactionException);
+            var expectedTransactionValidationException =
+                new TransactionValidationException(invalidTransactionException);
 
-        //    // When
-        //    ValueTask<Transaction> modifyTransactionTask = 
-        //        this.transactionService.ModifyTransactionAsync(invalidTransaction);
+            this.dateTimeBrokerMock.Setup(broker => 
+                broker.GetCurrentDateTimeOffset())
+                    .Returns(randomDateTime);
 
-        //    var actualTransactionValidationException = 
-        //        await Assert.ThrowsAsync<TransactionValidationException>(modifyTransactionTask.AsTask);
+            // When
+            ValueTask<Transaction> modifyTransactionTask =
+                this.transactionService.ModifyTransactionAsync(invalidTransaction);
 
-        //    // Then
-        //    actualTransactionValidationException.Should()
-        //        .BeEquivalentTo(expectedTransactionValidationException);
+            var actualTransactionValidationException =
+                await Assert.ThrowsAsync<TransactionValidationException>(modifyTransactionTask.AsTask);
 
-        //    this.loggingBrokerMock.Verify(broker => 
-        //        broker.LogError(It.Is(SameExceptionAs(
-        //            expectedTransactionValidationException))), 
-        //                Times.Once);
+            // Then
+            actualTransactionValidationException.Should()
+                .BeEquivalentTo(expectedTransactionValidationException);
 
-        //    this.storageBrokerMock.Verify(broker => 
-        //        broker.SelectTransactionByIdAsync(
-        //            It.IsAny<Guid>()), 
-        //                Times.Never);
+            this.dateTimeBrokerMock.Verify(broker => 
+                broker.GetCurrentDateTimeOffset(), 
+                    Times.Once);
 
-        //    this.storageBrokerMock.Verify(broker => 
-        //        broker.UpdateTransactionAsync(
-        //            It.IsAny<Transaction>()), 
-        //                Times.Never);
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTransactionValidationException))),
+                        Times.Once);
 
-        //    this.loggingBrokerMock.VerifyNoOtherCalls();
-        //    this.storageBrokerMock.VerifyNoOtherCalls();
-        //    this.dateTimeBrokerMock.VerifyNoOtherCalls();
-        //}
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTransactionByIdAsync(
+                    It.IsAny<Guid>()),
+                        Times.Never);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdateTransactionAsync(
+                    It.IsAny<Transaction>()),
+                        Times.Never);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
 
         [Theory]
         [MemberData(nameof(MinutesBeforeOrAfter))]
