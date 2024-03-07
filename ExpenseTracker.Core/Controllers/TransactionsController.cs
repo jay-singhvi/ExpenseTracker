@@ -126,6 +126,23 @@ namespace ExpenseTracker.Core.Controllers
             {
                 return BadRequest(transactionValidationException.InnerException);
             }
+            catch (TransactionDependencyValidationException transactionDependencyValidationException)
+             when(transactionDependencyValidationException.InnerException is LockedTransactionException)
+            {
+                return Locked(transactionDependencyValidationException.InnerException);
+            }
+            catch (TransactionDependencyValidationException transactionDependencyValidationException)
+            {
+                return BadRequest(transactionDependencyValidationException.InnerException);
+            }
+            catch (TransactionDependencyException transactionDependencyException)
+            {
+                return InternalServerError(transactionDependencyException);
+            }
+            catch (TransactionServiceException transactionServiceException)
+            {
+                return InternalServerError(transactionServiceException);
+            }
         }
     }
 }
