@@ -5,6 +5,7 @@ using Moq;
 using System;
 using System.Threading.Tasks;
 using Xunit;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 {
@@ -251,6 +252,49 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void ShouldThrowValidationExceptionOnModifyIfTransactionIsNotFoundAndLogItAsync()
+        {
+            // Given
+            var someTransactionId = Guid.NewGuid();
+            Transaction noTransaction = null;
+
+            var notFoundTransactionException =
+                new NotFoundTransactionException(someTransactionId);
+
+            var expectedTransactionValidationException =
+                new TransactionValidationException(notFoundTransactionException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectTransactionByIdAsync(someTransactionId))
+                    .ReturnsAsync(noTransaction);
+
+            // When
+            ValueTask<Transaction> retrieveTransactionByIdTask =
+                this.transactionService.RetrieveTransactionByIdAsync(someTransactionId);
+
+            var actualTransactionValidationException =
+                await Assert.ThrowsAsync<TransactionValidationException>(() =>
+                    retrieveTransactionByIdTask.AsTask());
+
+            // Then
+            actualTransactionValidationException.Should()
+                .BeEquivalentTo(expectedTransactionValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectTransactionByIdAsync(It.IsAny<Guid>()),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTransactionValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }

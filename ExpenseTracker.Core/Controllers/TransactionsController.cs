@@ -4,6 +4,7 @@ using ExpenseTracker.Core.Services.Foundations.Transactions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,17 +34,17 @@ namespace ExpenseTracker.Core.Controllers
                 return BadRequest(transactionValidationException.InnerException);
             }
             catch (TransactionDependencyValidationException transactionDependencyValidationException)
-                when(transactionDependencyValidationException.InnerException is InvalidTransactionReferenceException)
+                when (transactionDependencyValidationException.InnerException is InvalidTransactionReferenceException)
             {
                 return FailedDependency(transactionDependencyValidationException.InnerException);
             }
             catch (TransactionDependencyValidationException transactionDependencyValidationException)
-                when(transactionDependencyValidationException.InnerException is AlreadyExistsTransactionException)
+                when (transactionDependencyValidationException.InnerException is AlreadyExistsTransactionException)
             {
                 return Conflict(transactionDependencyValidationException.InnerException);
             }
-            catch(TransactionDependencyValidationException transactionDependencyValidationException)
-                when(transactionDependencyValidationException.InnerException is LockedTransactionException)
+            catch (TransactionDependencyValidationException transactionDependencyValidationException)
+                when (transactionDependencyValidationException.InnerException is LockedTransactionException)
             {
                 return Locked(transactionDependencyValidationException.InnerException);
             }
@@ -51,7 +52,7 @@ namespace ExpenseTracker.Core.Controllers
             {
                 return InternalServerError(transactionDependencyException);
             }
-            catch(TransactionServiceException transactionServiceException)
+            catch (TransactionServiceException transactionServiceException)
             {
                 return InternalServerError(transactionServiceException);
             }
@@ -62,7 +63,7 @@ namespace ExpenseTracker.Core.Controllers
         {
             try
             {
-                IQueryable<Transaction> retrieveTransactions = 
+                IQueryable<Transaction> retrieveTransactions =
                     transactionService.RetrieveAllTransactions();
 
                 return Ok(retrieveTransactions);
@@ -71,10 +72,55 @@ namespace ExpenseTracker.Core.Controllers
             {
                 return InternalServerError(transactionDependencyException);
             }
-            catch(TransactionServiceException transactionServiceException)
+            catch (TransactionServiceException transactionServiceException)
             {
                 return InternalServerError(transactionServiceException);
             }
         }
+
+        [HttpGet("{transactionId}")]
+        public async ValueTask<ActionResult<Transaction>> GetTransactionByIdAsync(Guid transactionId)
+        {
+            try
+            {
+                Transaction transaction = 
+                    await this.transactionService.RetrieveTransactionByIdAsync(transactionId);
+
+                return Ok(transaction);
+            }
+            catch (TransactionValidationException transactionValidationException)
+                when (transactionValidationException.InnerException is NotFoundTransactionException)
+            {
+                return NotFound(transactionValidationException.InnerException);
+            }
+            catch (TransactionValidationException transactionValidationException)
+            {
+                return BadRequest(transactionValidationException.InnerException);
+            }
+            catch (TransactionDependencyException transactionDependencyException)
+            {
+                return InternalServerError(transactionDependencyException);
+            }
+            catch (TransactionServiceException transactionServiceException)
+            {
+                return InternalServerError(transactionServiceException);
+            }
+        }
+
+        //[HttpPut]
+        //public async ValueTask<ActionResult<Transaction>> PutTransactionAsync(Transaction transaction)
+        //{
+        //    try
+        //    {
+        //        Transaction modifiedTransaction = 
+        //            await this.transactionService.ModifyTransactionAsync(transaction);
+
+        //        return Ok(modifiedTransaction);
+        //    }
+        //    catch (TransactionValidationException transactionValidationException)
+        //    {
+        //        return BadRequest(transactionValidationException);
+        //    }
+        //}
     }
 }
