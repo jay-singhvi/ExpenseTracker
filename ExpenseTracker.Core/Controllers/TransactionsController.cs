@@ -145,20 +145,42 @@ namespace ExpenseTracker.Core.Controllers
             }
         }
 
-        //[HttpPost]
-        //public async ValueTask<ActionResult<Transaction>> DeleteTransactionByIdAsync(Guid transactionId)
-        //{
-        //    try
-        //    {
-        //        Transaction deletedTransaction = 
-        //            await this.transactionService.RemoveTransactionByIdAsync(transactionId);
+        [HttpPost]
+        public async ValueTask<ActionResult<Transaction>> DeleteTransactionByIdAsync(Guid transactionId)
+        {
+            try
+            {
+                Transaction deletedTransaction =
+                    await this.transactionService.RemoveTransactionByIdAsync(transactionId);
 
-        //        Ok(deletedTransaction);
-        //    }
-        //    catch (TransactionDependencyValidationException transactionDependencyValidationException)
-        //    {
-
-        //    }
-        //}
+                return Ok(deletedTransaction);
+            }
+            catch (TransactionValidationException transactionValidationException)
+                when(transactionValidationException.InnerException is NotFoundTransactionException)
+            {
+                return NotFound(transactionValidationException.InnerException);
+            }
+            catch (TransactionValidationException transactionValidationException)
+            {
+                return BadRequest(transactionValidationException.InnerException);
+            }
+            catch (TransactionDependencyValidationException transactionDependencyValidationException)
+                when(transactionDependencyValidationException.InnerException is LockedTransactionException)
+            {
+                return Locked(transactionDependencyValidationException.InnerException);
+            }
+            catch (TransactionDependencyValidationException transactionDependencyValidationException)
+            {
+                return BadRequest(transactionDependencyValidationException);
+            }
+            catch (TransactionDependencyException transactionDependencyException)
+            {
+                return InternalServerError(transactionDependencyException);
+            }
+            catch (TransactionServiceException transactionServiceException)
+            {
+                return InternalServerError(transactionServiceException);
+            }
+        }
     }
 }
