@@ -68,6 +68,8 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
                 var maybeTransaction =
                     await this.storageBroker.SelectTransactionByIdAsync(transactionId);
 
+                ValidateStorageTransaction(maybeTransaction, transactionId);
+
                 return await this.storageBroker.DeleteTransactionAsync(maybeTransaction);
             });
     }

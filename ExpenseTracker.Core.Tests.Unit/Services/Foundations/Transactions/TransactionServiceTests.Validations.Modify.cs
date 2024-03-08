@@ -281,12 +281,12 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
                     .ReturnsAsync(noTransaction);
 
             // When
-            ValueTask<Transaction> retrieveTransactionByIdTask =
+            ValueTask<Transaction> modifyTransactionTask =
                 this.transactionService.RetrieveTransactionByIdAsync(someTransactionId);
 
             var actualTransactionValidationException =
                 await Assert.ThrowsAsync<TransactionValidationException>(() =>
-                    retrieveTransactionByIdTask.AsTask());
+                    modifyTransactionTask.AsTask());
 
             // Then
             actualTransactionValidationException.Should()

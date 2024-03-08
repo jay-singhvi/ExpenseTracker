@@ -144,5 +144,21 @@ namespace ExpenseTracker.Core.Controllers
                 return InternalServerError(transactionServiceException);
             }
         }
+
+        //[HttpPost]
+        //public async ValueTask<ActionResult<Transaction>> DeleteTransactionByIdAsync(Guid transactionId)
+        //{
+        //    try
+        //    {
+        //        Transaction deletedTransaction = 
+        //            await this.transactionService.RemoveTransactionByIdAsync(transactionId);
+
+        //        Ok(deletedTransaction);
+        //    }
+        //    catch (TransactionDependencyValidationException transactionDependencyValidationException)
+        //    {
+
+        //    }
+        //}
     }
 }
