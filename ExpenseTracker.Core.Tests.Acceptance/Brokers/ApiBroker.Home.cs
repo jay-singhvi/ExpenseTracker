@@ -1,4 +1,6 @@
-﻿namespace ExpenseTracker.Core.Tests.Acceptance.Brokers
+﻿using System.Threading.Tasks;
+
+namespace ExpenseTracker.Core.Tests.Acceptance.Brokers
 {
     public partial class ApiBroker
     {
