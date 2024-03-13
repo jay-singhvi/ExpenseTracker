@@ -5,7 +5,6 @@ using Moq;
 using System;
 using System.Threading.Tasks;
 using Xunit;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 {
@@ -145,7 +144,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
-        [Fact] 
+        [Fact]
         public async void ShouldThrowValidationExceptionOnModifyIfTransactionUpdatedDateIsSameAsCreatedDateAndLogItAsync()
         {
             // Given
@@ -165,7 +164,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             var expectedTransactionValidationException =
                 new TransactionValidationException(invalidTransactionException);
 
-            this.dateTimeBrokerMock.Setup(broker => 
+            this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
                     .Returns(randomDateTime);
 
@@ -180,8 +179,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             actualTransactionValidationException.Should()
                 .BeEquivalentTo(expectedTransactionValidationException);
 
-            this.dateTimeBrokerMock.Verify(broker => 
-                broker.GetCurrentDateTimeOffset(), 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>

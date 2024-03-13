@@ -1,11 +1,6 @@
 ﻿using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Tests.Acceptance.Brokers;
-using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Tynamix.ObjectFiller;
 using Xunit;
 
@@ -27,7 +22,7 @@ namespace ExpenseTracker.Core.Tests.Acceptance.Apis.Transactions
         private static Filler<Transaction> CreateTransactionFiller(DateTimeOffset dates)
         {
             var filler = new Filler<Transaction>();
-            
+
             filler.Setup().OnType<DateTimeOffset>().Use(dates)
                 .OnProperty(transaction => transaction.User).IgnoreIt();
 

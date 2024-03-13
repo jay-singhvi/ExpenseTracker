@@ -1,14 +1,4 @@
-﻿using ExpenseTracker.Core.Models.Transactions;
-using ExpenseTracker.Core.Services.Foundations.Transactions;
-using FluentAssertions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-
-namespace ExpenseTracker.Core.Tests.Acceptance.Apis.Transactions
+﻿namespace ExpenseTracker.Core.Tests.Acceptance.Apis.Transactions
 {
     public partial class TransactionsApiTests
     {

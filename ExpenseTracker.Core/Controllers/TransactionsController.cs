@@ -1,7 +1,6 @@
 ﻿using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using ExpenseTracker.Core.Services.Foundations.Transactions;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
 using System;
@@ -82,7 +81,7 @@ namespace ExpenseTracker.Core.Controllers
         {
             try
             {
-                Transaction transaction = 
+                Transaction transaction =
                     await this.transactionService.RetrieveTransactionByIdAsync(transactionId);
 
                 return Ok(transaction);
@@ -116,8 +115,8 @@ namespace ExpenseTracker.Core.Controllers
 
                 return Ok(modifiedTransaction);
             }
-            catch(TransactionValidationException transactionValidationException)
-                when(transactionValidationException.InnerException is NotFoundTransactionException)
+            catch (TransactionValidationException transactionValidationException)
+                when (transactionValidationException.InnerException is NotFoundTransactionException)
             {
                 return NotFound(transactionValidationException.InnerException);
             }
@@ -126,7 +125,7 @@ namespace ExpenseTracker.Core.Controllers
                 return BadRequest(transactionValidationException.InnerException);
             }
             catch (TransactionDependencyValidationException transactionDependencyValidationException)
-             when(transactionDependencyValidationException.InnerException is LockedTransactionException)
+             when (transactionDependencyValidationException.InnerException is LockedTransactionException)
             {
                 return Locked(transactionDependencyValidationException.InnerException);
             }
@@ -155,7 +154,7 @@ namespace ExpenseTracker.Core.Controllers
                 return Ok(deletedTransaction);
             }
             catch (TransactionValidationException transactionValidationException)
-                when(transactionValidationException.InnerException is NotFoundTransactionException)
+                when (transactionValidationException.InnerException is NotFoundTransactionException)
             {
                 return NotFound(transactionValidationException.InnerException);
             }
@@ -164,7 +163,7 @@ namespace ExpenseTracker.Core.Controllers
                 return BadRequest(transactionValidationException.InnerException);
             }
             catch (TransactionDependencyValidationException transactionDependencyValidationException)
-                when(transactionDependencyValidationException.InnerException is LockedTransactionException)
+                when (transactionDependencyValidationException.InnerException is LockedTransactionException)
             {
                 return Locked(transactionDependencyValidationException.InnerException);
             }
