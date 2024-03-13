@@ -25,6 +25,7 @@ namespace ExpenseTracker.Core
             builder.Services.AddTransient<IDateTimeBroker, DateTimeBroker>();
             builder.Services.AddTransient<IStorageBroker, StorageBroker>();
             builder.Services.AddTransient<IUserManagerBroker, UserManagerBroker>();
+            builder.Services.AddTransient<ITransactionService, TransactionService>();
 
             builder.Services.AddIdentityApiEndpoints<User>()
                 .AddRoles<Role>()
