@@ -1,5 +1,6 @@
 ﻿using EFxceptions.Identity;
 using ExpenseTracker.Core.Models.Users;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;

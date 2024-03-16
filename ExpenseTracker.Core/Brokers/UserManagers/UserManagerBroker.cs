@@ -1,4 +1,5 @@
-﻿using ExpenseTracker.Core.Models.Users;
+﻿using EFxceptions.Identity;
+using ExpenseTracker.Core.Models.Users;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ExpenseTracker.Core.Brokers.UserManagers
 {
-    public class UserManagerBroker : IUserManagerBroker
+    public class UserManagerBroker : EFxceptionsIdentityContext<User, Role, Guid>, IUserManagerBroker
     {
         private readonly UserManager<User> userManager;
 

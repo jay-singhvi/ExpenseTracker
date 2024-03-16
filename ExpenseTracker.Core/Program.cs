@@ -5,6 +5,7 @@ using ExpenseTracker.Core.Brokers.Storages;
 using ExpenseTracker.Core.Brokers.UserManagers;
 using ExpenseTracker.Core.Models.Users;
 using ExpenseTracker.Core.Services.Foundations.Transactions;
+using ExpenseTracker.Core.Services.Foundations.Users;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,6 +34,7 @@ namespace ExpenseTracker.Core
 
             builder.Services.AddDbContext<StorageBroker>();
             builder.Services.AddTransient<ITransactionService, TransactionService>();
+            builder.Services.AddTransient<IUserService, UserService>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
