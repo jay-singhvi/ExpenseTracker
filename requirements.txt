@@ -1,0 +1,26 @@
+openai-whisper
+torch
+ffmpeg
+pyaudio
+ipykernel
+pandas
+numpy
+
+# opencv-python
+# camelot-py
+# ghostscript
+# python3-tk
+# tcl-tk
+
+tabula-py
+JPype1
+# vllm
+transformers
+huggingface-hub
+accelerate
+jupyter
+ipywidgets
+
+# matplotlib
+tqdm
+langchain_community
