@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace ExpenseTracker.Core.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class TransactionsController : RESTFulController

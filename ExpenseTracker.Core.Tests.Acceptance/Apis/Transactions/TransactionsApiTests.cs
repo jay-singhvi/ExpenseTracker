@@ -1,4 +1,5 @@
 ﻿using ExpenseTracker.Core.Models.Transactions;
+using ExpenseTracker.Core.Models.Users;
 using ExpenseTracker.Core.Tests.Acceptance.Brokers;
 using System;
 using System.Runtime.CompilerServices;
@@ -30,10 +31,31 @@ namespace ExpenseTracker.Core.Tests.Acceptance.Apis.Transactions
             return filler;
         }
 
+        private static User CreateRandomUser()
+        {
+            DateTimeOffset dates = GetRandomDateTimeOffset();
+
+            return CreateUserFiller(dates).Create();
+        }
+
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
 
+        private static string GetRandomEmail() =>
+            new EmailAddresses().GetValue();
 
+        private static Filler<User> CreateUserFiller(DateTimeOffset dates)
+        {
+            var filler = new Filler<User>();
 
+            string email = GetRandomEmail();
+
+            filler.Setup().OnType<DateTimeOffset>().Use(dates)
+                .OnProperty(user => user.Email).Use(email)
+                .OnProperty(user => user.UserName).Use(email)
+                .OnProperty(user => user.LockoutEnd).Use(dates);
+
+            return filler;
+        }
     }
 }
