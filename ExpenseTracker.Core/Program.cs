@@ -1,3 +1,7 @@
+// -------------------------------------------------------
+// Copyright (c) Coalition of the Good-Hearted Engineers
+// FREE TO USE FOR THE WORLD
+// -------------------------------------------------------
 
 using ExpenseTracker.Core.Brokers.DateTimes;
 using ExpenseTracker.Core.Brokers.Loggings;
