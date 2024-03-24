@@ -7,6 +7,7 @@ using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Users;
 using FluentAssertions;
 using Newtonsoft.Json;
+using RESTFulSense.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -93,6 +94,27 @@ namespace ExpenseTracker.Core.Tests.Acceptance.Apis.Transactions
             // Then
             actualTransaction.Should().BeEquivalentTo(modifiedTransaction);
             await this.apiBroker.DeleteTransactionByIdAsync(actualTransaction.Id);
+        }
+
+        [Fact]
+        public async Task ShouldDeleteTransactionAsync()
+        {
+            // Given
+            Transaction randomTransaction = await PostRandomTransactionAsync();
+            Transaction inputTransaction = randomTransaction;
+            Transaction expectedTransaction = inputTransaction;
+
+            // When
+            Transaction deletedTransaction = 
+                await this.apiBroker.DeleteTransactionByIdAsync(inputTransaction.Id);
+
+            ValueTask<Transaction> getTransactionByIdTask = 
+                this.apiBroker.GetTransactionByIdAsync(inputTransaction.Id);
+
+            // Then
+            deletedTransaction.Should().BeEquivalentTo(expectedTransaction);
+            await Assert.ThrowsAsync<HttpResponseNotFoundException>(() => 
+                getTransactionByIdTask.AsTask());
         }
     }
 }
