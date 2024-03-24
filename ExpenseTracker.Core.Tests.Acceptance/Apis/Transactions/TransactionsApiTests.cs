@@ -54,13 +54,13 @@ namespace ExpenseTracker.Core.Tests.Acceptance.Apis.Transactions
 
             for (int i = 0; i < randomNumber; i++)
             {
-                randomTransactions.Add(await CreatePostedTransaction());
+                randomTransactions.Add(await PostRandomTransactionAsync());
             }
 
             return randomTransactions;
         }
 
-        private async ValueTask<Transaction> CreatePostedTransaction()
+        private async ValueTask<Transaction> PostRandomTransactionAsync()
         {
             Transaction randomTransaction = CreateRandomTransaction();
             await this.apiBroker.PostTransactionAsync(randomTransaction);
