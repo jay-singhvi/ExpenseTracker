@@ -30,8 +30,9 @@ namespace ExpenseTracker.Core.Tests.Acceptance.Apis.Transactions
         {
             var filler = new Filler<Transaction>();
 
-            filler.Setup().OnType<DateTimeOffset>().Use(dates)
-                .OnProperty(transaction => transaction.User).IgnoreIt();
+            filler.Setup()
+                .OnType<DateTimeOffset>().Use(dates);
+                //.OnProperty(transaction => transaction.User).IgnoreIt();
 
             return filler;
         }

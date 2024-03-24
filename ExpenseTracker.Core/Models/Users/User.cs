@@ -37,8 +37,8 @@ namespace ExpenseTracker.Core.Models.Users
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
 
-        [JsonIgnore]
-        public IEnumerable<Transaction> Transactions { get; set; }
+        //[JsonIgnore]
+        //public IEnumerable<Transaction> Transactions { get; set; }
 
     }
 }

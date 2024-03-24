@@ -15,11 +15,11 @@ namespace ExpenseTracker.Core.Brokers.Storages
             modelBuilder.Entity<Transaction>()
                 .HasKey(transaction => transaction.Id);
 
-            modelBuilder.Entity<Transaction>()
-                .HasOne(transaction => transaction.User)
-                .WithMany(user => user.Transactions)
-                .HasForeignKey(trasaction => trasaction.UserId)
-                .OnDelete(DeleteBehavior.NoAction);
+            //modelBuilder.Entity<Transaction>()
+            //    .HasOne(transaction => transaction.User)
+            //    .WithMany(user => user.Transactions)
+            //    .HasForeignKey(trasaction => trasaction.UserId)
+            //    .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

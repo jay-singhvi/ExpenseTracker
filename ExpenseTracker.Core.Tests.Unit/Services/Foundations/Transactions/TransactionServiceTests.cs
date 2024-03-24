@@ -54,8 +54,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
         {
             var filler = new Filler<Transaction>();
             filler.Setup()
-                   .OnType<DateTimeOffset>().Use(dates)
-                   .OnProperty(transaction => transaction.User).IgnoreIt();
+                   .OnType<DateTimeOffset>().Use(dates);
+                   //.OnProperty(transaction => transaction.User).IgnoreIt();
 
             return filler;
         }
