@@ -1,4 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿// -------------------------------------------------------
+// Copyright (c) Coalition of the Good-Hearted Engineers
+// FREE TO USE FOR THE WORLD
+// -------------------------------------------------------
+
+using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
 #nullable disable

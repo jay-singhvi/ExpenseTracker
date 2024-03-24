@@ -1,4 +1,9 @@
-﻿using ExpenseTracker.Core.Models.Users;
+﻿// -------------------------------------------------------
+// Copyright (c) Coalition of the Good-Hearted Engineers
+// FREE TO USE FOR THE WORLD
+// -------------------------------------------------------
+
+using ExpenseTracker.Core.Models.Users;
 using ExpenseTracker.Core.Models.Users.Exceptions;
 using FluentAssertions;
 using Moq;

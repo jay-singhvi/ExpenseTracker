@@ -1,4 +1,9 @@
-﻿using ExpenseTracker.Core.Models.Users.Exceptions;
+﻿// -------------------------------------------------------
+// Copyright (c) Coalition of the Good-Hearted Engineers
+// FREE TO USE FOR THE WORLD
+// -------------------------------------------------------
+
+using ExpenseTracker.Core.Models.Users.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
