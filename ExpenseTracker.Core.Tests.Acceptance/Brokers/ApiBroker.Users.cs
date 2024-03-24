@@ -17,51 +17,42 @@ namespace ExpenseTracker.Core.Tests.Acceptance.Brokers
 {
     public partial class ApiBroker
     {
-        public async ValueTask<User> PostUserAsync(User user)
-        {
-            var registerRequest = new UserRequest
-            {
-                Email = user.Email,
-                Password = user.PasswordHash
-            };
+        private const string UsersRelativeUrl = "api/users";
 
-            await this.apiFactoryClient.PostContentWithNoResponseAsync("/register", registerRequest, "application/json");
+        public async ValueTask<List<User>> GetAllUsersAsync() =>
+            await this.apiFactoryClient.GetContentAsync<List<User>>($"{UsersRelativeUrl}/");
 
-            return user;
-        }
+        //public async ValueTask<User> PostUserAsync(User user)
+        //{
+        //    var registerRequest = new UserRequest
+        //    {
+        //        Email = user.Email,
+        //        Password = user.PasswordHash
+        //    };
 
-        public async ValueTask<User> LoginUserAsync(User user)
-        {
-            var loginRequest =
-                new UserRequest { Email = user.Email, Password = "*1Mar1988#"/*user.PasswordHash*/ };
+        //    await this.apiFactoryClient.PostContentWithNoResponseAsync("/register", registerRequest, "application/json");
 
-            UserResponse response =
-                await this.apiFactoryClient.PostContentAsync<UserRequest, UserResponse>("/login", loginRequest, "application/json");
+        //    return user;
+        //}
 
-            ConfigureHttpClient(response.AccessToken);
+        //public async ValueTask<User> LoginUserAsync(User user)
+        //{
+        //    var loginRequest =
+        //        new UserRequest { Email = user.Email, Password = "*1Mar1988#"/*user.PasswordHash*/ };
 
-            return user;
-        }
+        //    UserResponse response =
+        //        await this.apiFactoryClient.PostContentAsync<UserRequest, UserResponse>("/login", loginRequest, "application/json");
 
-        private void ConfigureHttpClient(string accessToken)
-        {
-            this.httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", accessToken);
-        }
+        //    ConfigureHttpClient(response.AccessToken);
 
-    }
+        //    return user;
+        //}
 
-    public class UserRequest
-    {
-        public string Email { get; set; }
-        public string Password { get; set; }
-    }
+        //private void ConfigureHttpClient(string accessToken)
+        //{
+        //    this.httpClient.DefaultRequestHeaders.Authorization =
+        //        new AuthenticationHeaderValue("Bearer", accessToken);
+        //}
 
-    public class UserResponse
-    {
-        public string TokenType { get; set; }
-        public string AccessToken { get; set; }
-        public int ExpiresIn { get; set; }
-        public string RefreshToken { get; set; }
     }
 }

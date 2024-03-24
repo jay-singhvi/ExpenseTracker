@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ExpenseTracker.Core.Brokers.UserManagers
 {
-    public class UserManagerBroker : EFxceptionsIdentityContext<User, Role, Guid>, IUserManagerBroker
+    public class UserManagerBroker : IUserManagerBroker
     {
         private readonly UserManager<User> userManager;
 
