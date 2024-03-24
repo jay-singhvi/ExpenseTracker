@@ -76,5 +76,23 @@ namespace ExpenseTracker.Core.Tests.Acceptance.Apis.Transactions
             actualTransaction.Should().BeEquivalentTo(expectedTransaction);
             await this.apiBroker.DeleteTransactionByIdAsync(inputTransaction.Id);
         }
+
+        [Fact]
+        public async Task ShouldPutTransactionAsync()
+        {
+            // Given
+            Transaction randomTransaction = await PostRandomTransactionAsync();
+            Transaction modifiedTransaction = UpdateRandomTransaction(randomTransaction);
+
+            // When
+            await this.apiBroker.PutTransactionAsync(modifiedTransaction);
+
+            Transaction actualTransaction = 
+                await this.apiBroker.GetTransactionByIdAsync(randomTransaction.Id);
+
+            // Then
+            actualTransaction.Should().BeEquivalentTo(modifiedTransaction);
+            await this.apiBroker.DeleteTransactionByIdAsync(actualTransaction.Id);
+        }
     }
 }

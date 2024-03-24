@@ -31,10 +31,16 @@ namespace ExpenseTracker.Core.Tests.Acceptance.Apis.Transactions
 
         private static Filler<Transaction> CreateTransactionFiller(DateTimeOffset dates)
         {
-            var filler = new Filler<Transaction>();
+            Guid transactionId = Guid.NewGuid();
+
+            var filler = new Filler<Transaction>();            
 
             filler.Setup()
-                .OnType<DateTimeOffset>().Use(dates);
+                .OnProperty(transaction => transaction.CreatedBy).Use(transactionId)
+                .OnProperty(transaction => transaction.UpdatedBy).Use(transactionId)
+                .OnProperty(transaction => transaction.CreatedDate).Use(dates)
+                .OnProperty(transaction => transaction.UpdatedDate).Use(dates)
+                .OnType<DateTimeOffset>().Use(GetRandomDateTimeOffset);
                 //.OnProperty(transaction => transaction.User).IgnoreIt();
 
             return filler;
@@ -66,6 +72,24 @@ namespace ExpenseTracker.Core.Tests.Acceptance.Apis.Transactions
             await this.apiBroker.PostTransactionAsync(randomTransaction);
 
             return randomTransaction;
+        }
+
+        private static Transaction UpdateRandomTransaction(Transaction inputTransaction)
+        {
+            DateTimeOffset now = DateTimeOffset.UtcNow;
+
+            var filler = new Filler<Transaction>();
+            
+            filler.Setup()
+                .OnProperty(transaction => transaction.Id).Use(inputTransaction.Id)
+                .OnProperty(transaction => transaction.UserId).Use(inputTransaction.UserId)
+                .OnProperty(transaction => transaction.CreatedBy).Use(inputTransaction.CreatedBy)
+                .OnProperty(transaction => transaction.UpdatedBy).Use(inputTransaction.UpdatedBy)
+                .OnProperty(transaction => transaction.CreatedDate).Use(inputTransaction.CreatedDate)
+                .OnProperty(transaction => transaction.UpdatedDate).Use(now)
+                .OnType<DateTimeOffset>().Use(GetRandomDateTimeOffset());
+
+            return filler.Create();
         }
 
         private static int GetRandomNumber() =>
