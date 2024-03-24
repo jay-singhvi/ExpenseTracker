@@ -7,8 +7,10 @@ using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Users;
 using FluentAssertions;
 using Newtonsoft.Json;
+using RESTFulSense.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -25,12 +27,94 @@ namespace ExpenseTracker.Core.Tests.Acceptance.Apis.Transactions
             Transaction expectedTransaction = inputTransaction;
 
             // When
-            Transaction actualTransaction = 
+            Transaction actualTransaction =
                 await this.apiBroker.PostTransactionAsync(inputTransaction);
 
             // Then
             actualTransaction.Should().BeEquivalentTo(expectedTransaction);
             await this.apiBroker.DeleteTransactionByIdAsync(actualTransaction.Id);
+        }
+
+        [Fact]
+        public async Task ShouldGetAllTransactionsAsync()
+        {
+            // Given
+            List<Transaction> randomTransactions =
+                await CreateRandomPostedTransactionsAsync();
+
+            List<Transaction> expectedTransactions = randomTransactions;
+
+            // When
+            List<Transaction> actualTransactions = 
+                await this.apiBroker.GetAllTransactionsAsync();
+
+            // Then
+            foreach (Transaction expectedTransaction in expectedTransactions)
+            {
+                Transaction actualTransaction =
+                    actualTransactions.Single(
+                        transaction => transaction.Id == expectedTransaction.Id
+                        );
+
+                actualTransaction.Should().BeEquivalentTo(expectedTransaction);
+                await this.apiBroker.DeleteTransactionByIdAsync(actualTransaction.Id);
+            }
+        }
+
+        [Fact]
+        public async Task ShouldGetTransactionByIdAsync()
+        {
+            // Given
+            Transaction randomTransaction = await PostRandomTransactionAsync();
+            Transaction inputTransaction = randomTransaction;
+            Transaction expectedTransaction = randomTransaction;
+
+            // When
+            Transaction actualTransaction = 
+                await this.apiBroker.GetTransactionByIdAsync(inputTransaction.Id);
+
+            // Then
+            actualTransaction.Should().BeEquivalentTo(expectedTransaction);
+            await this.apiBroker.DeleteTransactionByIdAsync(inputTransaction.Id);
+        }
+
+        [Fact]
+        public async Task ShouldPutTransactionAsync()
+        {
+            // Given
+            Transaction randomTransaction = await PostRandomTransactionAsync();
+            Transaction modifiedTransaction = UpdateRandomTransaction(randomTransaction);
+
+            // When
+            await this.apiBroker.PutTransactionAsync(modifiedTransaction);
+
+            Transaction actualTransaction = 
+                await this.apiBroker.GetTransactionByIdAsync(randomTransaction.Id);
+
+            // Then
+            actualTransaction.Should().BeEquivalentTo(modifiedTransaction);
+            await this.apiBroker.DeleteTransactionByIdAsync(actualTransaction.Id);
+        }
+
+        [Fact]
+        public async Task ShouldDeleteTransactionAsync()
+        {
+            // Given
+            Transaction randomTransaction = await PostRandomTransactionAsync();
+            Transaction inputTransaction = randomTransaction;
+            Transaction expectedTransaction = inputTransaction;
+
+            // When
+            Transaction deletedTransaction = 
+                await this.apiBroker.DeleteTransactionByIdAsync(inputTransaction.Id);
+
+            ValueTask<Transaction> getTransactionByIdTask = 
+                this.apiBroker.GetTransactionByIdAsync(inputTransaction.Id);
+
+            // Then
+            deletedTransaction.Should().BeEquivalentTo(expectedTransaction);
+            await Assert.ThrowsAsync<HttpResponseNotFoundException>(() => 
+                getTransactionByIdTask.AsTask());
         }
     }
 }

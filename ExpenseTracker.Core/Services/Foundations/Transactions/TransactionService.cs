@@ -64,7 +64,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
 
                 ValidateStorageTransaction(maybeTransaction, transaction.Id);
 
-                return await this.storageBroker.UpdateTransactionAsync(maybeTransaction);
+                return await this.storageBroker.UpdateTransactionAsync(transaction);
             });
 
         public ValueTask<Transaction> RemoveTransactionByIdAsync(Guid transactionId) =>
