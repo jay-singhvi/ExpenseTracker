@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿// -------------------------------------------------------
+// Copyright (c) Coalition of the Good-Hearted Engineers
+// FREE TO USE FOR THE WORLD
+// -------------------------------------------------------
+
+using Microsoft.AspNetCore.Identity;
 using System;
 
 namespace ExpenseTracker.Core.Models.Users

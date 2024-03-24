@@ -1,4 +1,9 @@
-﻿using ExpenseTracker.Core.Models.Transactions;
+﻿// -------------------------------------------------------
+// Copyright (c) Coalition of the Good-Hearted Engineers
+// FREE TO USE FOR THE WORLD
+// -------------------------------------------------------
+
+using ExpenseTracker.Core.Models.Transactions;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;

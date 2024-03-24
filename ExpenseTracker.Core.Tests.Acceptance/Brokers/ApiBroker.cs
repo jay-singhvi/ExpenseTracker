@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+﻿// -------------------------------------------------------
+// Copyright (c) Coalition of the Good-Hearted Engineers
+// FREE TO USE FOR THE WORLD
+// -------------------------------------------------------
+
+using Microsoft.AspNetCore.Mvc.Testing;
 using RESTFulSense.Clients;
 using System;
 using System.Net.Http;

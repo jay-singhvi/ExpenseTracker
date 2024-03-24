@@ -1,4 +1,9 @@
-﻿using Microsoft.Data.SqlClient;
+﻿// -------------------------------------------------------
+// Copyright (c) Coalition of the Good-Hearted Engineers
+// FREE TO USE FOR THE WORLD
+// -------------------------------------------------------
+
+using Microsoft.Data.SqlClient;
 using System;
 using Xeptions;
 
