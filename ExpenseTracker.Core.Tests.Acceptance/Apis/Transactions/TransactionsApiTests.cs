@@ -7,7 +7,9 @@ using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Users;
 using ExpenseTracker.Core.Tests.Acceptance.Brokers;
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Tynamix.ObjectFiller;
 using Xunit;
 
@@ -23,6 +25,7 @@ namespace ExpenseTracker.Core.Tests.Acceptance.Apis.Transactions
 
         private static Transaction CreateRandomTransaction() =>
             CreateTransactionFiller(dates: DateTimeOffset.UtcNow).Create();
+
         private static Transaction CreateRandomTransaction(DateTimeOffset dates) =>
             CreateTransactionFiller(dates: dates).Create();
 
@@ -43,6 +46,30 @@ namespace ExpenseTracker.Core.Tests.Acceptance.Apis.Transactions
 
             return CreateUserFiller(dates).Create();
         }
+
+        private async ValueTask<List<Transaction>> CreateRandomPostedTransactionsAsync()
+        {
+            int randomNumber = GetRandomNumber();
+            var randomTransactions = new List<Transaction>();
+
+            for (int i = 0; i < randomNumber; i++)
+            {
+                randomTransactions.Add(await CreatePostedTransaction());
+            }
+
+            return randomTransactions;
+        }
+
+        private async ValueTask<Transaction> CreatePostedTransaction()
+        {
+            Transaction randomTransaction = CreateRandomTransaction();
+            await this.apiBroker.PostTransactionAsync(randomTransaction);
+
+            return randomTransaction;
+        }
+
+        private static int GetRandomNumber() =>
+            new IntRange(min: 2, max: 10).GetValue();
 
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
