@@ -3,8 +3,8 @@
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
-using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Users;
+using ExpenseTracker.Core.Tests.Acceptance.Models.Transactions;
 using FluentAssertions;
 using Newtonsoft.Json;
 using RESTFulSense.Exceptions;

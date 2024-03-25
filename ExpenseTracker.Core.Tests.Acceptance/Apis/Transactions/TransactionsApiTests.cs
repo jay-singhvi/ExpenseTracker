@@ -3,9 +3,9 @@
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
-using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Users;
 using ExpenseTracker.Core.Tests.Acceptance.Brokers;
+using ExpenseTracker.Core.Tests.Acceptance.Models.Transactions;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
