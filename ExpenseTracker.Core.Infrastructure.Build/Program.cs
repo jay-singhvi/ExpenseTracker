@@ -25,12 +25,12 @@ namespace ExpenseTracker.Core.Infrastructure.Build
                 {
                     PullRequest = new PullRequestEvent
                     {
-                        Branches = new string[] { "main" }
+                        Branches = new string[] { "master" }
                     },
 
                     Push = new PushEvent
                     {
-                        Branches = new string[] { "main" }
+                        Branches = new string[] { "master" }
                     }
                 },
 
