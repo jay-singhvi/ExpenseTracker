@@ -3,12 +3,9 @@
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
-using ExpenseTracker.Core.Models.Transactions;
-using ExpenseTracker.Core.Models.Users;
+using ExpenseTracker.Core.Tests.Acceptance.Models.Transactions;
 using FluentAssertions;
-using Newtonsoft.Json;
 using RESTFulSense.Exceptions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -45,7 +42,7 @@ namespace ExpenseTracker.Core.Tests.Acceptance.Apis.Transactions
             List<Transaction> expectedTransactions = randomTransactions;
 
             // When
-            List<Transaction> actualTransactions = 
+            List<Transaction> actualTransactions =
                 await this.apiBroker.GetAllTransactionsAsync();
 
             // Then
@@ -70,7 +67,7 @@ namespace ExpenseTracker.Core.Tests.Acceptance.Apis.Transactions
             Transaction expectedTransaction = randomTransaction;
 
             // When
-            Transaction actualTransaction = 
+            Transaction actualTransaction =
                 await this.apiBroker.GetTransactionByIdAsync(inputTransaction.Id);
 
             // Then
@@ -88,7 +85,7 @@ namespace ExpenseTracker.Core.Tests.Acceptance.Apis.Transactions
             // When
             await this.apiBroker.PutTransactionAsync(modifiedTransaction);
 
-            Transaction actualTransaction = 
+            Transaction actualTransaction =
                 await this.apiBroker.GetTransactionByIdAsync(randomTransaction.Id);
 
             // Then
@@ -105,15 +102,15 @@ namespace ExpenseTracker.Core.Tests.Acceptance.Apis.Transactions
             Transaction expectedTransaction = inputTransaction;
 
             // When
-            Transaction deletedTransaction = 
+            Transaction deletedTransaction =
                 await this.apiBroker.DeleteTransactionByIdAsync(inputTransaction.Id);
 
-            ValueTask<Transaction> getTransactionByIdTask = 
+            ValueTask<Transaction> getTransactionByIdTask =
                 this.apiBroker.GetTransactionByIdAsync(inputTransaction.Id);
 
             // Then
             deletedTransaction.Should().BeEquivalentTo(expectedTransaction);
-            await Assert.ThrowsAsync<HttpResponseNotFoundException>(() => 
+            await Assert.ThrowsAsync<HttpResponseNotFoundException>(() =>
                 getTransactionByIdTask.AsTask());
         }
     }
