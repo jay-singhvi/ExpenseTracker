@@ -1,4 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿// -------------------------------------------------------
+// Copyright (c) Coalition of the Good-Hearted Engineers
+// FREE TO USE FOR THE WORLD
+// -------------------------------------------------------
+
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace ExpenseTracker.Core.Brokers.Loggings

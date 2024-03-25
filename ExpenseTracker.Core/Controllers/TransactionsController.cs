@@ -1,4 +1,9 @@
-﻿using ExpenseTracker.Core.Models.Transactions;
+﻿// -------------------------------------------------------
+// Copyright (c) Coalition of the Good-Hearted Engineers
+// FREE TO USE FOR THE WORLD
+// -------------------------------------------------------
+
+using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using ExpenseTracker.Core.Services.Foundations.Transactions;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +15,6 @@ using System.Threading.Tasks;
 
 namespace ExpenseTracker.Core.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class TransactionsController : RESTFulController

@@ -1,4 +1,9 @@
-﻿using ExpenseTracker.Core.Models.Transactions.Exceptions;
+﻿// -------------------------------------------------------
+// Copyright (c) Coalition of the Good-Hearted Engineers
+// FREE TO USE FOR THE WORLD
+// -------------------------------------------------------
+
+using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using FluentAssertions;
 using Moq;
 using System;

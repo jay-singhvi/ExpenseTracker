@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTracker.Core", "ExpenseTracker.Core\ExpenseTracker.Core.csproj", "{A4293B49-49CC-4D65-8A38-F4A2CE70AB44}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseTracker.Core", "ExpenseTracker.Core\ExpenseTracker.Core.csproj", "{A4293B49-49CC-4D65-8A38-F4A2CE70AB44}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTracker.Core.Tests.Unit", "ExpenseTracker.Core.Tests.Unit\ExpenseTracker.Core.Tests.Unit.csproj", "{6F2674D2-8F70-48E9-8D3F-740FF813C8DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseTracker.Core.Tests.Unit", "ExpenseTracker.Core.Tests.Unit\ExpenseTracker.Core.Tests.Unit.csproj", "{6F2674D2-8F70-48E9-8D3F-740FF813C8DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTracker.Core.Tests.Acceptance", "ExpenseTracker.Core.Tests.Acceptance\ExpenseTracker.Core.Tests.Acceptance.csproj", "{67E535D0-26C5-4FB8-A672-768910E6C494}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseTracker.Core.Tests.Acceptance", "ExpenseTracker.Core.Tests.Acceptance\ExpenseTracker.Core.Tests.Acceptance.csproj", "{67E535D0-26C5-4FB8-A672-768910E6C494}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTracker.Core.Infrastructure.Build", "ExpenseTracker.Core.Infrastructure.Build\ExpenseTracker.Core.Infrastructure.Build.csproj", "{26B8DD2D-D7F0-43FA-876E-5E979FAB0ABD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{67E535D0-26C5-4FB8-A672-768910E6C494}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67E535D0-26C5-4FB8-A672-768910E6C494}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67E535D0-26C5-4FB8-A672-768910E6C494}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26B8DD2D-D7F0-43FA-876E-5E979FAB0ABD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26B8DD2D-D7F0-43FA-876E-5E979FAB0ABD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26B8DD2D-D7F0-43FA-876E-5E979FAB0ABD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26B8DD2D-D7F0-43FA-876E-5E979FAB0ABD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

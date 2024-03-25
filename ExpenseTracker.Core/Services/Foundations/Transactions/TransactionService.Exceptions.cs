@@ -1,4 +1,9 @@
-﻿using EFxceptions.Models.Exceptions;
+﻿// -------------------------------------------------------
+// Copyright (c) Coalition of the Good-Hearted Engineers
+// FREE TO USE FOR THE WORLD
+// -------------------------------------------------------
+
+using EFxceptions.Models.Exceptions;
 using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using Microsoft.Data.SqlClient;

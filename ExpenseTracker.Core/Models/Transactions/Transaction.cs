@@ -1,4 +1,10 @@
-﻿using ExpenseTracker.Core.Models.Users;
+﻿// -------------------------------------------------------
+// Copyright (c) Coalition of the Good-Hearted Engineers
+// FREE TO USE FOR THE WORLD
+// -------------------------------------------------------
+
+using ExpenseTracker.Core.Models.Users;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Text.Json.Serialization;
 
@@ -11,6 +17,7 @@ namespace ExpenseTracker.Core.Models.Transactions
         public string Category { get; set; }
         public string PaymentMode { get; set; }
         public string Description { get; set; }
+        [Precision(18,4)]
         public decimal Amount { get; set; }
         public DateTimeOffset TransactionDate { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
@@ -18,7 +25,7 @@ namespace ExpenseTracker.Core.Models.Transactions
         public Guid CreatedBy { get; set; }
         public Guid UpdatedBy { get; set; }
 
-        [JsonIgnore]
-        public User User { get; set; }
+        //[JsonIgnore]
+        //public User User { get; set; }
     }
 }

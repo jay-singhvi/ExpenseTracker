@@ -1,3 +1,7 @@
+// -------------------------------------------------------
+// Copyright (c) Coalition of the Good-Hearted Engineers
+// FREE TO USE FOR THE WORLD
+// -------------------------------------------------------
 
 using ExpenseTracker.Core.Brokers.DateTimes;
 using ExpenseTracker.Core.Brokers.Loggings;
@@ -19,7 +23,6 @@ namespace ExpenseTracker.Core
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
             builder.Services.AddControllers();
             builder.Services.AddAuthorization();
             builder.Services.AddTransient<ILoggingBroker, LoggingBroker>();
@@ -27,22 +30,18 @@ namespace ExpenseTracker.Core
             builder.Services.AddTransient<IStorageBroker, StorageBroker>();
             builder.Services.AddTransient<IUserManagerBroker, UserManagerBroker>();
             builder.Services.AddTransient<ITransactionService, TransactionService>();
+            builder.Services.AddTransient<IUserService, UserService>();
 
             builder.Services.AddIdentityApiEndpoints<User>()
                 .AddRoles<Role>()
                 .AddEntityFrameworkStores<StorageBroker>();
-
             builder.Services.AddDbContext<StorageBroker>();
-            builder.Services.AddTransient<ITransactionService, TransactionService>();
-            builder.Services.AddTransient<IUserService, UserService>();
 
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -53,7 +52,6 @@ namespace ExpenseTracker.Core
             app.UseHttpsRedirection();
             app.UseAuthorization();
             app.MapControllers();
-
             app.Run();
         }
     }

@@ -1,4 +1,9 @@
-﻿using EFxceptions.Identity;
+﻿// -------------------------------------------------------
+// Copyright (c) Coalition of the Good-Hearted Engineers
+// FREE TO USE FOR THE WORLD
+// -------------------------------------------------------
+
+using EFxceptions.Identity;
 using ExpenseTracker.Core.Models.Users;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -7,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ExpenseTracker.Core.Brokers.UserManagers
 {
-    public class UserManagerBroker : EFxceptionsIdentityContext<User, Role, Guid>, IUserManagerBroker
+    public class UserManagerBroker : IUserManagerBroker
     {
         private readonly UserManager<User> userManager;
 

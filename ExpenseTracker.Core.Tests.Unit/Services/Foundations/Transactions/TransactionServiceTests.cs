@@ -1,4 +1,9 @@
-﻿using ExpenseTracker.Core.Brokers.DateTimes;
+﻿// -------------------------------------------------------
+// Copyright (c) Coalition of the Good-Hearted Engineers
+// FREE TO USE FOR THE WORLD
+// -------------------------------------------------------
+
+using ExpenseTracker.Core.Brokers.DateTimes;
 using ExpenseTracker.Core.Brokers.Loggings;
 using ExpenseTracker.Core.Brokers.Storages;
 using ExpenseTracker.Core.Models.Transactions;
@@ -49,8 +54,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
         {
             var filler = new Filler<Transaction>();
             filler.Setup()
-                   .OnType<DateTimeOffset>().Use(dates)
-                   .OnProperty(transaction => transaction.User).IgnoreIt();
+                   .OnType<DateTimeOffset>().Use(dates);
+                   //.OnProperty(transaction => transaction.User).IgnoreIt();
 
             return filler;
         }
