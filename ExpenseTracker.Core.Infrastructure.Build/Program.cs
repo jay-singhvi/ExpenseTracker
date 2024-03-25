@@ -2,7 +2,6 @@
 using ADotNet.Models.Pipelines.GithubPipelines.DotNets;
 using ADotNet.Models.Pipelines.GithubPipelines.DotNets.Tasks;
 using ADotNet.Models.Pipelines.GithubPipelines.DotNets.Tasks.SetupDotNetTaskV3s;
-using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -75,7 +74,7 @@ namespace ExpenseTracker.Core.Infrastructure.Build
                 }
             };
 
-            string buildScriptPath = "../../../../.github/workflows/dotnet.yml"; 
+            string buildScriptPath = "../../../../.github/workflows/dotnet.yml";
             string directoryPath = Path.GetDirectoryName(buildScriptPath);
 
             if (!Directory.Exists(directoryPath))
