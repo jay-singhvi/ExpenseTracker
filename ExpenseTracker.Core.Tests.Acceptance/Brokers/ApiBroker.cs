@@ -5,7 +5,6 @@
 
 using Microsoft.AspNetCore.Mvc.Testing;
 using RESTFulSense.Clients;
-using System;
 using System.Net.Http;
 
 namespace ExpenseTracker.Core.Tests.Acceptance.Brokers

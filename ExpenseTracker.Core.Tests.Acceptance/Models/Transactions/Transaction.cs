@@ -3,13 +3,8 @@
 // FREE TO USE FOR THE WORLD
 // -------------------------------------------------------
 
-using ExpenseTracker.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ExpenseTracker.Core.Tests.Acceptance.Models.Transactions
 {

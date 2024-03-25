@@ -8,7 +8,6 @@ using ExpenseTracker.Core.Tests.Acceptance.Brokers;
 using ExpenseTracker.Core.Tests.Acceptance.Models.Transactions;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Tynamix.ObjectFiller;
 using Xunit;
@@ -33,7 +32,7 @@ namespace ExpenseTracker.Core.Tests.Acceptance.Apis.Transactions
         {
             Guid transactionId = Guid.NewGuid();
 
-            var filler = new Filler<Transaction>();            
+            var filler = new Filler<Transaction>();
 
             filler.Setup()
                 .OnProperty(transaction => transaction.CreatedBy).Use(transactionId)
@@ -41,7 +40,7 @@ namespace ExpenseTracker.Core.Tests.Acceptance.Apis.Transactions
                 .OnProperty(transaction => transaction.CreatedDate).Use(dates)
                 .OnProperty(transaction => transaction.UpdatedDate).Use(dates)
                 .OnType<DateTimeOffset>().Use(GetRandomDateTimeOffset);
-                //.OnProperty(transaction => transaction.User).IgnoreIt();
+            //.OnProperty(transaction => transaction.User).IgnoreIt();
 
             return filler;
         }
@@ -79,7 +78,7 @@ namespace ExpenseTracker.Core.Tests.Acceptance.Apis.Transactions
             DateTimeOffset now = DateTimeOffset.UtcNow;
 
             var filler = new Filler<Transaction>();
-            
+
             filler.Setup()
                 .OnProperty(transaction => transaction.Id).Use(inputTransaction.Id)
                 .OnProperty(transaction => transaction.UserId).Use(inputTransaction.UserId)
