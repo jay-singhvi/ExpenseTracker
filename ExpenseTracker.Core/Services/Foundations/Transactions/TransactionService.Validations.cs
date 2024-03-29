@@ -41,6 +41,7 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
                 (Rule: IsInvalid(transaction.UserId), Parameter: nameof(Transaction.UserId)),
                 (Rule: IsInvalid(transaction.Category), Parameter: nameof(Transaction.Category)),
                 (Rule: IsInvalid(transaction.Description), Parameter: nameof(Transaction.Description)),
+                (Rule: IsInvalid(transaction.PaymentMode), Parameter: nameof(Transaction.PaymentMode)),
                 (Rule: IsInvalid(transaction.Amount), Parameter: nameof(transaction.Amount)),
                 (Rule: IsInvalid(transaction.TransactionDate), Parameter: nameof(transaction.TransactionDate)),
                 (Rule: IsInvalid(transaction.CreatedDate), Parameter: nameof(transaction.CreatedDate)),
