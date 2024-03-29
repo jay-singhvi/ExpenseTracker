@@ -13,5 +13,9 @@ namespace ExpenseTracker.Core.Models.Transactions.Exceptions
         public NotFoundTransactionException(Guid transactionId)
             : base(message: $"Couldn't find transaction with Id {transactionId}.")
         { }
+
+        public NotFoundTransactionException(string message, Guid transactionId)
+            : base(message: message)
+        { }
     }
 }

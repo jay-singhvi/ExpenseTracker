@@ -13,5 +13,9 @@ namespace ExpenseTracker.Core.Models.Transactions.Exceptions
         public LockedTransactionException(Exception innerException)
             : base(message: "Locked transaction record exception, please try again later.", innerException)
         { }
+
+        public LockedTransactionException(string message, Exception innerException)
+            : base(message: message, innerException)
+        { }
     }
 }

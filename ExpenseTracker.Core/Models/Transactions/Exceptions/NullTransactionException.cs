@@ -11,5 +11,8 @@ namespace ExpenseTracker.Core.Models.Transactions.Exceptions
     {
         public NullTransactionException() : base(message: "Transaction is null.")
         { }
+
+        public NullTransactionException(string message) : base(message: message)
+        { }
     }
 }

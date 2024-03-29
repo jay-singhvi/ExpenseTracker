@@ -12,5 +12,9 @@ namespace ExpenseTracker.Core.Models.Users.Exceptions
         public UserServiceException(Xeption innerException)
             : base(message: "Profile service error occurred, contact support.", innerException)
         { }
+
+        public UserServiceException(string message, Xeption innerException)
+            : base(message: message, innerException)
+        { }
     }
 }

@@ -13,5 +13,9 @@ namespace ExpenseTracker.Core.Models.Transactions.Exceptions
         public InvalidTransactionReferenceException(Exception innerException)
             : base(message: "Invalid transaction reference error occurred.", innerException)
         { }
+
+        public InvalidTransactionReferenceException(string message, Exception innerException)
+            : base(message: message, innerException)
+        { }
     }
 }

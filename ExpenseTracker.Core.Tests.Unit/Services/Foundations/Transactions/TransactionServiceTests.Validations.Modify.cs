@@ -6,6 +6,7 @@
 using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using FluentAssertions;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -20,12 +21,13 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
         {
             // Given
             Transaction nullTransaction = null;
-
             var nullTransactionException =
-                new NullTransactionException();
+                new NullTransactionException(message: "Transaction is null.");
 
             var expectedTransactionValidationException =
-                new TransactionValidationException(nullTransactionException);
+                new TransactionValidationException(
+                    message: "Transaction validation error occured, please try again."
+                    , innerException: nullTransactionException);
 
             // When
             ValueTask<Transaction> modifyTransactionTask =
@@ -73,7 +75,9 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             };
 
             var invalidTransactionException =
-                new InvalidTransactionException();
+                new InvalidTransactionException(
+                    message: "Invalid transaction. Please correct the errors and try again."
+                    );
 
             invalidTransactionException.AddData(
                 key: nameof(Transaction.Id),
@@ -87,9 +91,9 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
                 key: nameof(Transaction.Category),
                 values: "Text is required.");
 
-            //invalidTransactionException.AddData(
-            //    key: nameof(Transaction.PaymentMode),
-            //    values: "Text is required.");
+            invalidTransactionException.AddData(
+                key: nameof(Transaction.PaymentMode),
+                values: "Text is required.");
 
             invalidTransactionException.AddData(
                 key: nameof(Transaction.Description),
@@ -112,7 +116,9 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
                 values: ["Date is required.", $"Date is same as {nameof(Transaction.CreatedDate)}"]);
 
             var expectedTransactionValidationException =
-                new TransactionValidationException(invalidTransactionException);
+                new TransactionValidationException(
+                    message: "Transaction validation error occured, please try again."
+                    , innerException: invalidTransactionException);
 
             // When
             ValueTask<Transaction> modifyTransactionTask =
@@ -160,14 +166,19 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             Transaction invalidTransaction = randomTransaction;
 
-            var invalidTransactionException = new InvalidTransactionException();
+            var invalidTransactionException =
+                new InvalidTransactionException(
+                    message: "Invalid transaction. Please correct the errors and try again."
+                    );
 
             invalidTransactionException.AddData(
                 key: nameof(Transaction.UpdatedDate),
                 values: $"Date is same as {nameof(Transaction.CreatedDate)}");
 
             var expectedTransactionValidationException =
-                new TransactionValidationException(invalidTransactionException);
+                new TransactionValidationException(
+                    message: "Transaction validation error occured, please try again."
+                    , innerException: invalidTransactionException);
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
@@ -223,14 +234,18 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
                 inputTransaction.UpdatedDate.AddMinutes(minutes);
 
             var invalidTransactionException =
-                new InvalidTransactionException();
+                new InvalidTransactionException(
+                    message: "Invalid transaction. Please correct the errors and try again."
+                    );
 
             invalidTransactionException.AddData(
                 key: nameof(Transaction.UpdatedDate),
                 values: "Date is not recent.");
 
             var expectedTransactionValidationException =
-                new TransactionValidationException(invalidTransactionException);
+                new TransactionValidationException(
+                    message: "Transaction validation error occured, please try again."
+                    , innerException: invalidTransactionException);
 
             // When
             ValueTask<Transaction> modifyTransactionTask =
@@ -275,10 +290,14 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             Transaction noTransaction = null;
 
             var notFoundTransactionException =
-                new NotFoundTransactionException(someTransactionId);
+                new NotFoundTransactionException(
+                    message: $"Couldn't find transaction with Id {someTransactionId}."
+                    , transactionId: someTransactionId);
 
             var expectedTransactionValidationException =
-                new TransactionValidationException(notFoundTransactionException);
+                new TransactionValidationException(
+                    message: "Transaction validation error occured, please try again."
+                    , innerException: notFoundTransactionException);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectTransactionByIdAsync(someTransactionId))
