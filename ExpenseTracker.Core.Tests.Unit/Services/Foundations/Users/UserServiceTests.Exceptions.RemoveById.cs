@@ -29,8 +29,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             var expectedUserDependencyException =
                 new UserDependencyException(
-                    message: "User dependency error occurred, contact support."
-                    , innerException: failedUserStorageException);
+                    message: "User dependency error occurred, contact support.", 
+                    innerException: failedUserStorageException);
 
             this.userManagerBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(inputUserId))
@@ -80,13 +80,13 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             var lockedUserException =
                 new LockedUserException(
-                    message: "Locked user record exception, please try again."
-                    , innerException: dbUpdateConcurrencyException);
+                    message: "Locked user record exception, please try again.", 
+                    innerException: dbUpdateConcurrencyException);
 
             var expectedUserDependencyValidationException =
                 new UserDependencyValidationException(
-                    message: "User dependency validation occurred, please try again."
-                    , innerException: lockedUserException);
+                    message: "User dependency validation occurred, please try again.", 
+                    innerException: lockedUserException);
 
             this.userManagerBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(userId))
@@ -131,13 +131,13 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             var failedUserServiceException =
                 new FailedUserServiceException(
-                    message: "Failed user service error occurred, please contact support."
-                    , innerException: serviceException);
+                    message: "Failed user service error occurred, please contact support.", 
+                    innerException: serviceException);
 
             var expectedUserServiceException =
                 new UserServiceException(
-                    message: "Profile service error occurred, contact support."
-                    , innerException: failedUserServiceException);
+                    message: "Profile service error occurred, contact support.", 
+                    innerException: failedUserServiceException);
 
             this.userManagerBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(userId))

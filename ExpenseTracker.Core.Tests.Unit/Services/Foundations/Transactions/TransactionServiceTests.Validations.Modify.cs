@@ -26,8 +26,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             var expectedTransactionValidationException =
                 new TransactionValidationException(
-                    message: "Transaction validation error occured, please try again."
-                    , innerException: nullTransactionException);
+                    message: "Transaction validation error occured, please try again.",
+                    innerException: nullTransactionException);
 
             // When
             ValueTask<Transaction> modifyTransactionTask =
@@ -117,8 +117,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             var expectedTransactionValidationException =
                 new TransactionValidationException(
-                    message: "Transaction validation error occured, please try again."
-                    , innerException: invalidTransactionException);
+                    message: "Transaction validation error occured, please try again.",
+                    innerException: invalidTransactionException);
 
             // When
             ValueTask<Transaction> modifyTransactionTask =
@@ -177,8 +177,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             var expectedTransactionValidationException =
                 new TransactionValidationException(
-                    message: "Transaction validation error occured, please try again."
-                    , innerException: invalidTransactionException);
+                    message: "Transaction validation error occured, please try again.",
+                    innerException: invalidTransactionException);
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
@@ -244,8 +244,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             var expectedTransactionValidationException =
                 new TransactionValidationException(
-                    message: "Transaction validation error occured, please try again."
-                    , innerException: invalidTransactionException);
+                    message: "Transaction validation error occured, please try again.",
+                    innerException: invalidTransactionException);
 
             // When
             ValueTask<Transaction> modifyTransactionTask =
@@ -291,13 +291,13 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             var notFoundTransactionException =
                 new NotFoundTransactionException(
-                    message: $"Couldn't find transaction with Id {someTransactionId}."
-                    , transactionId: someTransactionId);
+                    message: $"Couldn't find transaction with Id {someTransactionId}.",
+                    transactionId: someTransactionId);
 
             var expectedTransactionValidationException =
                 new TransactionValidationException(
-                    message: "Transaction validation error occured, please try again."
-                    , innerException: notFoundTransactionException);
+                    message: "Transaction validation error occured, please try again.",
+                    innerException: notFoundTransactionException);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectTransactionByIdAsync(someTransactionId))

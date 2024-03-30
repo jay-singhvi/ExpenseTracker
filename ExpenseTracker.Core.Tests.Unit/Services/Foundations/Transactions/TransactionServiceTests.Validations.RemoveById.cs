@@ -21,7 +21,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             // Given
             Guid invalidTransaction = Guid.Empty;
 
-            var invalidTransactionException = 
+            var invalidTransactionException =
                 new InvalidTransactionException(
                     message: "Invalid transaction. Please correct the errors and try again."
                     );
@@ -32,8 +32,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             var expectedTransactionValidationException =
                 new TransactionValidationException(
-                    message: "Transaction validation error occured, please try again."
-                    ,innerException: invalidTransactionException);
+                    message: "Transaction validation error occured, please try again.",
+                    innerException: invalidTransactionException);
 
             // When
             ValueTask<Transaction> removeByIdTask =
@@ -75,8 +75,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             var notFoundTransactionException =
                 new NotFoundTransactionException(
-                    message: $"Couldn't find transaction with Id {someTransactionId}."
-                    ,transactionId: someTransactionId);
+                    message: $"Couldn't find transaction with Id {someTransactionId}.",
+                    transactionId: someTransactionId);
 
             var expectedTransactionValidationException =
                 new TransactionValidationException(notFoundTransactionException);

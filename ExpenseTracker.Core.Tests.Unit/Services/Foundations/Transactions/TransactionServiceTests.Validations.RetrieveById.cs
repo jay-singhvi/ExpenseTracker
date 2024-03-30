@@ -33,8 +33,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             var expectedTransactionValidationException =
                 new TransactionValidationException(
-                    message: "Transaction validation error occured, please try again."
-                    , innerException: invalidTransactionException);
+                    message: "Transaction validation error occured, please try again.",
+                    innerException: invalidTransactionException);
 
             // When
             ValueTask<Transaction> retrieveTransactionByIdTask =
@@ -71,13 +71,13 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             var notFoundTransactionException =
                 new NotFoundTransactionException(
-                    message: $"Transaction not found with Id {someTransactionId}."
-                    , transactionId: someTransactionId);
+                    message: $"Transaction not found with Id {someTransactionId}.",
+                    transactionId: someTransactionId);
 
             var expectedTransactionValidationException =
             new TransactionValidationException(
-                    message: "Transaction validation error occured, please try again."
-                    , innerException: notFoundTransactionException
+                    message: "Transaction validation error occured, please try again.",
+                    innerException: notFoundTransactionException
                     );
 
             this.storageBrokerMock.Setup(broker =>

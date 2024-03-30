@@ -26,12 +26,14 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             var invalidUserException =
                 new InvalidUserException(
                     parameterName: nameof(User.Id),
-                    parameterValue: invalidUserId);
+                    parameterValue: invalidUserId
+                    );
 
             var expectedUserValidationException =
                 new UserValidationException(
-                    message: "User Validation error occurred, please try again."
-                    , innerException: invalidUserException);
+                    message: "User Validation error occurred, please try again.", 
+                    innerException: invalidUserException
+                    );
 
             // When
             ValueTask<User> retrieveUserById =
@@ -42,8 +44,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                     retrieveUserById.AsTask());
 
             // Then
-
-            actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
+            actualUserValidationException.Should()
+                .BeEquivalentTo(expectedUserValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -68,13 +70,15 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             var notFoundException =
                 new NotFoundUserException(
-                    message: $"Coundn't find user with id: {invalidUserId}"
-                    , userId: invalidUserId);
+                    message: $"Coundn't find user with id: {invalidUserId}", 
+                    userId: invalidUserId
+                    );
 
             var expectedUserValidationException =
                 new UserValidationException(
-                    message: "User Validation error occurred, please try again."
-                    , innerException: notFoundException);
+                    message: "User Validation error occurred, please try again.", 
+                    innerException: notFoundException
+                    );
 
             this.userManagerBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(invalidUserId))
@@ -89,8 +93,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                     retrieveUserById.AsTask());
 
             // Then
-
-            actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
+            actualUserValidationException.Should()
+                .BeEquivalentTo(expectedUserValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(

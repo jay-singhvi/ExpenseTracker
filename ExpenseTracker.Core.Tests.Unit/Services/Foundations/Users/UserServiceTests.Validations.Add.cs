@@ -26,8 +26,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             var expectedUserValidationException =
                 new UserValidationException(
-                    message: "User Validation error occurred, please try again."
-                    , innerException: nullUserException);
+                    message: "User Validation error occurred, please try again.", 
+                    innerException: nullUserException);
 
             // When
             ValueTask<User> addUserTask =
@@ -65,8 +65,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             var expectedUserValidationException =
                 new UserValidationException(
-                    message: "User Validation error occurred, please try again."
-                    , innerException: invalidUserException);
+                    message: "User Validation error occurred, please try again.", 
+                    innerException: invalidUserException);
 
             // When
             ValueTask<User> addUserTask =
@@ -109,8 +109,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             var expectedUserValidationException =
             new UserValidationException(
-                    message: "User Validation error occurred, please try again."
-                    , innerException: invalidUserException);
+                    message: "User Validation error occurred, please try again.", 
+                    innerException: invalidUserException);
 
             // When
             ValueTask<User> addUserTask =
@@ -149,8 +149,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             var expectedUserValidationException =
                 new UserValidationException(
-                    message: "User Validation error occurred, please try again."
-                    , innerException: invalidUserException);
+                    message: "User Validation error occurred, please try again.", 
+                    innerException: invalidUserException);
 
             // When
             ValueTask<User> addUserTask =
@@ -194,16 +194,16 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             var expectedUserValidationException =
                 new UserValidationException(
-                    message: "User Validation error occurred, please try again."
-                    , innerException: invalidUserException);
+                    message: "User Validation error occurred, please try again.", 
+                    innerException: invalidUserException);
 
             // When
             ValueTask<User> addUserTask =
                 this.userService.RegisterUserAsync(invalidUser, password);
 
             // Then
-            await Assert.ThrowsAsync<UserValidationException>(
-                () => addUserTask.AsTask());
+            await Assert.ThrowsAsync<UserValidationException>(() => 
+                addUserTask.AsTask());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -235,8 +235,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             var expectedUserValidationException =
                 new UserValidationException(
-                    message: "User Validation error occurred, please try again."
-                    , innerException: invalidUserException);
+                    message: "User Validation error occurred, please try again.", 
+                    innerException: invalidUserException);
 
             // When
             ValueTask<User> addUserTask =
@@ -274,16 +274,16 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             var expectedUserValidationException =
                 new UserValidationException(
-                    message: "User Validation error occurred, please try again."
-                    , innerException: invalidUserException);
+                    message: "User Validation error occurred, please try again.", 
+                    innerException: invalidUserException);
 
             // When
             ValueTask<User> addUserTask =
                 this.userService.RegisterUserAsync(inputUser, password);
 
             // Then
-            await Assert.ThrowsAsync<UserValidationException>(
-                () => addUserTask.AsTask());
+            await Assert.ThrowsAsync<UserValidationException>(() => 
+                addUserTask.AsTask());
 
             this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(
                 SameExceptionAs(expectedUserValidationException))),
@@ -314,16 +314,16 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             var expectedUserValidationException =
                 new UserValidationException(
-                    message: "User Validation error occurred, please try again."
-                , innerException: invalidUserException);
+                    message: "User Validation error occurred, please try again.", 
+                    innerException: invalidUserException);
 
             // When
             ValueTask<User> addUserTask =
                 this.userService.RegisterUserAsync(inputUser, password);
 
             // Then
-            await Assert.ThrowsAsync<UserValidationException>(
-                () => addUserTask.AsTask());
+            await Assert.ThrowsAsync<UserValidationException>(() => 
+                addUserTask.AsTask());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -358,8 +358,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             var expectedUserValidationException =
                 new UserValidationException(
-                    message: "User Validation error occurred, please try again."
-                    , innerException: invalidUserException);
+                    message: "User Validation error occurred, please try again.", 
+                    innerException: invalidUserException);
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
