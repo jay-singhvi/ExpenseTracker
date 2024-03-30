@@ -291,7 +291,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             var notFoundTransactionException =
                 new NotFoundTransactionException(
-                    message: $"Couldn't find transaction with Id {someTransactionId}.",
+                    message: $"Transaction not found with Id {someTransactionId}.",
                     transactionId: someTransactionId);
 
             var expectedTransactionValidationException =
