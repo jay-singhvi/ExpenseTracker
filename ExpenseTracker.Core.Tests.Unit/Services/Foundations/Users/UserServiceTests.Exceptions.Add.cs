@@ -28,12 +28,16 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             Exception sqlException = GetSqlException();
 
             var failedUserStorageException =
-                new FailedUserStorageException(sqlException);
+                new FailedUserStorageException(
+                    message: "Failed transaction storage error occurred, contact support.",
+                    innerException: sqlException
+                    );
 
             var expectedUserDependencyException =
                 new UserDependencyException(
                     message: "User dependency error occurred, contact support.",
-                    innerException: failedUserStorageException);
+                    innerException: failedUserStorageException
+                    );
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
@@ -80,12 +84,14 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             var alreadyExistsUserException =
                 new AlreadyExistsUserException(
                     message: "User with same Id already exists.",
-                    innerException: duplicateKeyException);
+                    innerException: duplicateKeyException
+                    );
 
             var expectedUserDependencyValidationException =
                 new UserDependencyValidationException(
                     message: "User dependency validation occurred, please try again.",
-                    innerException: alreadyExistsUserException);
+                    innerException: alreadyExistsUserException
+                    );
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
@@ -136,12 +142,14 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             var invalidUserReferenceException =
                 new InvalidUserReferenceException(
                     message: "Invalid user reference error occurred.",
-                    innerException: foreignKeyConstraintConflictException);
+                    innerException: foreignKeyConstraintConflictException
+                    );
 
             var expectedUserDependencyValidationException =
                 new UserDependencyValidationException(
                     message: "User dependency validation occurred, please try again.",
-                    innerException: invalidUserReferenceException);
+                    innerException: invalidUserReferenceException
+                    );
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
@@ -192,12 +200,14 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             var failedUserStorageException =
                 new FailedUserStorageException(
                     message: "Failed user storage error occurred, contact support.",
-                    innerException: dbUpdateException);
+                    innerException: dbUpdateException
+                    );
 
             var expectedUserDependencyValidationException =
                 new UserDependencyValidationException(
                     message: "User dependency validation occurred, please try again.",
-                    innerException: failedUserStorageException);
+                    innerException: failedUserStorageException
+                    );
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
@@ -243,13 +253,15 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             var failedUserServiceException =
                 new FailedUserServiceException(
-                    message: "Failed user service error occurred, please contact support.", 
-                    innerException: serviceException);
+                    message: "Failed user service error occurred, please contact support.",
+                    innerException: serviceException
+                    );
 
             var expectedUserServiceException =
                 new UserServiceException(
-                    message: "Profile service error occurred, contact support.", 
-                    innerException: failedUserServiceException);
+                    message: "Profile service error occurred, contact support.",
+                    innerException: failedUserServiceException
+                    );
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
