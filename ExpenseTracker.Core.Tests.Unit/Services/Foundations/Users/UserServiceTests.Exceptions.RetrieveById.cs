@@ -26,7 +26,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
 
             var failUserStorageException =
                 new FailedUserStorageException(
-                    message: "Failed transaction storage error occurred, contact support.",
+                    message: "Failed user storage error occurred, contact support.",
                     innerException: sqlException
                     );
 
