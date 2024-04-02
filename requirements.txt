@@ -19,3 +19,5 @@ openai
 python-dotenv
 pydub
 AudioConverter
+Flask
+pandas-stubs
