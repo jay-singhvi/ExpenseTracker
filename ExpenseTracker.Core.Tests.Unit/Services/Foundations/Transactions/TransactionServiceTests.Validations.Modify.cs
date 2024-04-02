@@ -76,8 +76,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             var invalidTransactionException =
                 new InvalidTransactionException(
-                    message: "Invalid transaction. Please correct the errors and try again."
-                    );
+                    message: "Invalid transaction. Please correct the errors and try again.");
 
             invalidTransactionException.AddData(
                 key: nameof(Transaction.Id),
@@ -168,8 +167,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             var invalidTransactionException =
                 new InvalidTransactionException(
-                    message: "Invalid transaction. Please correct the errors and try again."
-                    );
+                    message: "Invalid transaction. Please correct the errors and try again.");
 
             invalidTransactionException.AddData(
                 key: nameof(Transaction.UpdatedDate),
@@ -235,8 +233,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             var invalidTransactionException =
                 new InvalidTransactionException(
-                    message: "Invalid transaction. Please correct the errors and try again."
-                    );
+                    message: "Invalid transaction. Please correct the errors and try again.");
 
             invalidTransactionException.AddData(
                 key: nameof(Transaction.UpdatedDate),

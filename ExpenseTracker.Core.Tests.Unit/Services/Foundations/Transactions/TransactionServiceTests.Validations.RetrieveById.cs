@@ -24,8 +24,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             var invalidTransactionException =
                 new InvalidTransactionException(
-                    message: "Invalid transaction. Please correct the errors and try again."
-                    );
+                    message: "Invalid transaction. Please correct the errors and try again.");
 
             invalidTransactionException.AddData(
                 key: nameof(Transaction.Id),
@@ -77,8 +76,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             var expectedTransactionValidationException =
             new TransactionValidationException(
                     message: "Transaction validation error occured, please try again.",
-                    innerException: notFoundTransactionException
-                    );
+                    innerException: notFoundTransactionException);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectTransactionByIdAsync(someTransactionId))

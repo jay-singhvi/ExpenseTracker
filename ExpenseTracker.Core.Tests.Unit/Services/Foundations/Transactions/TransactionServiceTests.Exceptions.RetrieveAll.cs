@@ -22,14 +22,12 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             var failedTransactionStorageException =
                 new FailedTransactionStorageException(
                     message: "Failed transaction storage error occurred, contact support.", 
-                    innerException: sqlException
-                    );
+                    innerException: sqlException);
 
             var expectedTransactionDependencyException =
                 new TransactionDependencyException(
                     message: "Transaction dependency error occurred, contact support.", 
-                    innerException: failedTransactionStorageException
-                    );
+                    innerException: failedTransactionStorageException);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllTransactions())
@@ -69,14 +67,12 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             var failedTransactionServiceException =
                 new FailedTransactionServiceException(
                     message: "Failed transaction service error occurred, please contact support.", 
-                    innerException: serviceException
-                    );
+                    innerException: serviceException);
 
             var expectedTransactionServiceException =
                 new TransactionServiceException(
                     message: "Transaction service error occurred, please contact support.", 
-                    innerException: failedTransactionServiceException
-                    );
+                    innerException: failedTransactionServiceException);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllTransactions())

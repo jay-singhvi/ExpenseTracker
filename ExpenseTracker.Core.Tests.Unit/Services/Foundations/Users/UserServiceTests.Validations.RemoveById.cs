@@ -25,8 +25,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             var invalidUserException =
                 new InvalidUserException(
                     parameterName: nameof(User.Id), 
-                    parameterValue: invalidUserId
-                    );
+                    parameterValue: invalidUserId);
 
             var expectedUserValidationException =
                 new UserValidationException(
@@ -73,14 +72,12 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             var notFoundUserException = 
                 new NotFoundUserException(
                 message: $"Coundn't find user with id: {invalidUserId}", 
-                userId: invalidUserId
-                );
+                userId: invalidUserId);
 
             var expectedUserValidationException =
                 new UserValidationException(
                     message: "User Validation error occurred, please try again.", 
-                    innerException: notFoundUserException
-                    );
+                    innerException: notFoundUserException);
 
             this.userManagerBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(invalidUserId))

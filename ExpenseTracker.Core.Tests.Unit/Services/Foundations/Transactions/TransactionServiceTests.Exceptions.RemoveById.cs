@@ -27,14 +27,12 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             var failTransactionStorageException =
                 new FailedTransactionStorageException(
                     message: "Failed transaction storage error occurred, contact support.",
-                    innerException: sqlException
-                    );
+                    innerException: sqlException);
 
             var expectedTransactionDependencyException =
                 new TransactionDependencyException(
                     message: "Transaction dependency error occurred, contact support.",
-                    innerException: failTransactionStorageException
-                    );
+                    innerException: failTransactionStorageException);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectTransactionByIdAsync(randomTransactionId))
@@ -99,7 +97,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             this.dateTimeBrokerMock.Verify(broker =>
             broker.GetCurrentDateTimeOffset(),
-            Times.Once);
+                Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
             broker.LogError(It.Is(SameExceptionAs(
@@ -108,7 +106,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             this.storageBrokerMock.Verify(broker =>
             broker.InsertTransactionAsync(It.IsAny<Transaction>()),
-            Times.Never);
+                Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -242,14 +240,12 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             var failedTransactionServiceException =
                 new FailedTransactionServiceException(
                     message: "Failed transaction service error occurred, please contact support.",
-                    innerException: serviceError
-                    );
+                    innerException: serviceError);
 
             var expectedTransactionServiceException =
                 new TransactionServiceException(
                     message: "Transaction service error occurred, please contact support.",
-                    innerException: failedTransactionServiceException
-                    );
+                    innerException: failedTransactionServiceException);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectTransactionByIdAsync(someTransactionId))

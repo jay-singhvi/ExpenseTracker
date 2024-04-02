@@ -27,14 +27,12 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             var failUserStorageException =
                 new FailedUserStorageException(
                     message: "Failed user storage error occurred, contact support.",
-                    innerException: sqlException
-                    );
+                    innerException: sqlException);
 
             var expectedUserDependencyException =
                 new UserDependencyException(
                     message: "User dependency error occurred, contact support.",
-                    innerException: failUserStorageException
-                    );
+                    innerException: failUserStorageException);
 
             this.userManagerBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(userId))
@@ -78,14 +76,12 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             var failedUserServiceException =
                 new FailedUserServiceException(
                     message: "Failed user service error occurred, please contact support.",
-                    innerException: serviceException
-                    );
+                    innerException: serviceException);
 
             var expectedUserServiceException =
                 new UserServiceException(
                     message: "Profile service error occurred, contact support.",
-                    innerException: failedUserServiceException
-                    );
+                    innerException: failedUserServiceException);
 
             this.userManagerBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(userId))
