@@ -116,7 +116,8 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
             Message = "Date is required."
         };
 
-        private static dynamic IsNotSame(DateTimeOffset firstDate,
+        private static dynamic IsNotSame(
+            DateTimeOffset firstDate,
             DateTimeOffset secondDate,
             string secondDateName) => new
             {
@@ -124,7 +125,8 @@ namespace ExpenseTracker.Core.Services.Foundations.Transactions
                 Message = $"Date is not same as {secondDateName}"
             };
 
-        private static dynamic IsSame(DateTimeOffset firstDate,
+        private static dynamic IsSame(
+            DateTimeOffset firstDate,
             DateTimeOffset secondDate,
             string secondDateName) => new
             {
