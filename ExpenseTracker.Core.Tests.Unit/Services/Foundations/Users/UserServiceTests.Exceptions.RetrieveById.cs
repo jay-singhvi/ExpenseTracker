@@ -25,10 +25,14 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             var sqlException = GetSqlException();
 
             var failUserStorageException =
-                new FailedUserStorageException(sqlException);
+                new FailedUserStorageException(
+                    message: "Failed user storage error occurred, contact support.",
+                    innerException: sqlException);
 
             var expectedUserDependencyException =
-                new UserDependencyException(failUserStorageException);
+                new UserDependencyException(
+                    message: "User dependency error occurred, contact support.",
+                    innerException: failUserStorageException);
 
             this.userManagerBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(userId))
@@ -43,7 +47,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                     retrieveUserById.AsTask());
 
             // Then
-            actualUserDependencyException.Should().BeEquivalentTo(expectedUserDependencyException);
+            actualUserDependencyException.Should()
+                .BeEquivalentTo(expectedUserDependencyException);
 
             this.userManagerBrokerMock.Verify(broker =>
                 broker.SelectUserByIdAsync(It.IsAny<Guid>()),
@@ -69,10 +74,14 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             var serviceException = new Exception();
 
             var failedUserServiceException =
-                new FailedUserServiceException(serviceException);
+                new FailedUserServiceException(
+                    message: "Failed user service error occurred, please contact support.",
+                    innerException: serviceException);
 
             var expectedUserServiceException =
-                new UserServiceException(failedUserServiceException);
+                new UserServiceException(
+                    message: "Profile service error occurred, contact support.",
+                    innerException: failedUserServiceException);
 
             this.userManagerBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(userId))
@@ -87,7 +96,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                     RetrieveUserByIdTask.AsTask());
 
             // Then
-            actualUserServiceException.Should().BeEquivalentTo(expectedUserServiceException);
+            actualUserServiceException.Should()
+                .BeEquivalentTo(expectedUserServiceException);
 
             this.userManagerBrokerMock.Verify(broker =>
                 broker.SelectUserByIdAsync(It.IsAny<Guid>()),

@@ -13,5 +13,9 @@ namespace ExpenseTracker.Core.Models.Users.Exceptions
         public AlreadyExistsUserException(Exception innerException)
             : base(message: "User with same Id already exists.", innerException)
         { }
+
+        public AlreadyExistsUserException(string message, Exception innerException)
+            : base(message: message, innerException)
+        { }
     }
 }

@@ -21,10 +21,14 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             SqlException sqlException = GetSqlException();
 
             var failedUserStorageException =
-                new FailedUserStorageException(sqlException);
+                new FailedUserStorageException(
+                    message: "Failed user storage error occurred, contact support.",
+                    innerException: sqlException);
 
             var expectedUserDependencyException =
-                new UserDependencyException(failedUserStorageException);
+                new UserDependencyException(
+                    message: "User dependency error occurred, contact support.", 
+                    innerException: failedUserStorageException);
 
             this.userManagerBrokerMock.Setup(broker =>
                 broker.SelectAllUsers())
@@ -61,10 +65,14 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             var serviceException = new Exception();
 
             var failedUserStorageException =
-                new FailedUserStorageException(serviceException);
+                new FailedUserStorageException(
+                    message: "Failed user storage error occurred, contact support.", 
+                    innerException: serviceException);
 
             var expectedUserServiceException =
-                new UserServiceException(failedUserStorageException);
+                new UserServiceException(
+                    message: "Profile service error occurred, contact support.", 
+                    innerException: failedUserStorageException);
 
             this.userManagerBrokerMock.Setup(broker =>
                 broker.SelectAllUsers())
@@ -78,7 +86,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                 Assert.Throws<UserServiceException>(retrieveAllUsers);
 
             // Then
-            actualUserServiceException.Should().BeEquivalentTo(expectedUserServiceException);
+            actualUserServiceException.Should()
+                .BeEquivalentTo(expectedUserServiceException);
 
             this.userManagerBrokerMock.Verify(broker =>
                 broker.SelectAllUsers(),

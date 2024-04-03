@@ -25,10 +25,14 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             var sqlException = GetSqlException();
 
             var failTransactionStorageException =
-                new FailedTransactionStorageException(sqlException);
+                new FailedTransactionStorageException(
+                    message: "Failed transaction storage error occurred, contact support.",
+                    innerException: sqlException);
 
             var expectedTransactionDependencyException =
-                new TransactionDependencyException(failTransactionStorageException);
+                new TransactionDependencyException(
+                    message: "Transaction dependency error occurred, contact support.",
+                    innerException: failTransactionStorageException);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectTransactionByIdAsync(randomTransactionId))
@@ -70,10 +74,14 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             var dbUpdateException = new DbUpdateException();
 
             var failedTransactionStorageException =
-                new FailedTransactionStorageException(dbUpdateException);
+                new FailedTransactionStorageException(
+                    message: "Failed transaction storage error occurred, contact support.",
+                    innerException: dbUpdateException);
 
             var expectedTransactionDependencyException =
-                new TransactionDependencyException(failedTransactionStorageException);
+                new TransactionDependencyException(
+                    message: "Transaction dependency error occurred, contact support.",
+                    innerException: failedTransactionStorageException);
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
@@ -89,7 +97,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             this.dateTimeBrokerMock.Verify(broker =>
             broker.GetCurrentDateTimeOffset(),
-            Times.Once);
+                Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
             broker.LogError(It.Is(SameExceptionAs(
@@ -98,7 +106,7 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
 
             this.storageBrokerMock.Verify(broker =>
             broker.InsertTransactionAsync(It.IsAny<Transaction>()),
-            Times.Never);
+                Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -119,10 +127,14 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
                 new ForeignKeyConstraintConflictException(expectionMessage);
 
             var invalidTransactionReference =
-                new InvalidTransactionReferenceException(foreignKeyConstraintConflictException);
+                new InvalidTransactionReferenceException(
+                    message: "Invalid transaction reference error occurred.",
+                    innerException: foreignKeyConstraintConflictException);
 
             var expectedTransactionDependencyValidationException =
-                new TransactionDependencyValidationException(invalidTransactionReference);
+                new TransactionDependencyValidationException(
+                    message: "Transaction dependency validation error occurred, please try again.",
+                    innerException: invalidTransactionReference);
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
@@ -172,10 +184,14 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             var dbUpdateConcurrencyException = new DbUpdateConcurrencyException();
 
             var lockedTransactionException =
-                new LockedTransactionException(dbUpdateConcurrencyException);
+                new LockedTransactionException(
+                    message: "Locked transaction record exception, please try again later.",
+                    innerException: dbUpdateConcurrencyException);
 
             var expectedTransactionDependencyValidationException =
-                new TransactionDependencyValidationException(lockedTransactionException);
+                new TransactionDependencyValidationException(
+                    message: "Transaction dependency validation error occurred, please try again.",
+                    innerException: lockedTransactionException);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectTransactionByIdAsync(someTransactionID))
@@ -222,10 +238,14 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             var serviceError = new Exception();
 
             var failedTransactionServiceException =
-                new FailedTransactionServiceException(serviceError);
+                new FailedTransactionServiceException(
+                    message: "Failed transaction service error occurred, please contact support.",
+                    innerException: serviceError);
 
             var expectedTransactionServiceException =
-                new TransactionServiceException(failedTransactionServiceException);
+                new TransactionServiceException(
+                    message: "Transaction service error occurred, please contact support.",
+                    innerException: failedTransactionServiceException);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectTransactionByIdAsync(someTransactionId))

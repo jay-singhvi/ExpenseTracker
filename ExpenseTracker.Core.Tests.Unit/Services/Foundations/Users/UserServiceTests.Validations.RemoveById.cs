@@ -23,10 +23,14 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             Guid invalidUserId = randomId;
 
             var invalidUserException =
-                new InvalidUserException(parameterName: nameof(User.Id), parameterValue: invalidUserId);
+                new InvalidUserException(
+                    parameterName: nameof(User.Id), 
+                    parameterValue: invalidUserId);
 
             var expectedUserValidationException =
-                new UserValidationException(invalidUserException);
+                new UserValidationException(
+                    message: "User Validation error occurred, please try again.", 
+                    innerException: invalidUserException);
 
             // When
             ValueTask<User> removeUserByIdTask =
@@ -65,10 +69,15 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             Guid randomUserId = Guid.NewGuid();
             Guid invalidUserId = randomUserId;
             User noUser = null;
-            var notFoundUserException = new NotFoundUserException(invalidUserId);
+            var notFoundUserException = 
+                new NotFoundUserException(
+                message: $"Coundn't find user with id: {invalidUserId}", 
+                userId: invalidUserId);
 
             var expectedUserValidationException =
-                new UserValidationException(notFoundUserException);
+                new UserValidationException(
+                    message: "User Validation error occurred, please try again.", 
+                    innerException: notFoundUserException);
 
             this.userManagerBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(invalidUserId))
