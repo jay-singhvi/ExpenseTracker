@@ -6,6 +6,7 @@
 using ExpenseTracker.Core.Models.Transactions;
 using ExpenseTracker.Core.Models.Transactions.Exceptions;
 using FluentAssertions;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -22,14 +23,17 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             Guid invalidTransactionId = Guid.Empty;
 
             var invalidTransactionException =
-                new InvalidTransactionException();
+                new InvalidTransactionException(
+                    message: "Invalid transaction. Please correct the errors and try again.");
 
             invalidTransactionException.AddData(
                 key: nameof(Transaction.Id),
                 values: "Id is required.");
 
             var expectedTransactionValidationException =
-                new TransactionValidationException(invalidTransactionException);
+                new TransactionValidationException(
+                    message: "Transaction validation error occured, please try again.",
+                    innerException: invalidTransactionException);
 
             // When
             ValueTask<Transaction> retrieveTransactionByIdTask =
@@ -65,10 +69,14 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Transactions
             Transaction noTransaction = null;
 
             var notFoundTransactionException =
-                new NotFoundTransactionException(someTransactionId);
+                new NotFoundTransactionException(
+                    message: $"Transaction not found with Id {someTransactionId}.",
+                    transactionId: someTransactionId);
 
             var expectedTransactionValidationException =
-                new TransactionValidationException(notFoundTransactionException);
+            new TransactionValidationException(
+                    message: "Transaction validation error occured, please try again.",
+                    innerException: notFoundTransactionException);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectTransactionByIdAsync(someTransactionId))

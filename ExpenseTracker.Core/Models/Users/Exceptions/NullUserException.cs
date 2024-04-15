@@ -11,5 +11,8 @@ namespace ExpenseTracker.Core.Models.Users.Exceptions
     {
         public NullUserException() : base(message: "User is Null.")
         { }
+
+        public NullUserException(string message) : base(message: message)
+        { }
     }
 }

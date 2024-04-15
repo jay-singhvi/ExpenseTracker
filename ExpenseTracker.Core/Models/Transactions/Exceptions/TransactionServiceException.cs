@@ -12,5 +12,9 @@ namespace ExpenseTracker.Core.Models.Transactions.Exceptions
         public TransactionServiceException(Xeption innerException)
             : base(message: "Transaction service error occurred, please contact support.", innerException)
         { }
+
+        public TransactionServiceException(string message, Xeption innerException)
+            : base(message: message, innerException)
+        { }
     }
 }

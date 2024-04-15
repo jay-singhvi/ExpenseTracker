@@ -22,10 +22,12 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
             User nullUser = null;
 
             var nullUserException =
-                new NullUserException();
+                new NullUserException(message: "User is Null.");
 
             var expectedUserValidationException =
-                new UserValidationException(nullUserException);
+                new UserValidationException(
+                    message: "User Validation error occurred, please try again.", 
+                    innerException: nullUserException);
 
             // When
             ValueTask<User> modifyUserTask =
@@ -36,7 +38,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                     modifyUserTask.AsTask());
 
             // Then
-            actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
+            actualUserValidationException.Should()
+                .BeEquivalentTo(expectedUserValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -70,7 +73,9 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                     parameterValue: invalidUser.UserName);
 
             var expectedUserValidationException =
-                new UserValidationException(invalidUserException);
+                new UserValidationException(
+                    message: "User Validation error occurred, please try again.", 
+                    innerException: invalidUserException);
 
             // When
             ValueTask<User> modifyUserTask =
@@ -81,7 +86,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                     modifyUserTask.AsTask());
 
             // Then
-            actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
+            actualUserValidationException.Should()
+                .BeEquivalentTo(expectedUserValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(expectedUserValidationException))),
@@ -111,7 +117,9 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                     parameterValue: inputUser.UpdatedDate);
 
             var expectedUserValidationException =
-                new UserValidationException(invalidUserException);
+                new UserValidationException(
+                    message: "User Validation error occurred, please try again.", 
+                    innerException: invalidUserException);
 
             this.userManagerBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(inputUser.Id))
@@ -126,7 +134,8 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                     modifyUserTask.AsTask());
 
             //Then
-            actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
+            actualUserValidationException.Should()
+                .BeEquivalentTo(expectedUserValidationException);
 
             this.userManagerBrokerMock.Verify(broker =>
                 broker.SelectUserByIdAsync(inputUser.Id),
@@ -157,21 +166,25 @@ namespace ExpenseTracker.Core.Tests.Unit.Services.Foundations.Users
                     parameterValue: inputUser.UpdatedDate);
 
             var expectedUserValidationException =
-                new UserValidationException(invalidUserException);
+                new UserValidationException(
+                    message: "User Validation error occurred, please try again.", 
+                    innerException: invalidUserException);
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
                     .Throws(invalidUserException);
 
             // When
-            ValueTask<User> modifyUserTask = this.userService.ModifyUserAsync(inputUser);
+            ValueTask<User> modifyUserTask = 
+                this.userService.ModifyUserAsync(inputUser);
 
             var actualUserValidationException =
                 await Assert.ThrowsAsync<UserValidationException>(() =>
                     modifyUserTask.AsTask());
 
             // Then
-            actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
+            actualUserValidationException.Should()
+                .BeEquivalentTo(expectedUserValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTimeOffset(),

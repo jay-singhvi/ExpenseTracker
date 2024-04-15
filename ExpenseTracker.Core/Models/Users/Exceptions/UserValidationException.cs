@@ -12,5 +12,9 @@ namespace ExpenseTracker.Core.Models.Users.Exceptions
         public UserValidationException(Xeption innerException) :
             base(message: "User Validation error occurred, please try again.", innerException)
         { }
+
+        public UserValidationException(string message, Xeption innerException) :
+            base(message: message, innerException)
+        { }
     }
 }

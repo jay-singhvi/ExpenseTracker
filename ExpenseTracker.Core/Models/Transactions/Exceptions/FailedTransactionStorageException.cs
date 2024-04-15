@@ -15,13 +15,11 @@ namespace ExpenseTracker.Core.Models.Transactions.Exceptions
 
         public FailedTransactionStorageException(Exception innerException)
             : base(message: "Failed transaction storage error occurred, contact support.", innerException)
-        {
+        { }
 
-        }
+        public FailedTransactionStorageException(string message, Exception innerException)
+            : base(message: "Failed transaction storage error occurred, contact support.", innerException)
+        { }
 
-        public FailedTransactionStorageException(SqlException sqlException)
-        {
-            this.sqlException = sqlException;
-        }
     }
 }

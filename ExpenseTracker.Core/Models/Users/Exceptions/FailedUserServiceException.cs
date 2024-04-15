@@ -13,5 +13,9 @@ namespace ExpenseTracker.Core.Models.Users.Exceptions
         public FailedUserServiceException(Exception innerException)
             : base(message: "Failed user service error occurred, please contact support.", innerException)
         { }
+
+        public FailedUserServiceException(string message, Exception innerException)
+            : base(message: message, innerException)
+        { }
     }
 }

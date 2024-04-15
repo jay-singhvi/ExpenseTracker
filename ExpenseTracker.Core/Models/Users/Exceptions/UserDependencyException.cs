@@ -12,5 +12,9 @@ namespace ExpenseTracker.Core.Models.Users.Exceptions
         public UserDependencyException(Xeption innerException)
             : base(message: "User dependency error occurred, contact support.", innerException)
         { }
+
+        public UserDependencyException(string message, Xeption innerException)
+            : base(message: message, innerException)
+        { }
     }
 }

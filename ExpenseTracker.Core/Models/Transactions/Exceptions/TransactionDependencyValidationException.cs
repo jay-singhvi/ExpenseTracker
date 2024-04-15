@@ -12,5 +12,9 @@ namespace ExpenseTracker.Core.Models.Transactions.Exceptions
         public TransactionDependencyValidationException(Xeption innerException)
             : base(message: "Transaction dependency validation error occurred, please try again.", innerException)
         { }
+
+        public TransactionDependencyValidationException(string message, Xeption innerException)
+            : base(message: message, innerException)
+        { }
     }
 }

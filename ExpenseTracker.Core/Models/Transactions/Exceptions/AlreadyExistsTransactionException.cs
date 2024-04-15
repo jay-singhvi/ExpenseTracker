@@ -13,5 +13,9 @@ namespace ExpenseTracker.Core.Models.Transactions.Exceptions
         public AlreadyExistsTransactionException(Exception innerException)
             : base(message: "Transaction with the same id already exists.", innerException)
         { }
+
+        public AlreadyExistsTransactionException(string message, Exception innerException)
+            : base(message, innerException) 
+        { }
     }
 }

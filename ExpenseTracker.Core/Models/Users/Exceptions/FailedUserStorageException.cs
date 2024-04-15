@@ -13,5 +13,9 @@ namespace ExpenseTracker.Core.Models.Users.Exceptions
         public FailedUserStorageException(Exception innerException)
             : base(message: "Failed user storage error occurred, contact support.", innerException)
         { }
+
+        public FailedUserStorageException(string message, Exception innerException)
+            : base(message: message, innerException)
+        { }
     }
 }

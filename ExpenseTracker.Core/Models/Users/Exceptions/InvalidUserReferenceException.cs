@@ -13,5 +13,9 @@ namespace ExpenseTracker.Core.Models.Users.Exceptions
         public InvalidUserReferenceException(Exception innerException)
             : base(message: "Invalid user reference error occurred.", innerException)
         { }
+
+        public InvalidUserReferenceException(string message, Exception innerException)
+            : base(message: message, innerException)
+        { }
     }
 }

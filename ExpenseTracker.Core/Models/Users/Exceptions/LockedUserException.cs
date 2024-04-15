@@ -13,5 +13,9 @@ namespace ExpenseTracker.Core.Models.Users.Exceptions
         public LockedUserException(Exception innerException)
             : base(message: "Locked user record exception, please try again.", innerException)
         { }
+
+        public LockedUserException(string message, Exception innerException)
+            : base(message: message, innerException)
+        { }
     }
 }
